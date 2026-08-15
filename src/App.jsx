@@ -69,17 +69,7 @@ export default function App() {
   const [filtro, setFiltro] = useState('Todos')
   const [guardando, setGuardando] = useState(false)
   const [aviso, setAviso] = useState('')
-  const [mostrarEntrada, setMostrarEntrada] = useState(true)
-
   const fileInputRef = useRef(null)
-
-  useEffect(() => {
-    const temporizador = setTimeout(() => {
-      setMostrarEntrada(false)
-    }, 1800)
-
-    return () => clearTimeout(temporizador)
-  }, [])
 
   async function cargarDesdeSupabase(user) {
     const { data, error } = await supabase
@@ -246,7 +236,9 @@ export default function App() {
     } catch (error) {
       console.error(error)
 
-      alert(`No se pudo guardar el proyecto.\n\n${error.message}`)
+      alert(
+        `No se pudo guardar el proyecto.\n\n${error.message}`
+      )
     } finally {
       setGuardando(false)
     }
@@ -280,7 +272,9 @@ export default function App() {
     } catch (error) {
       console.error(error)
 
-      alert(`No se pudo eliminar el proyecto.\n\n${error.message}`)
+      alert(
+        `No se pudo eliminar el proyecto.\n\n${error.message}`
+      )
     } finally {
       setGuardando(false)
     }
@@ -346,31 +340,6 @@ export default function App() {
     return a.fechaEntrega.localeCompare(b.fechaEntrega)
   })
 
-  /*
-   * PANTALLA DE ENTRADA
-   */
-  if (mostrarEntrada) {
-    return (
-      <div className="splash">
-        <div className="splash-inner">
-          <img
-            className="splash-logo"
-            src="./icon-180.png"
-            alt="Proyectos de Interiorismo"
-          />
-
-          <h1 className="splash-title">
-            Proyectos
-          </h1>
-
-          <p className="splash-subtitle">
-            Panel de estudio
-          </p>
-        </div>
-      </div>
-    )
-  }
-
   if (cargando) {
     return (
       <div className="app">
@@ -391,36 +360,32 @@ export default function App() {
             margin: '60px auto',
           }}
         >
+
+          {/* ICONO */}
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
-              gap: '13px',
+              justifyContent: 'center',
               marginBottom: '24px',
             }}
           >
             <img
               src="./icon-180.png"
-              alt="Proyectos de Interiorismo"
-              className="app-logo"
+              alt="Proyectos de interiorismo"
+              style={{
+                width: '72px',
+                height: '72px',
+                objectFit: 'contain',
+                borderRadius: '16px',
+              }}
             />
-
-            <div>
-              <p className="eyebrow">
-                Panel de estudio
-              </p>
-
-              <h1
-                className="serif"
-                style={{
-                  margin: 0,
-                  fontSize: '28px',
-                }}
-              >
-                Proyectos
-              </h1>
-            </div>
           </div>
+
+          <p className="eyebrow">Panel de estudio</p>
+
+          <h1 className="serif">
+            Proyectos de interiorismo
+          </h1>
 
           <hr className="rule" />
 
@@ -446,8 +411,8 @@ export default function App() {
                 boxSizing: 'border-box',
                 padding: '12px 14px',
                 marginBottom: '18px',
-                border: '1px solid #e4e3de',
-                borderRadius: '8px',
+                border: '1px solid #ccc',
+                borderRadius: '6px',
                 fontSize: '15px',
               }}
             />
@@ -473,8 +438,8 @@ export default function App() {
                 boxSizing: 'border-box',
                 padding: '12px 14px',
                 marginBottom: '18px',
-                border: '1px solid #e4e3de',
-                borderRadius: '8px',
+                border: '1px solid #ccc',
+                borderRadius: '6px',
                 fontSize: '15px',
               }}
             />
@@ -507,23 +472,38 @@ export default function App() {
 
   return (
     <div className="app">
+
       <div className="topbar">
-        <div>
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+          }}
+        >
+
+          {/* ICONO PEQUEÑO */}
           <img
             src="./icon-180.png"
-            alt="Proyectos de Interiorismo"
-            className="app-logo"
+            alt="Proyectos de interiorismo"
+            style={{
+              width: '42px',
+              height: '42px',
+              objectFit: 'contain',
+              borderRadius: '9px',
+              flexShrink: 0,
+            }}
           />
 
           <div>
-            <p className="eyebrow">
-              Panel de estudio
-            </p>
+            <p className="eyebrow">Panel de estudio</p>
 
             <h1 className="serif">
               Proyectos de interiorismo
             </h1>
           </div>
+
         </div>
 
         <div className="top-actions">
@@ -574,7 +554,7 @@ export default function App() {
           className="mono"
           style={{
             fontSize: '12.5px',
-            color: 'var(--ink-soft)',
+            color: 'var(--accent)',
             margin: '8px 0 0',
           }}
         >
@@ -587,7 +567,7 @@ export default function App() {
           className="mono"
           style={{
             fontSize: '12.5px',
-            color: 'var(--ink-soft)',
+            color: 'var(--accent)',
             margin: '8px 0 0',
           }}
         >
