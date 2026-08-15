@@ -9,6 +9,8 @@ import {
   importarJSON,
 } from './storage.js'
 
+const ICONO = `${import.meta.env.BASE_URL}icon-180.png`
+
 function proyectoDesdeBD(row) {
   return {
     id: row.id,
@@ -69,16 +71,17 @@ export default function App() {
   const [filtro, setFiltro] = useState('Todos')
   const [guardando, setGuardando] = useState(false)
   const [aviso, setAviso] = useState('')
-  const fileInputRef = useRef(null)
   const [mostrarEntrada, setMostrarEntrada] = useState(true)
 
-useEffect(() => {
-  const temporizador = setTimeout(() => {
-    setMostrarEntrada(false)
-  }, 1500)
+  const fileInputRef = useRef(null)
 
-  return () => clearTimeout(temporizador)
-}, [])
+  useEffect(() => {
+    const temporizador = setTimeout(() => {
+      setMostrarEntrada(false)
+    }, 1500)
+
+    return () => clearTimeout(temporizador)
+  }, [])
 
   async function cargarDesdeSupabase(user) {
     const { data, error } = await supabase
@@ -348,17 +351,23 @@ useEffect(() => {
 
     return a.fechaEntrega.localeCompare(b.fechaEntrega)
   })
-if (mostrarEntrada) {
-  return (
-    <div className="splash">
-      <img
-        src="/afuenteto/icon-180.png"
-        alt="Proyectos de interiorismo"
-        className="splash-logo"
-      />
-    </div>
-  )
-}
+
+  /*
+   * Pantalla de entrada
+   * Se muestra durante 1,5 segundos.
+   */
+  if (mostrarEntrada) {
+    return (
+      <div className="splash">
+        <img
+          src={ICONO}
+          alt="Proyectos de interiorismo"
+          className="splash-logo"
+        />
+      </div>
+    )
+  }
+
   if (cargando) {
     return (
       <div className="app">
@@ -379,8 +388,6 @@ if (mostrarEntrada) {
             margin: '60px auto',
           }}
         >
-
-          {/* ICONO */}
           <div
             style={{
               display: 'flex',
@@ -389,7 +396,7 @@ if (mostrarEntrada) {
             }}
           >
             <img
-              src="/afuenteto/icon-180.png"
+              src={ICONO}
               alt="Proyectos de interiorismo"
               style={{
                 width: '72px',
@@ -491,9 +498,7 @@ if (mostrarEntrada) {
 
   return (
     <div className="app">
-
       <div className="topbar">
-
         <div
           style={{
             display: 'flex',
@@ -501,10 +506,8 @@ if (mostrarEntrada) {
             gap: '12px',
           }}
         >
-
-          {/* ICONO PEQUEÑO */}
           <img
-            src="/afuenteto/icon-180.png"
+            src={ICONO}
             alt="Proyectos de interiorismo"
             style={{
               width: '42px',
@@ -522,7 +525,6 @@ if (mostrarEntrada) {
               Proyectos de interiorismo
             </h1>
           </div>
-
         </div>
 
         <div className="top-actions">
