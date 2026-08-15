@@ -4,13 +4,59 @@ import ProjectModal from './components/ProjectModal.jsx'
 import { supabase } from './supabase.js'
 import {
   FASES,
-  cargarProyectos,
-  guardarProyecto,
-  eliminarProyecto,
   nuevoProyecto,
   exportarJSON,
   importarJSON,
 } from './storage.js'
+
+function proyectoDesdeBD(row) {
+  return {
+    id: row.id,
+    nombre: row.nombre || '',
+    cliente: row.cliente || '',
+    telefono: row.telefono || '',
+    email: row.email || '',
+    direccion: row.direccion || '',
+    fechaInicio: row.fecha_inicio || '',
+    fechaEntrega: row.fecha_entrega || '',
+    fase: row.fase || FASES[0],
+    presupuestoTotal: row.presupuesto_total ?? '',
+    presupuestoGastado: row.presupuesto_gastado ?? '',
+    notas: row.notas || '',
+    tareas: Array.isArray(row.tareas) ? row.tareas : [],
+    proveedores: Array.isArray(row.proveedores) ? row.proveedores : [],
+  }
+}
+
+function proyectoParaBD(proyecto, userId) {
+  return {
+    id: proyecto.id,
+    user_id: userId,
+    nombre: proyecto.nombre || '',
+    cliente: proyecto.cliente || '',
+    telefono: proyecto.telefono || '',
+    email: proyecto.email || '',
+    direccion: proyecto.direccion || '',
+    fecha_inicio: proyecto.fechaInicio || null,
+    fecha_entrega: proyecto.fechaEntrega || null,
+    fase: proyecto.fase || FASES[0],
+    presupuesto_total:
+      proyecto.presupuestoTotal === '' ||
+      proyecto.presupuestoTotal === null
+        ? null
+        : Number(proyecto.presupuestoTotal),
+    presupuesto_gastado:
+      proyecto.presupuestoGastado === '' ||
+      proyecto.presupuestoGastado === null
+        ? null
+        : Number(proyecto.presupuestoGastado),
+    notas: proyecto.notas || '',
+    tareas: Array.isArray(proyecto.tareas) ? proyecto.tareas : [],
+    proveedores: Array.isArray(proyecto.proveedores)
+      ? proyecto.proveedores
+      : [],
+  }
+}
 
 export default function App() {
   const [usuario, setUsuario] = useState(null)
@@ -21,9 +67,23 @@ export default function App() {
   const [proyectos, setProyectos] = useState([])
   const [editando, setEditando] = useState(null)
   const [filtro, setFiltro] = useState('Todos')
-  const fileInputRef = useRef(null)
-  const [avisoImport, setAvisoImport] = useState('')
   const [guardando, setGuardando] = useState(false)
+  const [aviso, setAviso] = useState('')
+  const fileInputRef = useRef(null)
+
+  async function cargarDesdeSupabase(user) {
+    const { data, error } = await supabase
+      .from('proyectos')
+      .select('*')
+      .eq('user_id', user.id)
+
+    if (error) {
+      console.error(error)
+      throw error
+    }
+
+    return (data || []).map(proyectoDesdeBD)
+  }
 
   useEffect(() => {
     let activo = true
@@ -39,7 +99,7 @@ export default function App() {
         if (session?.user) {
           setUsuario(session.user)
 
-          const datos = await cargarProyectos()
+          const datos = await cargarDesdeSupabase(session.user)
 
           if (activo) {
             setProyectos(datos)
@@ -47,7 +107,12 @@ export default function App() {
         }
       } catch (error) {
         console.error(error)
-        setErrorLogin('No se pudieron cargar los proyectos.')
+
+        if (activo) {
+          setErrorLogin(
+            'No se han podido cargar los datos. Comprueba la configuración de Supabase.'
+          )
+        }
       } finally {
         if (activo) {
           setCargando(false)
@@ -66,7 +131,7 @@ export default function App() {
         setUsuario(session.user)
 
         try {
-          const datos = await cargarProyectos()
+          const datos = await cargarDesdeSupabase(session.user)
 
           if (activo) {
             setProyectos(datos)
@@ -94,7 +159,7 @@ export default function App() {
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim(),
         password,
       })
 
@@ -102,14 +167,16 @@ export default function App() {
 
       setUsuario(data.user)
 
-      const datos = await cargarProyectos()
+      const datos = await cargarDesdeSupabase(data.user)
       setProyectos(datos)
+
       setPassword('')
     } catch (error) {
       console.error(error)
 
       setErrorLogin(
-        'No se ha podido iniciar sesión. Comprueba el email y la contraseña.'
+        error.message ||
+          'No se ha podido iniciar sesión. Comprueba el email y la contraseña.'
       )
     } finally {
       setCargando(false)
@@ -120,54 +187,96 @@ export default function App() {
     await supabase.auth.signOut()
     setUsuario(null)
     setProyectos([])
+    setEditando(null)
   }
 
   function abrirNuevo() {
     setEditando(nuevoProyecto())
   }
 
-  function abrirExistente(p) {
-    setEditando(p)
+  function abrirExistente(proyecto) {
+    setEditando(proyecto)
   }
 
   async function guardar(datos) {
+    if (!usuario) return
+
     setGuardando(true)
+    setAviso('')
 
     try {
-      const proyectoGuardado = await guardarProyecto(datos)
+      const fila = proyectoParaBD(datos, usuario.id)
+
+      const { data, error } = await supabase
+        .from('proyectos')
+        .upsert(fila)
+        .select()
+        .single()
+
+      if (error) throw error
+
+      const proyectoGuardado = proyectoDesdeBD(data)
 
       setProyectos((prev) => {
         const existe = prev.some((p) => p.id === proyectoGuardado.id)
 
-        return existe
-          ? prev.map((p) =>
-              p.id === proyectoGuardado.id ? proyectoGuardado : p
-            )
-          : [...prev, proyectoGuardado]
+        if (existe) {
+          return prev.map((p) =>
+            p.id === proyectoGuardado.id ? proyectoGuardado : p
+          )
+        }
+
+        return [...prev, proyectoGuardado]
       })
 
       setEditando(null)
+
+      setAviso('Proyecto guardado correctamente.')
+      setTimeout(() => setAviso(''), 3000)
     } catch (error) {
       console.error(error)
-      alert(`No se pudo guardar el proyecto:\n\n${error.message}`)
+
+      alert(
+        `No se pudo guardar el proyecto.\n\n${error.message}`
+      )
     } finally {
       setGuardando(false)
     }
   }
 
   async function eliminar(id) {
-    if (!confirm('¿Eliminar este proyecto? Esta acción no se puede deshacer.')) {
-      return
-    }
+    if (!usuario) return
+
+    const confirmado = confirm(
+      '¿Eliminar este proyecto? Esta acción no se puede deshacer.'
+    )
+
+    if (!confirmado) return
+
+    setGuardando(true)
 
     try {
-      await eliminarProyecto(id)
+      const { error } = await supabase
+        .from('proyectos')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', usuario.id)
+
+      if (error) throw error
 
       setProyectos((prev) => prev.filter((p) => p.id !== id))
       setEditando(null)
+
+      setAviso('Proyecto eliminado.')
+      setTimeout(() => setAviso(''), 3000)
     } catch (error) {
       console.error(error)
-      alert(`No se pudo eliminar el proyecto:\n\n${error.message}`)
+
+      alert(
+        `No se pudo eliminar el proyecto.\n\n${error.message}`
+      )
+    } finally {
+      setGuardando(false)
     }
   }
 
@@ -181,8 +290,8 @@ export default function App() {
       const datos = await importarJSON(file)
 
       const confirmado = confirm(
-        `Se han encontrado ${datos.length} proyecto(s) en el archivo. ` +
-          `Se añadirán a tus proyectos actuales en la base de datos. ¿Continuar?`
+        `Se han encontrado ${datos.length} proyecto(s) en el archivo.\n\n` +
+          'Se añadirán a la base de datos. ¿Continuar?'
       )
 
       if (!confirmado) return
@@ -190,20 +299,30 @@ export default function App() {
       setGuardando(true)
 
       for (const proyecto of datos) {
-        await guardarProyecto(proyecto)
+        const fila = proyectoParaBD(proyecto, usuario.id)
+
+        const { error } = await supabase
+          .from('proyectos')
+          .upsert(fila)
+
+        if (error) throw error
       }
 
-      const actualizados = await cargarProyectos()
+      const actualizados = await cargarDesdeSupabase(usuario)
+
       setProyectos(actualizados)
 
-      setAvisoImport(
+      setAviso(
         `Importados ${datos.length} proyecto(s) correctamente.`
       )
 
-      setTimeout(() => setAvisoImport(''), 4000)
+      setTimeout(() => setAviso(''), 4000)
     } catch (error) {
       console.error(error)
-      alert(`No se pudieron importar los proyectos:\n\n${error.message}`)
+
+      alert(
+        `No se pudieron importar los proyectos.\n\n${error.message}`
+      )
     } finally {
       setGuardando(false)
     }
@@ -225,4 +344,250 @@ export default function App() {
     return (
       <div className="app">
         <div className="empty">
-          <h3 className="serif">Cargando...</
+          <h3 className="serif">Cargando...</h3>
+          <p>Conectando con la base de datos.</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!usuario) {
+    return (
+      <div className="app">
+        <div
+          style={{
+            maxWidth: '420px',
+            margin: '80px auto',
+          }}
+        >
+          <p className="eyebrow">Panel de estudio</p>
+
+          <h1 className="serif">
+            Proyectos de interiorismo
+          </h1>
+
+          <hr className="rule" />
+
+          <form onSubmit={iniciarSesion}>
+            <label
+              style={{
+                display: 'block',
+                marginBottom: '8px',
+                fontSize: '13px',
+              }}
+            >
+              Email
+            </label>
+
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              required
+              style={{
+                width: '100%',
+                boxSizing: 'border-box',
+                padding: '12px 14px',
+                marginBottom: '18px',
+                border: '1px solid #ccc',
+                borderRadius: '6px',
+                fontSize: '15px',
+              }}
+            />
+
+            <label
+              style={{
+                display: 'block',
+                marginBottom: '8px',
+                fontSize: '13px',
+              }}
+            >
+              Contraseña
+            </label>
+
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+              style={{
+                width: '100%',
+                boxSizing: 'border-box',
+                padding: '12px 14px',
+                marginBottom: '18px',
+                border: '1px solid #ccc',
+                borderRadius: '6px',
+                fontSize: '15px',
+              }}
+            />
+
+            {errorLogin && (
+              <p
+                style={{
+                  color: '#b42318',
+                  fontSize: '13px',
+                  marginBottom: '16px',
+                }}
+              >
+                {errorLogin}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={cargando}
+              style={{ width: '100%' }}
+            >
+              Entrar
+            </button>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="app">
+      <div className="topbar">
+        <div>
+          <p className="eyebrow">Panel de estudio</p>
+
+          <h1 className="serif">
+            Proyectos de interiorismo
+          </h1>
+        </div>
+
+        <div className="top-actions">
+          <button
+            className="btn"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={guardando}
+          >
+            Importar
+          </button>
+
+          <button
+            className="btn"
+            onClick={() => exportarJSON(proyectos)}
+            disabled={guardando}
+          >
+            Exportar copia
+          </button>
+
+          <button
+            className="btn btn-primary"
+            onClick={abrirNuevo}
+            disabled={guardando}
+          >
+            + Nuevo proyecto
+          </button>
+
+          <button
+            className="btn"
+            onClick={cerrarSesion}
+            disabled={guardando}
+          >
+            Salir
+          </button>
+        </div>
+      </div>
+
+      <input
+        type="file"
+        accept="application/json"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleImportFile}
+      />
+
+      {aviso && (
+        <p
+          className="mono"
+          style={{
+            fontSize: '12.5px',
+            color: 'var(--accent)',
+            margin: '8px 0 0',
+          }}
+        >
+          {aviso}
+        </p>
+      )}
+
+      {guardando && (
+        <p
+          className="mono"
+          style={{
+            fontSize: '12.5px',
+            color: 'var(--accent)',
+            margin: '8px 0 0',
+          }}
+        >
+          Guardando...
+        </p>
+      )}
+
+      <hr className="rule" />
+
+      <div className="filters">
+        <button
+          className={'chip' + (filtro === 'Todos' ? ' active' : '')}
+          onClick={() => setFiltro('Todos')}
+        >
+          Todos ({proyectos.length})
+        </button>
+
+        {FASES.map((fase) => (
+          <button
+            key={fase}
+            className={
+              'chip' + (filtro === fase ? ' active' : '')
+            }
+            onClick={() => setFiltro(fase)}
+          >
+            {fase} (
+            {proyectos.filter((p) => p.fase === fase).length}
+            )
+          </button>
+        ))}
+      </div>
+
+      {proyectosOrdenados.length === 0 ? (
+        <div className="empty">
+          <h3 className="serif">
+            {proyectos.length === 0
+              ? 'Todavía no hay proyectos'
+              : 'Ningún proyecto en esta fase'}
+          </h3>
+
+          <p>
+            {proyectos.length === 0
+              ? 'Crea el primero para empezar a ver el estado de tu estudio de un vistazo.'
+              : 'Prueba con otro filtro o crea un proyecto nuevo.'}
+          </p>
+        </div>
+      ) : (
+        <div className="grid">
+          {proyectosOrdenados.map((proyecto) => (
+            <ProjectCard
+              key={proyecto.id}
+              proyecto={proyecto}
+              onOpen={() => abrirExistente(proyecto)}
+            />
+          ))}
+        </div>
+      )}
+
+      {editando && (
+        <ProjectModal
+          proyecto={editando}
+          onSave={guardar}
+          onDelete={eliminar}
+          onClose={() => setEditando(null)}
+        />
+      )}
+    </div>
+  )
+}
