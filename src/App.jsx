@@ -352,7 +352,7 @@ if (mostrarEntrada) {
   return (
     <div className="splash">
       <img
-        src="./icon-180.png"
+        src="/afuenteto/icon-180.png"
         alt="Proyectos de interiorismo"
         className="splash-logo"
       />
@@ -389,7 +389,7 @@ if (mostrarEntrada) {
             }}
           >
             <img
-              src="./icon-180.png"
+              src="/afuenteto/icon-180.png"
               alt="Proyectos de interiorismo"
               style={{
                 width: '72px',
@@ -504,7 +504,7 @@ if (mostrarEntrada) {
 
           {/* ICONO PEQUEÑO */}
           <img
-            src="./icon-180.png"
+            src="/afuenteto/icon-180.png"
             alt="Proyectos de interiorismo"
             style={{
               width: '42px',
