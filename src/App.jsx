@@ -70,6 +70,15 @@ export default function App() {
   const [guardando, setGuardando] = useState(false)
   const [aviso, setAviso] = useState('')
   const fileInputRef = useRef(null)
+  const [mostrarEntrada, setMostrarEntrada] = useState(true)
+
+useEffect(() => {
+  const temporizador = setTimeout(() => {
+    setMostrarEntrada(false)
+  }, 1500)
+
+  return () => clearTimeout(temporizador)
+}, [])
 
   async function cargarDesdeSupabase(user) {
     const { data, error } = await supabase
@@ -339,7 +348,17 @@ export default function App() {
 
     return a.fechaEntrega.localeCompare(b.fechaEntrega)
   })
-
+if (mostrarEntrada) {
+  return (
+    <div className="splash">
+      <img
+        src="./icon-180.png"
+        alt="Proyectos de interiorismo"
+        className="splash-logo"
+      />
+    </div>
+  )
+}
   if (cargando) {
     return (
       <div className="app">
