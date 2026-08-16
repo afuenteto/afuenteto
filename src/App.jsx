@@ -373,7 +373,7 @@ export default function App() {
         >
           <img
             src={ICONO}
-            alt="Proyectos de Interiorismo"
+            alt=";)"
             style={{
               width: '180px',
               height: '180px',
