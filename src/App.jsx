@@ -357,11 +357,6 @@ export default function App() {
           className="splash-logo"
           alt=""
         />
-        <img
-          src="/afuenteto/icon-180.png"
-          className="app-logo"
-          alt=""
-        />
       </div>
     )
   }
