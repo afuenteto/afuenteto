@@ -9,8 +9,6 @@ import {
   importarJSON,
 } from './storage.js'
 
-import ICONO from './icon-180.png'
-
 function proyectoDesdeBD(row) {
   return {
     id: row.id,
@@ -61,8 +59,6 @@ function proyectoParaBD(proyecto, userId) {
 }
 
 export default function App() {
-  const [mostrarSplash, setMostrarSplash] = useState(true)
-
   const [usuario, setUsuario] = useState(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -73,16 +69,7 @@ export default function App() {
   const [filtro, setFiltro] = useState('Todos')
   const [guardando, setGuardando] = useState(false)
   const [aviso, setAviso] = useState('')
-
   const fileInputRef = useRef(null)
-
-  useEffect(() => {
-    const temporizador = setTimeout(() => {
-      setMostrarSplash(false)
-    }, 1800)
-
-    return () => clearTimeout(temporizador)
-  }, [])
 
   async function cargarDesdeSupabase(user) {
     const { data, error } = await supabase
@@ -249,7 +236,9 @@ export default function App() {
     } catch (error) {
       console.error(error)
 
-      alert(`No se pudo guardar el proyecto.\n\n${error.message}`)
+      alert(
+        `No se pudo guardar el proyecto.\n\n${error.message}`
+      )
     } finally {
       setGuardando(false)
     }
@@ -283,7 +272,9 @@ export default function App() {
     } catch (error) {
       console.error(error)
 
-      alert(`No se pudo eliminar el proyecto.\n\n${error.message}`)
+      alert(
+        `No se pudo eliminar el proyecto.\n\n${error.message}`
+      )
     } finally {
       setGuardando(false)
     }
@@ -349,94 +340,26 @@ export default function App() {
     return a.fechaEntrega.localeCompare(b.fechaEntrega)
   })
 
-  /* ---------- PANTALLA INICIAL ---------- */
-
-  if (mostrarSplash) {
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          background: '#f5c400',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999,
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            textAlign: 'center',
-            animation: 'entradaIcono 1.4s ease-out forwards',
-          }}
-        >
-          <img
-            src={ICONO}
-            alt=";)"
-            style={{
-              width: '180px',
-              height: '180px',
-              objectFit: 'cover',
-              display: 'block',
-              borderRadius: '28px',
-              boxShadow: '0 18px 50px rgba(0,0,0,0.20)',
-            }}
-          />
-
-          <div
-            style={{
-              marginTop: '22px',
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '13px',
-              fontWeight: 600,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: '#171717',
-            }}
-          >
-            Proyectos de Interiorismo
-          </div>
-        </div>
-
-        <style>
-          {`
-            @keyframes entradaIcono {
-              0% {
-                opacity: 0;
-                transform: scale(0.82);
-              }
-
-              60% {
-                opacity: 1;
-                transform: scale(1.04);
-              }
-
-              100% {
-                opacity: 1;
-                transform: scale(1);
-              }
-            }
-          `}
-        </style>
-      </div>
-    )
-  }
-
-  /* ---------- CARGANDO ---------- */
-
+  /*
+   * PANTALLA DE ENTRADA
+   *
+   * Solo aparece el icono.
+   * No hay título ni subtítulo.
+   *
+   * La ruta corresponde al icono que ya tienes
+   * dentro de la carpeta assets.
+   */
   if (cargando) {
     return (
-      <div className="app">
-        <div className="empty">
-          <h3 className="serif">Cargando...</h3>
-          <p>Conectando con la base de datos.</p>
-        </div>
+      <div className="splash">
+        <img
+          src="/assets/icon-512.png"
+          className="splash-logo"
+          alt=""
+        />
       </div>
     )
   }
-
-  /* ---------- LOGIN ---------- */
 
   if (!usuario) {
     return (
@@ -444,45 +367,14 @@ export default function App() {
         <div
           style={{
             maxWidth: '420px',
-            margin: '60px auto',
+            margin: '80px auto',
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '14px',
-              marginBottom: '24px',
-            }}
-          >
-            <img
-              src={ICONO}
-              alt=""
-              style={{
-                width: '58px',
-                height: '58px',
-                objectFit: 'cover',
-                borderRadius: '12px',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.12)',
-              }}
-            />
+          <p className="eyebrow">Panel de estudio</p>
 
-            <div>
-              <p className="eyebrow" style={{ margin: 0 }}>
-                Panel de estudio
-              </p>
-
-              <h1
-                className="serif"
-                style={{
-                  margin: '3px 0 0',
-                  fontSize: '25px',
-                }}
-              >
-                Proyectos
-              </h1>
-            </div>
-          </div>
+          <h1 className="serif">
+            Proyectos de interiorismo
+          </h1>
 
           <hr className="rule" />
 
@@ -567,43 +459,15 @@ export default function App() {
     )
   }
 
-  /* ---------- APLICACIÓN ---------- */
-
   return (
     <div className="app">
       <div className="topbar">
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-          }}
-        >
-          <img
-            src={ICONO}
-            alt="Logo"
-            style={{
-              width: '42px',
-              height: '42px',
-              objectFit: 'cover',
-              borderRadius: '9px',
-              flexShrink: 0,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
-            }}
-          />
+        <div>
+          <p className="eyebrow">Panel de estudio</p>
 
-          <div>
-            <p className="eyebrow">Panel de estudio</p>
-
-            <h1
-              className="serif"
-              style={{
-                margin: 0,
-              }}
-            >
-              Proyectos de interiorismo
-            </h1>
-          </div>
+          <h1 className="serif">
+            Proyectos de interiorismo
+          </h1>
         </div>
 
         <div className="top-actions">
