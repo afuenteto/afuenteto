@@ -377,7 +377,7 @@ useEffect(() => {
             margin: '80px auto',
           }}
         >
-          <p className="eyebrow">Panel de estudio</p>
+          <p className="eyebrow">AF</p>
 
           <h1 className="serif">
             Proyectos de interiorismo
