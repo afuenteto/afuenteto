@@ -1062,3 +1062,7 @@ a {
     animation: none;
   }
 }
+.splash-title,
+.splash-subtitle {
+  display: none !important;
+}
