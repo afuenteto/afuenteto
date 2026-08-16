@@ -120,13 +120,7 @@ export default function App() {
         }
       }
     }
-useEffect(() => {
-  const timer = setTimeout(() => {
-    setSplash(false)
-  }, 1600)
 
-  return () => clearTimeout(timer)
-}, [])
     iniciar()
 
     const {
