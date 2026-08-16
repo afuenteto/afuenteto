@@ -60,6 +60,7 @@ function proyectoParaBD(proyecto, userId) {
 
 export default function App() {
   const [usuario, setUsuario] = useState(null)
+  const [splash, setSplash] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorLogin, setErrorLogin] = useState('')
@@ -150,7 +151,13 @@ export default function App() {
       subscription.unsubscribe()
     }
   }, [])
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setSplash(false)
+  }, 1600)
 
+  return () => clearTimeout(timer)
+}, [])
   async function iniciarSesion(e) {
     e.preventDefault()
 
