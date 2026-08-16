@@ -487,7 +487,9 @@ a {
   .card-head h3,
 .card-head h3 a {
   color: #7a1f1f;
-  text-decoration: none;
+  background: #fff3a6;
+  padding: 6px 10px;
+  border-radius: 8px;
 }
 }
 
