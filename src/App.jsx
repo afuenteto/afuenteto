@@ -353,8 +353,13 @@ export default function App() {
     return (
       <div className="splash">
         <img
-          src="/assets/icon-512.png"
+          src="/afuenteto/icon-512.png"
           className="splash-logo"
+          alt=""
+        />
+        <img
+          src="/afuenteto/icon-180.png"
+          className="app-logo"
           alt=""
         />
       </div>
