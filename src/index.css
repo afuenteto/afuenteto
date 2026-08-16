@@ -2,16 +2,18 @@
   --bg: #f6f5f1;
   --surface: #ffffff;
   --surface-soft: #faf9f6;
+
   --ink: #171717;
   --ink-soft: #6f6f6b;
   --ink-faint: #a2a29c;
 
-  /* Amarillo principal del icono */
+  /* Amarillo del icono */
   --accent: #ffd400;
   --accent-soft: #fff3a6;
   --accent-hover: #e8c000;
 
   --line: #e4e3de;
+
   --alert: #c43d32;
   --alert-soft: #f9e1de;
 
@@ -23,7 +25,9 @@
     0 8px 30px rgba(0, 0, 0, 0.05);
 }
 
-/* ---------- Base ---------- */
+/* =========================================================
+   BASE
+   ========================================================= */
 
 * {
   box-sizing: border-box;
@@ -37,26 +41,38 @@ body,
 
 body {
   margin: 0;
+
   background: var(--bg);
   color: var(--ink);
+
   font-family:
     'Inter',
     -apple-system,
     BlinkMacSystemFont,
     'Helvetica Neue',
+    Arial,
     sans-serif;
+
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 h1,
 h2,
 h3,
+h4,
+h5,
+h6,
 .serif {
   font-family:
-    'Fraunces',
-    Georgia,
-    serif;
-  font-weight: 500;
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+
+  font-weight: 600;
   letter-spacing: -0.025em;
 }
 
@@ -67,9 +83,19 @@ h3,
     monospace;
 }
 
-button {
+button,
+input,
+select,
+textarea {
   font-family: inherit;
+}
+
+button {
   cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
 }
 
 a {
@@ -88,92 +114,88 @@ a {
 .splash {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+
+  z-index: 9999;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: var(--accent);
+  background: var(--bg);
 
-  animation: splash-out 0.7s ease 1.6s forwards;
+  animation: splashFade 1.5s ease forwards;
 }
 
 .splash-inner {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-
-  animation: splash-in 0.8s ease both;
+  justify-content: center;
 }
 
+/* ÚNICAMENTE EL ICONO */
+
 .splash-logo {
-  width: 170px;
-  height: 170px;
+  display: block;
+
+  width: 150px;
+  height: 150px;
+
   object-fit: cover;
 
   border-radius: 18px;
 
   box-shadow:
-    0 12px 35px rgba(0, 0, 0, 0.18);
+    0 12px 35px rgba(0, 0, 0, 0.16);
 
-  animation: logo-in 0.7s cubic-bezier(.2, .8, .2, 1) both;
+  animation:
+    splashLogo 1.5s
+    cubic-bezier(.2, .8, .2, 1)
+    forwards;
 }
 
-.splash-title {
-  margin: 22px 0 0;
+/* Ocultar cualquier texto que pudiera existir */
 
-  color: #171717;
-
-  font-family:
-    'Inter',
-    sans-serif;
-
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
+.splash-title,
 .splash-subtitle {
-  margin: 7px 0 0;
-
-  color: rgba(23, 23, 23, 0.65);
-
-  font-size: 12px;
-  letter-spacing: 0.04em;
+  display: none !important;
 }
 
-@keyframes splash-in {
-  from {
+/* ---------- Animación icono ---------- */
+
+@keyframes splashLogo {
+  0% {
     opacity: 0;
+    transform: scale(0.85);
   }
 
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes logo-in {
-  from {
-    opacity: 0;
-    transform: scale(0.88);
-  }
-
-  to {
+  25% {
     opacity: 1;
     transform: scale(1);
   }
-}
 
-@keyframes splash-out {
-  from {
+  75% {
     opacity: 1;
-    visibility: visible;
+    transform: scale(1);
   }
 
-  to {
+  100% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+/* ---------- Desaparición pantalla ---------- */
+
+@keyframes splashFade {
+  0% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -181,7 +203,7 @@ a {
 }
 
 /* =========================================================
-   LAYOUT PRINCIPAL
+   APLICACIÓN
    ========================================================= */
 
 .app {
@@ -193,7 +215,9 @@ a {
   padding: 34px 26px 100px;
 }
 
-/* ---------- Cabecera ---------- */
+/* =========================================================
+   CABECERA
+   ========================================================= */
 
 .topbar {
   display: flex;
@@ -208,31 +232,38 @@ a {
 .topbar > div:first-child {
   display: flex;
   align-items: center;
+
   gap: 13px;
 }
 
 .topbar h1 {
   margin: 0;
 
-  font-size: 29px;
+  font-size: 28px;
   line-height: 1.1;
+
+  font-weight: 600;
 }
 
 .topbar .eyebrow {
   margin: 0 0 4px;
 
   font-family:
-    'IBM Plex Mono',
-    monospace;
+    'Inter',
+    sans-serif;
 
   font-size: 10px;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 
   color: var(--ink-soft);
 }
 
-/* Icono pequeño de la aplicación */
+/* =========================================================
+   ICONO PEQUEÑO DE LA APP
+   ========================================================= */
 
 .app-logo {
   width: 42px;
@@ -245,15 +276,21 @@ a {
   flex-shrink: 0;
 }
 
-/* ---------- Acciones ---------- */
+/* =========================================================
+   ACCIONES
+   ========================================================= */
 
 .top-actions {
   display: flex;
+
   gap: 8px;
+
   align-items: center;
 }
 
-/* ---------- Línea ---------- */
+/* =========================================================
+   LÍNEA
+   ========================================================= */
 
 .rule {
   border: none;
@@ -289,6 +326,7 @@ a {
 
 .btn:hover {
   border-color: #c8c8c2;
+
   background: #fdfdfb;
 }
 
@@ -298,6 +336,7 @@ a {
 
 .btn-primary {
   background: var(--ink);
+
   border-color: var(--ink);
 
   color: #fff;
@@ -305,11 +344,13 @@ a {
 
 .btn-primary:hover {
   background: #2c2c2c;
+
   border-color: #2c2c2c;
 }
 
 .btn-ghost {
   border-color: transparent;
+
   background: transparent;
 
   color: var(--ink-soft);
@@ -317,6 +358,7 @@ a {
 
 .btn-ghost:hover {
   background: #eeeeea;
+
   color: var(--ink);
 }
 
@@ -326,6 +368,7 @@ a {
 
 .btn-sm {
   padding: 6px 10px;
+
   font-size: 12px;
 }
 
@@ -335,6 +378,7 @@ a {
 
 .filters {
   display: flex;
+
   gap: 7px;
 
   margin-bottom: 22px;
@@ -352,6 +396,7 @@ a {
   border-radius: 100px;
 
   font-size: 12px;
+  font-weight: 500;
 
   color: var(--ink-soft);
 
@@ -363,11 +408,13 @@ a {
 
 .chip:hover {
   border-color: #c9c9c3;
+
   color: var(--ink);
 }
 
 .chip.active {
   background: var(--ink);
+
   border-color: var(--ink);
 
   color: #fff;
@@ -432,7 +479,9 @@ a {
 .card-head h3 {
   margin: 0 0 4px;
 
-  font-size: 19px;
+  font-size: 18px;
+
+  font-weight: 600;
 }
 
 .card-client {
@@ -445,10 +494,12 @@ a {
 
 .tag-urgent {
   font-family:
-    'IBM Plex Mono',
-    monospace;
+    'Inter',
+    sans-serif;
 
   font-size: 10px;
+
+  font-weight: 600;
 
   letter-spacing: 0.04em;
 
@@ -566,10 +617,12 @@ a {
   text-align: center;
 
   font-family:
-    'IBM Plex Mono',
-    monospace;
+    'Inter',
+    sans-serif;
 
   font-size: 9px;
+
+  font-weight: 500;
 
   letter-spacing: 0.02em;
 
@@ -589,7 +642,7 @@ a {
 .phase-labels span.active {
   color: var(--ink);
 
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* =========================================================
@@ -670,7 +723,9 @@ a {
 
   color: var(--ink);
 
-  font-size: 22px;
+  font-size: 21px;
+
+  font-weight: 600;
 }
 
 /* =========================================================
@@ -687,6 +742,7 @@ a {
   display: flex;
 
   align-items: flex-start;
+
   justify-content: center;
 
   padding: 40px 16px;
@@ -700,6 +756,7 @@ a {
 
 .modal {
   width: 100%;
+
   max-width: 620px;
 
   padding: 28px;
@@ -716,6 +773,7 @@ a {
   display: flex;
 
   justify-content: space-between;
+
   align-items: center;
 
   margin-bottom: 20px;
@@ -724,10 +782,14 @@ a {
 .modal-head h2 {
   margin: 0;
 
-  font-size: 22px;
+  font-size: 21px;
+
+  font-weight: 600;
 }
 
-/* ---------- Campos ---------- */
+/* =========================================================
+   CAMPOS
+   ========================================================= */
 
 .field-row {
   display: grid;
@@ -751,6 +813,8 @@ a {
 
 .field label {
   font-size: 10.5px;
+
+  font-weight: 600;
 
   text-transform: uppercase;
 
@@ -800,7 +864,9 @@ a {
   min-height: 70px;
 }
 
-/* ---------- Secciones ---------- */
+/* =========================================================
+   SECCIONES
+   ========================================================= */
 
 .section-label {
   display: flex;
@@ -812,10 +878,12 @@ a {
   margin: 24px 0 11px;
 
   font-family:
-    'IBM Plex Mono',
-    monospace;
+    'Inter',
+    sans-serif;
 
   font-size: 10px;
+
+  font-weight: 600;
 
   letter-spacing: 0.08em;
 
@@ -834,7 +902,9 @@ a {
   background: var(--line);
 }
 
-/* ---------- Listas ---------- */
+/* =========================================================
+   LISTAS
+   ========================================================= */
 
 .list-row {
   display: flex;
@@ -903,7 +973,9 @@ a {
   background: var(--alert-soft);
 }
 
-/* ---------- Acciones modal ---------- */
+/* =========================================================
+   ACCIONES DEL MODAL
+   ========================================================= */
 
 .modal-actions {
   display: flex;
@@ -977,74 +1049,16 @@ a {
     width: 145px;
     height: 145px;
   }
-
-  .splash-title {
-    font-size: 15px;
-  }
 }
 
-/* Respeta usuarios que prefieren menos animación */
+/* =========================================================
+   MENOS ANIMACIÓN
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   .splash,
   .splash-inner,
   .splash-logo {
     animation: none;
-  }
-}
-/* ---------- Pantalla de entrada ---------- */
-
-.splash {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg);
-  z-index: 9999;
-  animation: splashFade 1.5s ease forwards;
-}
-
-.splash-logo {
-  width: 150px;
-  height: 150px;
-  object-fit: contain;
-  animation: splashLogo 1.5s ease forwards;
-}
-
-@keyframes splashLogo {
-  0% {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-
-  25% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  75% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  100% {
-    opacity: 0;
-    transform: scale(1.04);
-  }
-}
-
-@keyframes splashFade {
-  0% {
-    opacity: 1;
-  }
-
-  75% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    pointer-events: none;
   }
 }
