@@ -482,6 +482,13 @@ a {
   font-size: 18px;
 
   font-weight: 600;
+  
+  color: #7a1f1f;
+  .card-head h3,
+.card-head h3 a {
+  color: #7a1f1f;
+  text-decoration: none;
+}
 }
 
 .card-client {
