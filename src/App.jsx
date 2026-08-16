@@ -468,14 +468,22 @@ useEffect(() => {
 
   return (
     <div className="app">
-      <div className="topbar">
-        <div>
-          <p className="eyebrow">Panel de estudio</p>
+     <div className="topbar">
+  <div className="brand">
+    <img
+      src="/afuenteto/icon-180.png"
+      className="app-logo"
+      alt=""
+    />
 
-          <h1 className="serif">
-            Proyectos de interiorismo
-          </h1>
-        </div>
+    <div>
+      <p className="eyebrow">Panel de estudio</p>
+
+      <h1 className="serif">
+        Proyectos de interiorismo
+      </h1>
+    </div>
+  </div>
 
         <div className="top-actions">
           <button
