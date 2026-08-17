@@ -6,14 +6,6 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
   if (!proyecto.direccion) return
 
   const direccion = encodeURIComponent(proyecto.direccion)
-<button
-  type="button"
-  className="btn"
-  onClick={abrirMaps}
-  disabled={!proyecto.direccion}
->
-  📍 Abrir en Maps
-</button>
   window.open(
     `https://www.google.com/maps/search/?api=1&query=${direccion}`,
     '_blank'
@@ -113,6 +105,14 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
           <div className="field">
             <label htmlFor="direccion">Dirección / ubicación</label>
             <input id="direccion" type="text" value={datos.direccion} onChange={(e) => set('direccion', e.target.value)} />
+            <button
+  type="button"
+  className="btn"
+  onClick={abrirMaps}
+  disabled={!proyecto.direccion}
+>
+  📍 Abrir en Maps
+</button>
           </div>
         </div>
 
