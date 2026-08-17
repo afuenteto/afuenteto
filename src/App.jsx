@@ -22,6 +22,7 @@ function proyectoDesdeBD(row) {
     fase: row.fase || FASES[0],
     presupuestoTotal: row.presupuesto_total ?? '',
     presupuestoGastado: row.presupuesto_gastado ?? '',
+    presupuestoPdf: row.presupuesto_pdf || '',
     notas: row.notas || '',
     tareas: Array.isArray(row.tareas) ? row.tareas : [],
     proveedores: Array.isArray(row.proveedores) ? row.proveedores : [],
@@ -46,6 +47,7 @@ function proyectoParaBD(proyecto, userId) {
         ? null
         : Number(proyecto.presupuestoTotal),
     presupuesto_gastado:
+      presupuesto_pdf: proyecto.presupuestoPdf || null,
       proyecto.presupuestoGastado === '' ||
       proyecto.presupuestoGastado === null
         ? null
