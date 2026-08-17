@@ -352,6 +352,13 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
   style={{ display: 'none' }}
   onChange={importarContacto}
 />
+           <input
+  type="file"
+  accept="application/pdf"
+  id="pdfPresupuesto"
+  style={{ display: 'none' }}
+  onChange={subirPresupuesto}
+/>
             <button type="submit" className="btn btn-primary">
               Guardar
             </button>
