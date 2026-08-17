@@ -2,6 +2,23 @@ import { useState } from 'react'
 import { FASES, uid } from '../storage.js'
 
 export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
+  function abrirMaps() {
+  if (!proyecto.direccion) return
+
+  const direccion = encodeURIComponent(proyecto.direccion)
+<button
+  type="button"
+  className="btn"
+  onClick={abrirMaps}
+  disabled={!proyecto.direccion}
+>
+  📍 Abrir en Maps
+</button>
+  window.open(
+    `https://www.google.com/maps/search/?api=1&query=${direccion}`,
+    '_blank'
+  )
+}
   const [datos, setDatos] = useState(proyecto)
   const [nuevaTarea, setNuevaTarea] = useState('')
   const [nuevoProveedor, setNuevoProveedor] = useState('')
