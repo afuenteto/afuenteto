@@ -140,7 +140,7 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <form className="modal" onSubmit={handleSubmit}>
         <div className="modal-head">
-          <h2 className="serif">PRUEBA{esNuevo ? 'Nuevo proyecto' : datos.nombre || 'Editar proyecto'}</h2>
+          <h2 className="serif">PRUEBA{esNuevo ? 'Nuevo proyecto PRUEBA' : datos.nombre || 'Editar proyecto'}</h2>
           <button type="button" className="icon-btn" onClick={onClose} aria-label="Cerrar">
             ✕
           </button>
