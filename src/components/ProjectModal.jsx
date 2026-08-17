@@ -244,6 +244,15 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
               value={datos.presupuestoGastado}
               onChange={(e) => set('presupuestoGastado', e.target.value)}
             />
+           <button
+  type="button"
+  className="btn"
+  onClick={() =>
+    document.getElementById('pdfPresupuesto').click()
+  }
+>
+  📎 Subir presupuesto PDF
+</button>
           </div>
         </div>
 
