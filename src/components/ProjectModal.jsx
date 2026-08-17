@@ -244,18 +244,33 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
               value={datos.presupuestoGastado}
               onChange={(e) => set('presupuestoGastado', e.target.value)}
             />
-           <button
-  type="button"
-  className="btn"
-  onClick={() =>
-    document.getElementById('pdfPresupuesto').click()
-  }
->
-  📎 Subir presupuesto PDF
-</button>
           </div>
         </div>
+<div className="field">
+  <label>Presupuesto</label>
 
+  <button
+    type="button"
+    className="btn"
+    onClick={() =>
+      document.getElementById('pdfPresupuesto').click()
+    }
+  >
+    📎 Subir presupuesto PDF
+  </button>
+
+  {datos.presupuestoPdf && (
+    <a
+      href={datos.presupuestoPdf}
+      target="_blank"
+      rel="noreferrer"
+      className="btn"
+      style={{ marginTop: '8px' }}
+    >
+      📄 Ver presupuesto
+    </a>
+  )}
+</div>
         <div className="section-label">Tareas</div>
         {datos.tareas.map((t) => (
           <div className="list-row" key={t.id}>
