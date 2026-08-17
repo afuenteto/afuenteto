@@ -4,43 +4,7 @@ import { FASES, uid } from '../storage.js'
 export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
  const contactoInputRef = useRef(null)
  function abrirMaps() {
-  function importarContacto(e) {
-  const file = e.target.files?.[0]
-
-  if (!file) return
-
-  const reader = new FileReader()
-
-  reader.onload = () => {
-    const texto = reader.result
-
-    const nombre =
-      texto.match(/FN:(.*)/)?.[1] || ''
-
-    const telefono =
-      texto.match(/TEL[^:]*:(.*)/)?.[1] || ''
-
-    const email =
-      texto.match(/EMAIL[^:]*:(.*)/)?.[1] || ''
-
-    const direccion =
-      texto.match(/ADR[^:]*:(.*)/)?.[1]
-        ?.replace(/;/g, ' ')
-        || ''
-
-    setDatos((d) => ({
-      ...d,
-      cliente: nombre,
-      telefono,
-      email,
-      direccion,
-    }))
-  }
-
-  reader.readAsText(file)
-
-  e.target.value = ''
-}
+ 
   if (!datos.direccion) return
 
   const direccion = encodeURIComponent(datos.direccion)
