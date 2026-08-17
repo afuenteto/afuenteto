@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { FASES, uid } from '../storage.js'
 
 export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
-  function abrirMaps() {
-  if (!proyecto.direccion) return
+ function abrirMaps() {
+  if (!datos.direccion) return
 
-  const direccion = encodeURIComponent(proyecto.direccion)
+  const direccion = encodeURIComponent(datos.direccion)
+
   window.open(
     `https://www.google.com/maps/search/?api=1&query=${direccion}`,
     '_blank'
