@@ -105,11 +105,11 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
           <div className="field">
             <label htmlFor="direccion">Dirección / ubicación</label>
             <input id="direccion" type="text" value={datos.direccion} onChange={(e) => set('direccion', e.target.value)} />
-            <button
+           <button
   type="button"
   className="btn"
   onClick={abrirMaps}
-  disabled={!proyecto.direccion}
+  disabled={!datos.direccion}
 >
   📍 Abrir en Maps
 </button>
