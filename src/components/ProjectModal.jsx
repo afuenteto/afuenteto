@@ -53,6 +53,37 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
     '_blank'
   )
 }
+ async function subirPresupuesto(e) {
+  const file = e.target.files?.[0]
+
+  if (!file) return
+
+  if (file.type !== 'application/pdf') {
+    alert('Selecciona un archivo PDF')
+    return
+  }
+
+  const nombreArchivo = `${datos.id}-${Date.now()}-${file.name}`
+
+  const { error } = await supabase.storage
+    .from('presupuestos')
+    .upload(nombreArchivo, file)
+
+  if (error) {
+    console.error(error)
+    alert('No se pudo subir el PDF')
+    return
+  }
+
+  const { data } = supabase.storage
+    .from('presupuestos')
+    .getPublicUrl(nombreArchivo)
+
+  setDatos((d) => ({
+    ...d,
+    presupuestoPdf: data.publicUrl,
+  }))
+}
   const [datos, setDatos] = useState(proyecto)
   const [nuevaTarea, setNuevaTarea] = useState('')
   const [nuevoProveedor, setNuevoProveedor] = useState('')
