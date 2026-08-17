@@ -274,23 +274,19 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
             <button type="button" className="btn btn-ghost" onClick={onClose}>
               Cancelar
             </button>
-           <input
+          <input
   ref={contactoInputRef}
   type="file"
   accept=".vcf"
   style={{ display: 'none' }}
+  onChange={importarContacto}
 />
             <button type="submit" className="btn btn-primary">
               Guardar
             </button>
           </div>
         </div>
-       <input
-  ref={contactoInputRef}
-  type="file"
-  accept=".vcf"
-  style={{ display: 'none' }}
-/>
+     
       </form>
     </div>
   )
