@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { FASES, uid } from '../storage.js'
+import { supabase } from '../supabase.js'
 
 export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
  const contactoInputRef = useRef(null)
