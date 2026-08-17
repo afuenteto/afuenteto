@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { FASES, uid } from '../storage.js'
 
 export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
+ const contactoInputRef = useRef(null)
  function abrirMaps() {
   if (!datos.direccion) return
 
@@ -90,7 +91,15 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
         <div className="field-row">
           <div className="field">
             <label htmlFor="cliente">Cliente / contacto</label>
-            <input id="cliente" type="text" value={datos.cliente} onChange={(e) => set('cliente', e.target.value)} />
+            <input 
+             <button
+  type="button"
+  className="btn"
+  onClick={() => contactoInputRef.current?.click()}
+>
+  👤 Importar contacto
+</button>
+           id="cliente" type="text" value={datos.cliente} onChange={(e) => set('cliente', e.target.value)} />
           </div>
           <div className="field">
             <label htmlFor="telefono">Teléfono</label>
@@ -265,6 +274,12 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
             <button type="button" className="btn btn-ghost" onClick={onClose}>
               Cancelar
             </button>
+           <input
+  ref={contactoInputRef}
+  type="file"
+  accept=".vcf"
+  style={{ display: 'none' }}
+/>
             <button type="submit" className="btn btn-primary">
               Guardar
             </button>
