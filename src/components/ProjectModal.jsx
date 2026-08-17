@@ -285,6 +285,12 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
             </button>
           </div>
         </div>
+       <input
+  ref={contactoInputRef}
+  type="file"
+  accept=".vcf"
+  style={{ display: 'none' }}
+/>
       </form>
     </div>
   )
