@@ -141,7 +141,7 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
       <form className="modal" onSubmit={handleSubmit}>
         <div className="modal-head">
          <p style={{color:"red", fontSize:"20px"}}>
-  ESTOY EN ESTE ARCHIVO
+  ESTOY EN ESTE ARCHIVO 12345
 </p>
           <h2 className="serif">PRUEBA{esNuevo ? 'Nuevo proyecto PRUEBA' : datos.nombre || 'Editar proyecto'}</h2>
           <button type="button" className="icon-btn" onClick={onClose} aria-label="Cerrar">
