@@ -91,7 +91,8 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
         <div className="field-row">
           <div className="field">
             <label htmlFor="cliente">Cliente / contacto</label>
-            <input 
+            <input
+           id="cliente" type="text" value={datos.cliente} onChange={(e) => set('cliente', e.target.value)} />
              <button
   type="button"
   className="btn"
@@ -99,7 +100,6 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
 >
   👤 Importar contacto
 </button>
-           id="cliente" type="text" value={datos.cliente} onChange={(e) => set('cliente', e.target.value)} />
           </div>
           <div className="field">
             <label htmlFor="telefono">Teléfono</label>
