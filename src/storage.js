@@ -113,6 +113,13 @@ export function nuevoProyecto() {
     notas: '',
     tareas: [],
     proveedores: [],
+    tipoProyecto: 'Vivienda',
+    honorariosDiseno: '',
+    honorariosGestion: '',
+    otrosImportes: '',
+    cobros: [],
+    horasEstimadas: '',
+    horasReales: '',
   }
 }
 
