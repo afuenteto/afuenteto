@@ -627,7 +627,7 @@ useEffect(() => {
           </button>
         ))}
       </div>
-
+<StudioDashboard proyectos={proyectos} />
       {proyectosOrdenados.length === 0 ? (
         <div className="empty">
           <h3 className="serif">
