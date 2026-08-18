@@ -84,7 +84,10 @@ if (error) {
     presupuestoPdf: data.publicUrl,
   }))
 }
-  const [datos, setDatos] = useState(proyecto)
+ const [datos, setDatos] = useState({
+  ...proyecto,
+  cobros: proyecto.cobros || []
+})
   const [nuevaTarea, setNuevaTarea] = useState('')
   const [nuevoProveedor, setNuevoProveedor] = useState('')
 
