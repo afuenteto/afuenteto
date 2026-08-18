@@ -250,9 +250,6 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
         </div>
 <div className="field">
   <label>Presupuesto</label>
-<label style={{color:'red', fontSize:'20px'}}>
-  PRUEBA PDF
-</label>
   <button
     type="button"
     className="btn"
