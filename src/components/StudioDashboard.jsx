@@ -1,1 +1,75 @@
+export default function StudioDashboard({ proyectos }) {
 
+  const valorTotal = proyectos.reduce(
+    (total, p) =>
+      total +
+      Number(p.honorariosDiseno || 0) +
+      Number(p.honorariosGestion || 0) +
+      Number(p.otrosImportes || 0),
+    0
+  )
+
+  const cobradoTotal = proyectos.reduce(
+    (total, p) =>
+      total +
+      (p.cobros || []).reduce(
+        (suma, c) => suma + Number(c.importe || 0),
+        0
+      ),
+    0
+  )
+
+  const pendienteTotal = valorTotal - cobradoTotal
+
+  return (
+    <div className="studio-dashboard">
+
+      <div className="section-label">
+        Resumen del estudio
+      </div>
+
+      <div className="field-row">
+
+        <div className="field">
+          <label>Valor contratado</label>
+          <input
+            type="text"
+            readOnly
+            value={`${valorTotal.toLocaleString('es-ES')} €`}
+          />
+        </div>
+
+        <div className="field">
+          <label>Total cobrado</label>
+          <input
+            type="text"
+            readOnly
+            value={`${cobradoTotal.toLocaleString('es-ES')} €`}
+          />
+        </div>
+
+      </div>
+
+
+      <div className="field">
+        <label>Pendiente de cobro</label>
+        <input
+          type="text"
+          readOnly
+          value={`${pendienteTotal.toLocaleString('es-ES')} €`}
+        />
+      </div>
+
+
+      <div className="field">
+        <label>Proyectos activos</label>
+        <input
+          type="text"
+          readOnly
+          value={proyectos.length}
+        />
+      </div>
+
+    </div>
+  )
+}
