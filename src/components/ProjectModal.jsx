@@ -142,7 +142,7 @@ if (error) {
         <div className="modal-head">
          <p style={{color:"red", fontSize:"20px"}}>
   </p>
-          <h2 className="serif">PRUEBA{esNuevo ? 'Nuevo proyecto PRUEBA' : datos.nombre || 'Editar proyecto'}</h2>
+          <h2 className="serif">PRUEBA{esNuevo ? 'Nuevo proyecto' : datos.nombre || 'Editar proyecto'}</h2>
           <button type="button" className="icon-btn" onClick={onClose} aria-label="Cerrar">
             ✕
           </button>
@@ -236,6 +236,80 @@ if (error) {
               onChange={(e) => set('presupuestoTotal', e.target.value)}
             />
           </div>
+
+
+
+
+
+
+         
+         <div className="section-label">Economía del proyecto</div>
+
+<div className="field-row">
+  <div className="field">
+    <label>Tipo de proyecto</label>
+    <select
+      value={datos.tipoProyecto}
+      onChange={(e) => set('tipoProyecto', e.target.value)}
+    >
+      <option>Vivienda</option>
+      <option>Restaurante</option>
+      <option>Hotel</option>
+      <option>Oficina</option>
+      <option>Comercio</option>
+      <option>Mobiliario</option>
+      <option>Otro</option>
+    </select>
+  </div>
+</div>
+
+<div className="field-row">
+  <div className="field">
+    <label>Honorarios diseño (€)</label>
+    <input
+      type="number"
+      value={datos.honorariosDiseno}
+      onChange={(e) => set('honorariosDiseno', e.target.value)}
+    />
+  </div>
+
+  <div className="field">
+    <label>Gestión / seguimiento (€)</label>
+    <input
+      type="number"
+      value={datos.honorariosGestion}
+      onChange={(e) => set('honorariosGestion', e.target.value)}
+    />
+  </div>
+</div>
+
+<div className="field-row">
+  <div className="field">
+    <label>Otros servicios (€)</label>
+    <input
+      type="number"
+      value={datos.otrosImportes}
+      onChange={(e) => set('otrosImportes', e.target.value)}
+    />
+  </div>
+
+  <div className="field">
+    <label>Horas estimadas</label>
+    <input
+      type="number"
+      value={datos.horasEstimadas}
+      onChange={(e) => set('horasEstimadas', e.target.value)}
+    />
+  </div>
+</div>
+
+
+
+
+
+
+         
+         
           <div className="field">
             <label htmlFor="presupuestoGastado">Gastado hasta ahora (€)</label>
             <input
