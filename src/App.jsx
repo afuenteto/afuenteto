@@ -26,6 +26,13 @@ function proyectoDesdeBD(row) {
     notas: row.notas || '',
     tareas: Array.isArray(row.tareas) ? row.tareas : [],
     proveedores: Array.isArray(row.proveedores) ? row.proveedores : [],
+    tipoProyecto: row.tipo_proyecto || 'Vivienda',
+    honorariosDiseno: row.honorarios_diseno ?? '',
+    honorariosGestion: row.honorarios_gestion ?? '',
+    otrosImportes: row.otros_importes ?? '',
+    cobros: Array.isArray(row.cobros) ? row.cobros : [],
+    horasEstimadas: row.horas_estimadas ?? '',
+    horasReales: row.horas_reales ?? '',
   }
 }
 
@@ -52,6 +59,44 @@ function proyectoParaBD(proyecto, userId) {
     ? null
     : Number(proyecto.presupuestoGastado),
 
+
+    
+tipo_proyecto: proyecto.tipoProyecto || 'Vivienda',
+
+honorarios_diseno:
+  proyecto.honorariosDiseno === '' ||
+  proyecto.honorariosDiseno === null
+    ? null
+    : Number(proyecto.honorariosDiseno),
+
+honorarios_gestion:
+  proyecto.honorariosGestion === '' ||
+  proyecto.honorariosGestion === null
+    ? null
+    : Number(proyecto.honorariosGestion),
+
+otros_importes:
+  proyecto.otrosImportes === '' ||
+  proyecto.otrosImportes === null
+    ? null
+    : Number(proyecto.otrosImportes),
+
+cobros: proyecto.cobros || [],
+
+horas_estimadas:
+  proyecto.horasEstimadas === '' ||
+  proyecto.horasEstimadas === null
+    ? null
+    : Number(proyecto.horasEstimadas),
+
+horas_reales:
+  proyecto.horasReales === '' ||
+  proyecto.horasReales === null
+    ? null
+    : Number(proyecto.horasReales),
+
+
+    
 presupuesto_pdf: proyecto.presupuestoPdf || null,
     notas: proyecto.notas || '',
     tareas: Array.isArray(proyecto.tareas) ? proyecto.tareas : [],
