@@ -3,6 +3,32 @@ import { FASES, uid } from '../storage.js'
 import { supabase } from '../supabase.js'
 
 export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
+ const [datos, setDatos] = useState({
+  ...proyecto,
+  cobros: proyecto.cobros || []
+})
+
+const [nuevaTarea, setNuevaTarea] = useState('')
+const [nuevoProveedor, setNuevoProveedor] = useState('')
+
+const [nuevoCobro, setNuevoCobro] = useState({
+  fecha: '',
+  concepto: '',
+  importe: ''
+})
+
+const totalProyecto =
+  Number(datos.honorariosDiseno || 0) +
+  Number(datos.honorariosGestion || 0) +
+  Number(datos.otrosImportes || 0)
+
+const totalCobrado =
+  (datos.cobros || []).reduce(
+    (total, cobro) => total + Number(cobro.importe || 0),
+    0
+  )
+
+const pendienteCobro = totalProyecto - totalCobrado
  const contactoInputRef = useRef(null)
    function importarContacto(e) {
     const file = e.target.files?.[0]
