@@ -431,6 +431,20 @@ function agregarCobro() {
     <span>{c.fecha}</span>
     <span>{c.concepto}</span>
     <strong>{c.importe} €</strong>
+
+    <button
+      type="button"
+      className="icon-btn"
+      onClick={() =>
+        set(
+          'cobros',
+          datos.cobros.filter((x) => x.id !== c.id)
+        )
+      }
+      aria-label="Eliminar cobro"
+    >
+      ✕
+    </button>
   </div>
 ))}
 
