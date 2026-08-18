@@ -185,7 +185,9 @@ function agregarCobro() {
         <div className="modal-head">
          <p style={{color:"red", fontSize:"20px"}}>
   </p>
-          <h2 className="serif">PRUEBA{esNuevo ? 'Nuevo proyecto' : datos.nombre || 'Editar proyecto'}</h2>
+        <h2 className="serif">
+  {esNuevo ? 'Nuevo proyecto' : datos.nombre || 'Editar proyecto'}
+</h2>
           <button type="button" className="icon-btn" onClick={onClose} aria-label="Cerrar">
             ✕
           </button>
