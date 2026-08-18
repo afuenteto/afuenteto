@@ -88,6 +88,28 @@ if (error) {
   ...proyecto,
   cobros: proyecto.cobros || []
 })
+
+const [nuevaTarea, setNuevaTarea] = useState('')
+const [nuevoProveedor, setNuevoProveedor] = useState('')
+
+const [nuevoCobro, setNuevoCobro] = useState({
+  fecha: '',
+  concepto: '',
+  importe: ''
+})
+
+const totalProyecto =
+  Number(datos.honorariosDiseno || 0) +
+  Number(datos.honorariosGestion || 0) +
+  Number(datos.otrosImportes || 0)
+
+const totalCobrado =
+  (datos.cobros || []).reduce(
+    (total, cobro) => total + Number(cobro.importe || 0),
+    0
+  )
+
+const pendienteCobro = totalProyecto - totalCobrado
   const [nuevaTarea, setNuevaTarea] = useState('')
   const [nuevoProveedor, setNuevoProveedor] = useState('')
 
