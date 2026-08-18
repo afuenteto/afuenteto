@@ -46,10 +46,13 @@ function proyectoParaBD(proyecto, userId) {
       proyecto.presupuestoTotal === null
         ? null
         : Number(proyecto.presupuestoTotal),
-    presupuesto_gastado:
-      presupuesto_pdf: proyecto.presupuestoPdf || null,
-      proyecto.presupuestoGastado === '' ||
-      proyecto.presupuestoGastado === null
+  presupuesto_gastado:
+  proyecto.presupuestoGastado === '' ||
+  proyecto.presupuestoGastado === null
+    ? null
+    : Number(proyecto.presupuestoGastado),
+
+presupuesto_pdf: proyecto.presupuestoPdf || null,
         ? null
         : Number(proyecto.presupuestoGastado),
     notas: proyecto.notas || '',
