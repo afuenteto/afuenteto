@@ -88,6 +88,12 @@ if (error) {
   const [nuevaTarea, setNuevaTarea] = useState('')
   const [nuevoProveedor, setNuevoProveedor] = useState('')
 
+ const [nuevoCobro, setNuevoCobro] = useState({
+  fecha: '',
+  concepto: '',
+  importe: ''
+})
+
   function set(campo, valor) {
     setDatos((d) => ({ ...d, [campo]: valor }))
   }
@@ -116,7 +122,27 @@ if (error) {
     set('proveedores', [...datos.proveedores, { id: uid(), nombre, contacto: '' }])
     setNuevoProveedor('')
   }
+function agregarCobro() {
+  if (!nuevoCobro.fecha || !nuevoCobro.importe) return
 
+  const cobro = {
+    id: uid(),
+    fecha: nuevoCobro.fecha,
+    concepto: nuevoCobro.concepto || 'Cobro',
+    importe: Number(nuevoCobro.importe)
+  }
+
+  set(
+    'cobros',
+    [...(datos.cobros || []), cobro]
+  )
+
+  setNuevoCobro({
+    fecha: '',
+    concepto: '',
+    importe: ''
+  })
+}
   function actualizarProveedorContacto(id, contacto) {
     set(
       'proveedores',
@@ -345,6 +371,63 @@ if (error) {
       📄 Ver presupuesto
     </a>
   )}
+</div>
+
+       <div className="section-label">Cobros</div>
+
+{(datos.cobros || []).map((c) => (
+  <div className="list-row" key={c.id}>
+    <span>{c.fecha}</span>
+    <span>{c.concepto}</span>
+    <strong>{c.importe} €</strong>
+  </div>
+))}
+
+<div className="add-row">
+
+<input
+  type="date"
+  value={nuevoCobro.fecha}
+  onChange={(e) =>
+    setNuevoCobro({
+      ...nuevoCobro,
+      fecha: e.target.value
+    })
+  }
+/>
+
+<input
+  type="text"
+  placeholder="Concepto"
+  value={nuevoCobro.concepto}
+  onChange={(e) =>
+    setNuevoCobro({
+      ...nuevoCobro,
+      concepto: e.target.value
+    })
+  }
+/>
+
+<input
+  type="number"
+  placeholder="Importe"
+  value={nuevoCobro.importe}
+  onChange={(e) =>
+    setNuevoCobro({
+      ...nuevoCobro,
+      importe: e.target.value
+    })
+  }
+/>
+
+<button
+ type="button"
+ className="btn btn-sm"
+ onClick={agregarCobro}
+>
+ Añadir
+</button>
+
 </div>
         <div className="section-label">Tareas</div>
         {datos.tareas.map((t) => (
