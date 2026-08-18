@@ -69,9 +69,9 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
     .from('presupuestos')
     .upload(nombreArchivo, file)
 
- if (error) {
-  console.error(error)
-  alert(error.message)
+if (error) {
+  console.log('ERROR SUPABASE PDF:', error)
+  alert(JSON.stringify(error))
   return
 }
 
