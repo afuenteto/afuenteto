@@ -522,7 +522,19 @@ a {
 
   white-space: nowrap;
 }
+@media (max-width: 700px) {
+  .field-row {
+    grid-template-columns: 1fr;
+  }
 
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
 /* =========================================================
    FASES
    ========================================================= */
