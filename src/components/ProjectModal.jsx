@@ -375,7 +375,41 @@ function agregarCobro() {
     </a>
   )}
 </div>
+<div className="section-label">Resumen económico</div>
 
+<div className="field-row">
+
+  <div className="field">
+    <label>Valor del proyecto</label>
+    <input
+      type="text"
+      value={`${totalProyecto.toLocaleString('es-ES')} €`}
+      readOnly
+    />
+  </div>
+
+  <div className="field">
+    <label>Total cobrado</label>
+    <input
+      type="text"
+      value={`${totalCobrado.toLocaleString('es-ES')} €`}
+      readOnly
+    />
+  </div>
+
+</div>
+
+<div className="field">
+  <label>Pendiente de cobro</label>
+  <input
+    type="text"
+    value={`${pendienteCobro.toLocaleString('es-ES')} €`}
+    readOnly
+  />
+</div>
+
+
+<div className="section-label">Cobros</div>
        <div className="section-label">Cobros</div>
 
 {(datos.cobros || []).map((c) => (
