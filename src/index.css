@@ -1059,7 +1059,18 @@ a {
     height: 145px;
   }
 }
+.cobro-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  width: 100%;
+}
 
+.cobro-form input,
+.cobro-form button {
+  width: 100%;
+  box-sizing: border-box;
+}
 /* =========================================================
    MENOS ANIMACIÓN
    ========================================================= */
