@@ -1,3 +1,4 @@
+import StudioDashboard from './components/StudioDashboard.jsx'
 import { useEffect, useRef, useState } from 'react'
 import ProjectCard from './components/ProjectCard.jsx'
 import ProjectModal from './components/ProjectModal.jsx'
