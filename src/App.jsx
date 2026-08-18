@@ -30,7 +30,6 @@ function proyectoDesdeBD(row) {
     honorariosDiseno: row.honorarios_diseno ?? '',
     honorariosGestion: row.honorarios_gestion ?? '',
     otrosImportes: row.otros_importes ?? '',
-    cobros: proyecto.cobros || [],
     cobros: Array.isArray(row.cobros) ? row.cobros : [],
     horasEstimadas: row.horas_estimadas ?? '',
     horasReales: row.horas_reales ?? '',
