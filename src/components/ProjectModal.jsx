@@ -386,7 +386,7 @@ function agregarCobro() {
   </div>
 ))}
 
-<div className="add-row">
+<div className="cobro-form">
 
 <input
   type="date"
