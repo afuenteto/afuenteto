@@ -424,8 +424,6 @@ function agregarCobro() {
 
 
 <div className="section-label">Cobros</div>
-       <div className="section-label">Cobros</div>
-
 {(datos.cobros || []).map((c) => (
   <div className="list-row" key={c.id}>
     <span>{c.fecha}</span>
