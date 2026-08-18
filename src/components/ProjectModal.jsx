@@ -69,11 +69,11 @@ export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
     .from('presupuestos')
     .upload(nombreArchivo, file)
 
-  if (error) {
-    console.error(error)
-    alert('No se pudo subir el PDF')
-    return
-  }
+ if (error) {
+  console.error(error)
+  alert(error.message)
+  return
+}
 
   const { data } = supabase.storage
     .from('presupuestos')
