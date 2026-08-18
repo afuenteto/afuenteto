@@ -53,8 +53,6 @@ function proyectoParaBD(proyecto, userId) {
     : Number(proyecto.presupuestoGastado),
 
 presupuesto_pdf: proyecto.presupuestoPdf || null,
-        ? null
-        : Number(proyecto.presupuestoGastado),
     notas: proyecto.notas || '',
     tareas: Array.isArray(proyecto.tareas) ? proyecto.tareas : [],
     proveedores: Array.isArray(proyecto.proveedores)
