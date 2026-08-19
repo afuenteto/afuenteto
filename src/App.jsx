@@ -6,7 +6,6 @@ import SortableProjectCard from './components/SortableProjectCard'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import ProjectModal from './components/ProjectModal.jsx'
-import SortableProjectCard from './components/SortableProjectCard'
 import { supabase } from './supabase.js'
 import {
   FASES,
