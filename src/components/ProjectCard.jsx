@@ -22,16 +22,6 @@ export default function ProjectCard({ proyecto, onOpen }) {
       0
     )
 
-const totalPrevisto =
-  (proyecto.cobros || [])
-    .filter((cobro) => cobro.estado === 'previsto')
-    .reduce(
-      (total, cobro) =>
-        total + Number(cobro.importe || 0),
-      0
-    )
-
-  
 console.log("TOTAL PROYECTO:", valorProyecto, "COBRADO:", totalCobrado)
 
   
