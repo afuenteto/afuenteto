@@ -22,6 +22,10 @@ export default function ProjectCard({ proyecto, onOpen }) {
     0
   )
 
+  
+console.log("TOTAL PROYECTO:", valorProyecto, "COBRADO:", totalCobrado)
+
+  
 const totalPrevisto =
   (proyecto.cobros || []).reduce(
     (total, cobro) =>
