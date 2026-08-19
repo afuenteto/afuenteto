@@ -89,6 +89,11 @@ const totalPrevisto =
   <span>
     Pendiente: {pendienteCobro.toLocaleString('es-ES')} €
   </span>
+  {totalPrevisto > 0 && (
+  <span>
+    Previsto: {totalPrevisto.toLocaleString('es-ES')} €
+  </span>
+)}
 </div>
 
 <div className="mono" style={{ marginTop: 6 }}>
