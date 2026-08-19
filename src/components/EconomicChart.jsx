@@ -42,24 +42,24 @@ export default function EconomicChart({ proyectos }) {
     0
   )
 
-  const datos = [
-    {
-      nombre: 'Total',
-      importe: total
-    },
-    {
-      nombre: 'Cobrado',
-      importe: cobrado
-    },
-    {
-      nombre: 'Previsto',
-      importe: previsto
-    },
-    {
-      nombre: 'Pendiente',
-      importe: total - cobrado
-    }
-  ]
+const datos = [
+  {
+    nombre: 'Cobrado',
+    importe: cobrado
+  },
+  {
+    nombre: 'Previsto',
+    importe: previsto
+  },
+  {
+    nombre: 'Pendiente',
+    importe: total - cobrado
+  },
+  {
+    nombre: 'Total',
+    importe: total
+  }
+]
 
   return (
     <div className="chart-box">
@@ -78,9 +78,22 @@ export default function EconomicChart({ proyectos }) {
             }
           />
 
-          <Bar
-            dataKey="importe"
-          />
+          <Bar dataKey="importe">
+  {datos.map((entrada, index) => (
+    <Cell
+      key={`cell-${index}`}
+      fill={
+        entrada.nombre === 'Total'
+          ? '#C99500'
+          : entrada.nombre === 'Cobrado'
+          ? '#FFD400'
+          : entrada.nombre === 'Previsto'
+          ? '#E6B800'
+          : '#F3D36B'
+      }
+    />
+  ))}
+</Bar>
         </BarChart>
       </ResponsiveContainer>
 
