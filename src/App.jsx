@@ -1,4 +1,5 @@
 import StudioDashboard from './components/StudioDashboard.jsx'
+import EconomicChart from './components/EconomicChart.jsx'
 import { useEffect, useRef, useState } from 'react'
 import ProjectCard from './components/ProjectCard.jsx'
 import ProjectModal from './components/ProjectModal.jsx'
@@ -643,6 +644,8 @@ useEffect(() => {
           </p>
         </div>
       ) : (
+  <EconomicChart proyectos={proyectosOrdenados} />
+  
         <div className="grid">
           {proyectosOrdenados.map((proyecto) => (
             <ProjectCard
