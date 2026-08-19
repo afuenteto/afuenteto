@@ -12,11 +12,22 @@ export default function ProjectCard({ proyecto, onOpen }) {
         Number(proyecto.otrosImportes || 0)
 
   const totalCobrado =
-    (proyecto.cobros || []).reduce(
-      (total, cobro) =>
-        total + Number(cobro.importe || 0),
-      0
-    )
+  (proyecto.cobros || []).reduce(
+    (total, cobro) =>
+      cobro.estado === 'previsto'
+        ? total
+        : total + Number(cobro.importe || 0),
+    0
+  )
+
+const totalPrevisto =
+  (proyecto.cobros || []).reduce(
+    (total, cobro) =>
+      cobro.estado === 'previsto'
+        ? total + Number(cobro.importe || 0)
+        : total,
+    0
+  )
 
   const pendienteCobro = valorProyecto - totalCobrado
 
@@ -61,8 +72,12 @@ export default function ProjectCard({ proyecto, onOpen }) {
       </span>
 
       <span>
-        Pendiente: {pendienteCobro.toLocaleString('es-ES')} €
-      </span>
+  Pendiente: {pendienteCobro.toLocaleString('es-ES')} €
+</span>
+
+<span>
+  Previsto: {totalPrevisto.toLocaleString('es-ES')} €
+</span>
     </div>
   </div>
 )}
