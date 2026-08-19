@@ -68,8 +68,9 @@ const totalPrevisto =
 
     <div className="card-stats" style={{ marginTop: 6 }}>
       <span className="mono">
-        <strong>{totalCobrado.toLocaleString('es-ES')} €</strong> cobrados
-      </span>
+  <strong>{totalCobrado.toLocaleString('es-ES')} €</strong>
+  {' '}de {valorProyecto.toLocaleString('es-ES')} €
+</span>
 
       <span>
         Pendiente: {pendienteCobro.toLocaleString('es-ES')} €
