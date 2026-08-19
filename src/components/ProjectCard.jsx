@@ -13,14 +13,23 @@ export default function ProjectCard({ proyecto, onOpen }) {
         Number(proyecto.honorariosGestion || 0) +
         Number(proyecto.otrosImportes || 0)
 
-  const totalCobrado =
-  (proyecto.cobros || []).reduce(
-    (total, cobro) =>
-      cobro.estado === 'previsto'
-        ? total
-        : total + Number(cobro.importe || 0),
-    0
-  )
+ const totalCobrado =
+  (proyecto.cobros || [])
+    .filter((cobro) => cobro.estado !== 'previsto')
+    .reduce(
+      (total, cobro) =>
+        total + Number(cobro.importe || 0),
+      0
+    )
+
+const totalPrevisto =
+  (proyecto.cobros || [])
+    .filter((cobro) => cobro.estado === 'previsto')
+    .reduce(
+      (total, cobro) =>
+        total + Number(cobro.importe || 0),
+      0
+    )
 
   
 console.log("TOTAL PROYECTO:", valorProyecto, "COBRADO:", totalCobrado)
