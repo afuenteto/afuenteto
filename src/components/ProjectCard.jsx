@@ -68,7 +68,9 @@ const totalPrevisto =
 
     <div className="card-stats" style={{ marginTop: 6 }}>
       <span className="mono">
-  <strong>{totalCobrado.toLocaleString('es-ES')} €</strong>
+  <strong>
+  {totalCobrado.toLocaleString('es-ES')} € de {valorProyecto.toLocaleString('es-ES')} €
+</strong>
   {' '}de {valorProyecto.toLocaleString('es-ES')} €
 </span>
 
