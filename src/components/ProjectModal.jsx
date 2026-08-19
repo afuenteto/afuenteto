@@ -511,7 +511,23 @@ function agregarCobro() {
     })
   }
 />
+<select
+  value={nuevoCobro.estado || 'cobrado'}
+  onChange={(e) =>
+    setNuevoCobro({
+      ...nuevoCobro,
+      estado: e.target.value
+    })
+  }
+>
+  <option value="cobrado">
+    Cobrado
+  </option>
 
+  <option value="previsto">
+    Previsto
+  </option>
+</select>
 <button
  type="button"
  className="btn btn-sm"
