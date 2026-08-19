@@ -439,7 +439,16 @@ function agregarCobro() {
     readOnly
   />
 </div>
-
+{totalPrevisto > 0 && (
+  <div className="field">
+    <label>Cobros previstos</label>
+    <input
+      type="text"
+      value={`${totalPrevisto.toLocaleString('es-ES')} €`}
+      readOnly
+    />
+  </div>
+)}
 
 <div className="section-label">Cobros</div>
 {(datos.cobros || []).map((c) => (
