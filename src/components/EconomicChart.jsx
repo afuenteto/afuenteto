@@ -5,6 +5,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer
+  Cell
 } from 'recharts'
 
 export default function EconomicChart({ proyectos }) {
