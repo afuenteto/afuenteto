@@ -84,7 +84,7 @@ const totalPrevisto =
   Previsto: {totalPrevisto.toLocaleString('es-ES')} €
 </span>
     </div>
-  </div>
+
 )}
 
       <div className="card-footer">
