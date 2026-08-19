@@ -643,12 +643,7 @@ useEffect(() => {
               : 'Prueba con otro filtro o crea un proyecto nuevo.'}
           </p>
         </div>
-<<<<<<< HEAD
- ) : (
-        <>
-          <EconomicChart proyectos={proyectosOrdenados} />
-=======
-     ) : (
+
         <>
           <EconomicChart proyectos={proyectosOrdenados} />
 
