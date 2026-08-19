@@ -651,7 +651,10 @@ useEffect(() => {
     <div>
       <EconomicChart proyectos={proyectosOrdenados} />
 
-     <DndContext collisionDetection={closestCenter}>
+     <DndContext
+  collisionDetection={closestCenter}
+  onDragEnd={handleDragEnd}
+>
   <SortableContext
     items={proyectosOrdenados.map(p => p.id)}
     strategy={verticalListSortingStrategy}
