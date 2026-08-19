@@ -3,6 +3,7 @@ import EconomicChart from './components/EconomicChart.jsx'
 import { useEffect, useRef, useState } from 'react'
 import ProjectCard from './components/ProjectCard.jsx'
 import ProjectModal from './components/ProjectModal.jsx'
+import SortableProjectCard from './components/SortableProjectCard'
 import { supabase } from './supabase.js'
 import {
   FASES,
@@ -650,7 +651,7 @@ useEffect(() => {
 
       <div className="grid">
         {proyectosOrdenados.map((proyecto) => (
-          <ProjectCard
+          <SortableProjectCard
             key={proyecto.id}
             proyecto={proyecto}
             onOpen={() => abrirExistente(proyecto)}
