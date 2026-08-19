@@ -651,15 +651,22 @@ useEffect(() => {
     <div>
       <EconomicChart proyectos={proyectosOrdenados} />
 
-      <div className="grid">
-        {proyectosOrdenados.map((proyecto) => (
-          <SortableProjectCard
-            key={proyecto.id}
-            proyecto={proyecto}
-            onOpen={() => abrirExistente(proyecto)}
-          />
-        ))}
-      </div>
+     <DndContext collisionDetection={closestCenter}>
+  <SortableContext
+    items={proyectosOrdenados.map(p => p.id)}
+    strategy={verticalListSortingStrategy}
+  >
+    <div className="grid">
+      {proyectosOrdenados.map((proyecto) => (
+        <SortableProjectCard
+          key={proyecto.id}
+          proyecto={proyecto}
+          onOpen={() => abrirExistente(proyecto)}
+        />
+      ))}
+    </div>
+  </SortableContext>
+</DndContext>
     </div>
   )}
 
