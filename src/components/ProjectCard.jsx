@@ -55,9 +55,9 @@ const totalPrevisto =
         {!vencido && urgente && <span className="tag-urgent">Entrega en {dias}d</span>}
       </div>
 
-      <PhaseRail fase={proyecto.fase} />
+<PhaseRail fase={proyecto.fase} />
 
-    {valorProyecto > 0 && (
+{valorProyecto > 0 && (
   <div>
     <div className="budget-bar">
       <div
@@ -66,28 +66,23 @@ const totalPrevisto =
       />
     </div>
 
-   <div className="card-stats" style={{ marginTop: 6 }}>
-  <span className="mono">
-    <strong>{totalCobrado.toLocaleString('es-ES')} €</strong> cobrados
-  </span>
+    <div className="card-stats" style={{ marginTop: 6 }}>
+      <span className="mono">
+        <strong>{totalCobrado.toLocaleString('es-ES')} €</strong> cobrados
+      </span>
 
-  <span>
-    Pendiente: {pendienteCobro.toLocaleString('es-ES')} €
-  </span>
+      <span>
+        Pendiente: {pendienteCobro.toLocaleString('es-ES')} €
+      </span>
 
-  <span>
-    Total: {valorProyecto.toLocaleString('es-ES')} €
-  </span>
-</div>
-
-<span>
-  Previsto: {totalPrevisto.toLocaleString('es-ES')} €
-</span>
+      <span>
+        Total: {valorProyecto.toLocaleString('es-ES')} €
+      </span>
     </div>
-
+  </div>
 )}
 
-      <div className="card-footer">
+<div className="card-footer">
         <span>Inicio: {formatearFecha(proyecto.fechaInicio)}</span>
         <span>
           {tareasPendientes} tarea{tareasPendientes !== 1 ? 's' : ''} pendiente
