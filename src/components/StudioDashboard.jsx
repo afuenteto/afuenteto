@@ -1,13 +1,18 @@
 export default function StudioDashboard({ proyectos }) {
 
-  const valorTotal = proyectos.reduce(
-    (total, p) =>
-      total +
-      Number(p.honorariosDiseno || 0) +
-      Number(p.honorariosGestion || 0) +
-      Number(p.otrosImportes || 0),
-    0
-  )
+ const valorTotal = proyectos.reduce(
+  (total, p) => {
+    const valorProyecto =
+      p.presupuestoTotal && Number(p.presupuestoTotal) > 0
+        ? Number(p.presupuestoTotal)
+        : Number(p.honorariosDiseno || 0) +
+          Number(p.honorariosGestion || 0) +
+          Number(p.otrosImportes || 0)
+
+    return total + valorProyecto
+  },
+  0
+)
 
   const cobradoTotal = proyectos.reduce(
     (total, p) =>
