@@ -455,8 +455,9 @@ function agregarCobro() {
   <div className="list-row" key={c.id}>
     <span>{c.fecha}</span>
     <span>{c.concepto}</span>
- <strong>
-  {c.importe} € {c.estado === 'previsto' ? '⏳' : '✓'}
+<strong>
+  {Number(c.importe).toLocaleString('es-ES')} € 
+  {c.estado === 'previsto' ? ' ⏳ Previsto' : ' ✓ Cobrado'}
 </strong>
 
     <button
