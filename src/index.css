@@ -1,17 +1,18 @@
 :root {
-  --bg: #f5f5f7;
+  --bg: #f6f5f1;
   --surface: #ffffff;
-  --surface-soft: #fafafa;
+  --surface-soft: #faf9f6;
 
-  --ink: #1d1d1f;
-  --ink-soft: #6e6e73;
-  --ink-faint: #a1a1a6;
+  --ink: #171717;
+  --ink-soft: #6f6f6b;
+  --ink-faint: #a2a29c;
 
-  --accent: #222222;
-  --accent-soft: #e5e5e5;
-  --accent-hover: #444444;
+  /* Amarillo del icono */
+  --accent: #ffd400;
+  --accent-soft: #fff3a6;
+  --accent-hover: #e8c000;
 
-  --line: #d2d2d7;
+  --line: #e4e3de;
 
   --alert: #c43d32;
   --alert-soft: #f9e1de;
