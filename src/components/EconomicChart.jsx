@@ -85,11 +85,11 @@ const datos = [
       key={`cell-${index}`}
       fill={
         entrada.nombre === 'Total'
-          ? '#CB8400'
+          ? '#ffd400'
           : entrada.nombre === 'Cobrado'
-          ? '#F5D478'
+          ? '#fff3a6'
           : entrada.nombre === 'Previsto'
-          ? '#F0B937'
+          ? '#e8c000'
           : '#E59A00'
       }
     />
