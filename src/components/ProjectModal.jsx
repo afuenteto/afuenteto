@@ -456,7 +456,9 @@ setNuevoCobro({
   <div className="list-row" key={c.id}>
     <span>{c.fecha}</span>
     <span>{c.concepto}</span>
-    <strong>{c.importe} €</strong>
+ <strong>
+  {c.importe} € {c.estado === 'previsto' ? '⏳' : '✓'}
+</strong>
 
     <button
       type="button"
