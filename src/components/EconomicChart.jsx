@@ -87,9 +87,9 @@ const datos = [
         entrada.nombre === 'Total'
           ? '#ffd400'
           : entrada.nombre === 'Cobrado'
-          ? '#fff3a6'
-          : entrada.nombre === 'Previsto'
           ? '#e8c000'
+          : entrada.nombre === 'Previsto'
+          ? '#fff3a6'
           : '#E59A00'
       }
     />
