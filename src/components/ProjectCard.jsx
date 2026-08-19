@@ -2,6 +2,8 @@ import PhaseRail from './PhaseRail.jsx'
 import { diasHasta, formatearFecha } from '../storage.js'
 
 export default function ProjectCard({ proyecto, onOpen }) {
+  console.log("PROJECTCARD ACTUALIZADO", proyecto.nombre)
+  
   const tareasPendientes = proyecto.tareas.filter((t) => !t.hecha).length
 
   const valorProyecto =
