@@ -643,19 +643,21 @@ useEffect(() => {
               : 'Prueba con otro filtro o crea un proyecto nuevo.'}
           </p>
         </div>
-      ) : (
-  <EconomicChart proyectos={proyectosOrdenados} />
-  
-        <div className="grid">
-          {proyectosOrdenados.map((proyecto) => (
-            <ProjectCard
-              key={proyecto.id}
-              proyecto={proyecto}
-              onOpen={() => abrirExistente(proyecto)}
-            />
-          ))}
-        </div>
-      )}
+) : (
+  <>
+    <EconomicChart proyectos={proyectosOrdenados} />
+
+    <div className="grid">
+      {proyectosOrdenados.map((proyecto) => (
+        <ProjectCard
+          key={proyecto.id}
+          proyecto={proyecto}
+          onOpen={() => abrirExistente(proyecto)}
+        />
+      ))}
+    </div>
+  </>
+)}
 
       {editando && (
         <ProjectModal
