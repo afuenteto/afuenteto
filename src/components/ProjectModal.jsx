@@ -24,10 +24,22 @@ const totalProyecto =
   Number(datos.otrosImportes || 0)
 
 const totalCobrado =
-  (datos.cobros || []).reduce(
-    (total, cobro) => total + Number(cobro.importe || 0),
-    0
-  )
+  (datos.cobros || [])
+    .filter((cobro) => cobro.estado !== 'previsto')
+    .reduce(
+      (total, cobro) =>
+        total + Number(cobro.importe || 0),
+      0
+    )
+
+const totalPrevisto =
+  (datos.cobros || [])
+    .filter((cobro) => cobro.estado === 'previsto')
+    .reduce(
+      (total, cobro) =>
+        total + Number(cobro.importe || 0),
+      0
+    )
 
 const pendienteCobro = totalProyecto - totalCobrado
  const contactoInputRef = useRef(null)
