@@ -14,7 +14,8 @@ const [nuevoProveedor, setNuevoProveedor] = useState('')
 const [nuevoCobro, setNuevoCobro] = useState({
   fecha: '',
   concepto: '',
-  importe: ''
+  importe: '',
+  estado: 'cobrado'
 })
 
 const totalProyecto =
@@ -154,12 +155,37 @@ function agregarCobro() {
     [...(datos.cobros || []), cobro]
   )
 
-  setNuevoCobro({
-    fecha: '',
-    concepto: '',
-    importe: ''
-  })
+setNuevoCobro({
+  fecha: '',
+  concepto: '',
+  importe: '',
+  estado: 'cobrado'
+})
 }
+ const cobro = {
+  id: uid(),
+  fecha: nuevoCobro.fecha,
+  concepto: nuevoCobro.concepto || 'Cobro',
+  importe: Number(nuevoCobro.importe),
+  estado: nuevoCobro.estado
+}
+ <select
+  value={nuevoCobro.estado}
+  onChange={(e) =>
+    setNuevoCobro({
+      ...nuevoCobro,
+      estado: e.target.value
+    })
+  }
+>
+  <option value="cobrado">
+    Cobrado
+  </option>
+
+  <option value="previsto">
+    Previsto
+  </option>
+</select>
   function actualizarProveedorContacto(id, contacto) {
     set(
       'proveedores',
