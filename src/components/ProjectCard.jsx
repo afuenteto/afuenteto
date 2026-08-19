@@ -3,11 +3,32 @@ import { diasHasta, formatearFecha } from '../storage.js'
 
 export default function ProjectCard({ proyecto, onOpen }) {
   const tareasPendientes = proyecto.tareas.filter((t) => !t.hecha).length
-  const total = parseFloat(proyecto.presupuestoTotal) || 0
-  const gastado = parseFloat(proyecto.presupuestoGastado) || 0
-  const pct = total > 0 ? Math.min(100, (gastado / total) * 100) : 0
-  const sobrepasado = total > 0 && gastado > total
 
+  const valorProyecto =
+    proyecto.presupuestoTotal && Number(proyecto.presupuestoTotal) > 0
+      ? Number(proyecto.presupuestoTotal)
+      : Number(proyecto.honorariosDiseno || 0) +
+        Number(proyecto.honorariosGestion || 0) +
+        Number(proyecto.otrosImportes || 0)
+
+  const totalCobrado =
+    (proyecto.cobros || []).reduce(
+      (total, cobro) =>
+        total + Number(cobro.importe || 0),
+      0
+    )
+
+  const pendienteCobro = valorProyecto - totalCobrado
+
+  const pct =
+    valorProyecto > 0
+      ? Math.min(100, (totalCobrado / valorProyecto) * 100)
+      : 0
+
+  const sobrepasado = totalCobrado > valorProyecto
+
+
+  
   const dias = diasHasta(proyecto.fechaEntrega)
   const urgente = dias !== null && dias <= 7 && dias >= 0 && proyecto.fase !== 'Entrega'
   const vencido = dias !== null && dias < 0 && proyecto.fase !== 'Entrega'
@@ -25,22 +46,26 @@ export default function ProjectCard({ proyecto, onOpen }) {
 
       <PhaseRail fase={proyecto.fase} />
 
-      {total > 0 && (
-        <div>
-          <div className="budget-bar">
-            <div
-              className={'budget-bar-fill' + (sobrepasado ? ' over' : '')}
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-          <div className="card-stats" style={{ marginTop: 6 }}>
-            <span className="mono">
-              <strong>{gastado.toLocaleString('es-ES')} €</strong> de {total.toLocaleString('es-ES')} €
-            </span>
-            <span>{Math.round(pct)}%</span>
-          </div>
-        </div>
-      )}
+    {valorProyecto > 0 && (
+  <div>
+    <div className="budget-bar">
+      <div
+        className={'budget-bar-fill' + (sobrepasado ? ' over' : '')}
+        style={{ width: `${pct}%` }}
+      />
+    </div>
+
+    <div className="card-stats" style={{ marginTop: 6 }}>
+      <span className="mono">
+        <strong>{totalCobrado.toLocaleString('es-ES')} €</strong> cobrados
+      </span>
+
+      <span>
+        Pendiente: {pendienteCobro.toLocaleString('es-ES')} €
+      </span>
+    </div>
+  </div>
+)}
 
       <div className="card-footer">
         <span>Inicio: {formatearFecha(proyecto.fechaInicio)}</span>
