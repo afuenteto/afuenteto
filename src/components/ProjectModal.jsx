@@ -147,7 +147,8 @@ function agregarCobro() {
     id: uid(),
     fecha: nuevoCobro.fecha,
     concepto: nuevoCobro.concepto || 'Cobro',
-    importe: Number(nuevoCobro.importe)
+    importe: Number(nuevoCobro.importe),
+    estado: nuevoCobro.estado || 'cobrado'
   }
 
   set(
@@ -155,37 +156,14 @@ function agregarCobro() {
     [...(datos.cobros || []), cobro]
   )
 
-setNuevoCobro({
-  fecha: '',
-  concepto: '',
-  importe: '',
-  estado: 'cobrado'
-})
+  setNuevoCobro({
+    fecha: '',
+    concepto: '',
+    importe: '',
+    estado: 'cobrado'
+  })
 }
- const cobro = {
-  id: uid(),
-  fecha: nuevoCobro.fecha,
-  concepto: nuevoCobro.concepto || 'Cobro',
-  importe: Number(nuevoCobro.importe),
-  estado: nuevoCobro.estado
-}
- <select
-  value={nuevoCobro.estado}
-  onChange={(e) =>
-    setNuevoCobro({
-      ...nuevoCobro,
-      estado: e.target.value
-    })
-  }
->
-  <option value="cobrado">
-    Cobrado
-  </option>
 
-  <option value="previsto">
-    Previsto
-  </option>
-</select>
   function actualizarProveedorContacto(id, contacto) {
     set(
       'proveedores',
