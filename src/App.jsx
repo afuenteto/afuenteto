@@ -643,9 +643,27 @@ useEffect(() => {
               : 'Prueba con otro filtro o crea un proyecto nuevo.'}
           </p>
         </div>
+<<<<<<< HEAD
  ) : (
         <>
           <EconomicChart proyectos={proyectosOrdenados} />
+=======
+     ) : (
+        <>
+          <EconomicChart proyectos={proyectosOrdenados} />
+
+          <div className="grid">
+            {proyectosOrdenados.map((proyecto) => (
+              <ProjectCard
+                key={proyecto.id}
+                proyecto={proyecto}
+                onOpen={() => abrirExistente(proyecto)}
+              />
+            ))}
+          </div>
+        </>
+      )}
+>>>>>>> 09b6d3a (Añadir gráfico económico al dashboard)
 
           <div className="grid">
             {proyectosOrdenados.map((proyecto) => (
