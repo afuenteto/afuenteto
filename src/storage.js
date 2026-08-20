@@ -123,17 +123,7 @@ export function nuevoProyecto() {
   }
 }
 
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  const fecha = new Date().toISOString().slice(0, 10)
-
-  a.href = url
-  a.download = `proyectos-interiorismo-${fecha}.json`
-  a.click()
-
-  URL.revokeObjectURL(url)
-}
-
+ 
 export function diasHasta(fechaISO) {
   if (!fechaISO) return null
 
