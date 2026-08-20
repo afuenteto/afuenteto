@@ -75,24 +75,7 @@ const pendienteCobro = totalProyecto - totalCobrado
         direccion,
       }))
     }
-<div className="field">
-  <label>Prioridad</label>
 
-  <select
-    value={proyecto.prioridad || 'en_curso'}
-    onChange={(e) =>
-      setProyecto({
-        ...proyecto,
-        prioridad: e.target.value
-      })
-    }
-  >
-    <option value="urgente">🔴 Urgente</option>
-    <option value="en_curso">🟡 En curso</option>
-    <option value="estable">🟢 Estable</option>
-    <option value="bloqueado">🔵 Bloqueado</option>
-  </select>
-</div>
     reader.readAsText(file)
 
     e.target.value = ''
@@ -113,7 +96,24 @@ const pendienteCobro = totalProyecto - totalCobrado
   const file = e.target.files?.[0]
 
   if (!file) return
+<div className="field">
+  <label>Prioridad</label>
 
+  <select
+    value={datos.prioridad || 'en_curso'}
+    onChange={(e) =>
+      setDatos((d) => ({
+        ...d,
+        prioridad: e.target.value,
+      }))
+    }
+  >
+    <option value="urgente">🔴 Urgente</option>
+    <option value="en_curso">🟡 En curso</option>
+    <option value="estable">🟢 Estable</option>
+    <option value="bloqueado">🔵 Bloqueado</option>
+  </select>
+</div>
   if (file.type !== 'application/pdf') {
     alert('Selecciona un archivo PDF')
     return
