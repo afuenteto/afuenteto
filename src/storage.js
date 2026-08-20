@@ -123,12 +123,6 @@ export function nuevoProyecto() {
   }
 }
 
-export function exportarJSON(proyectos) {
-  const blob = new Blob(
-    [JSON.stringify(proyectos, null, 2)],
-    { type: 'application/json' }
-  )
-
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   const fecha = new Date().toISOString().slice(0, 10)
@@ -138,36 +132,6 @@ export function exportarJSON(proyectos) {
   a.click()
 
   URL.revokeObjectURL(url)
-}
-
-export function importarJSON(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(reader.result)
-
-        if (!Array.isArray(data)) {
-          throw new Error('formato inválido')
-        }
-
-        resolve(data)
-      } catch {
-        reject(
-          new Error(
-            'El archivo no tiene un formato de copia de seguridad válido.'
-          )
-        )
-      }
-    }
-
-    reader.onerror = () => {
-      reject(new Error('No se pudo leer el archivo.'))
-    }
-
-    reader.readAsText(file)
-  })
 }
 
 export function diasHasta(fechaISO) {
