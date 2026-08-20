@@ -17,39 +17,30 @@ export default function SortableProjectCard({
     id: proyecto.id
   })
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition
-  }
-
   return (
- <div
-  ref={setNodeRef}
-  style={{
-    transform: CSS.Transform.toString(transform),
-    transition,
-    position: 'relative',
-  }}
->
-  <ProjectCard
-    proyecto={proyecto}
-    onOpen={onOpen}
-  />
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        position: 'relative',
+      }}
+    >
 
-  <button
-    className="drag-handle"
-    {...attributes}
-    {...listeners}
-    type="button"
-  >
-    ⠿
-  </button>
-</div>
+      <ProjectCard
+        proyecto={proyecto}
+        onOpen={onOpen}
+      />
 
-  <ProjectCard
-    proyecto={proyecto}
-    onOpen={onOpen}
-  />
-</div>
+      <button
+        className="drag-handle"
+        {...attributes}
+        {...listeners}
+        type="button"
+      >
+        ⠿
+      </button>
+
+    </div>
   )
 }
