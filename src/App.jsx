@@ -1,6 +1,6 @@
 import StudioDashboard from './components/StudioDashboard.jsx'
 import EconomicChart from './components/EconomicChart.jsx'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ProjectCard from './components/ProjectCard.jsx'
 import SortableProjectCard from './components/SortableProjectCard'
 import { DndContext, closestCenter } from '@dnd-kit/core'
