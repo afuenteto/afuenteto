@@ -589,14 +589,6 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 
 </div>
 
-      <input
-        type="file"
-        accept="application/json"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        onChange={handleImportFile}
-      />
-
       {aviso && (
         <p
           className="mono"
