@@ -131,8 +131,7 @@ export function nuevoProyecto() {
   a.download = `proyectos-interiorismo-${fecha}.json`
   a.click()
 
-  URL.revokeObjectURL(url)
-}
+
 
 export function diasHasta(fechaISO) {
   if (!fechaISO) return null
