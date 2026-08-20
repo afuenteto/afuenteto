@@ -301,7 +301,24 @@ function agregarCobro() {
           </div>
           <div />
         </div>
+<div className="field">
+  <label>Prioridad</label>
 
+  <select
+    value={proyecto.prioridad || 'en_curso'}
+    onChange={(e) =>
+      setProyecto({
+        ...proyecto,
+        prioridad: e.target.value,
+      })
+    }
+  >
+    <option value="urgente">🔴 Urgente</option>
+    <option value="en_curso">🟡 En curso</option>
+    <option value="estable">🟢 Estable</option>
+    <option value="bloqueado">🔵 Bloqueado</option>
+  </select>
+</div>
         <div className="field-row">
           <div className="field">
             <label htmlFor="presupuestoTotal">Presupuesto total (€)</label>
