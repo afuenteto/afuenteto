@@ -10,8 +10,6 @@ import { supabase } from './supabase.js'
 import {
   FASES,
   nuevoProyecto,
-  exportarJSON,
-  importarJSON,
 } from './storage.js'
 
 function proyectoDesdeBD(row) {
