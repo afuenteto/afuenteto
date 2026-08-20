@@ -29,16 +29,16 @@ const [mostrarResumen, setMostrarResumen] = useState(false)
   return (
     <div className="studio-dashboard">
 
-      <div
-        className="section-label dashboard-toggle"
-        onClick={() => setMostrarResumen(!mostrarResumen)}
-        style={{ cursor: 'pointer' }}
-      >
-        Resumen del estudio
-        <span style={{ float: 'right' }}>
-          {mostrarResumen ? '−' : '+'}
-        </span>
-      </div>
+     <h3
+  className="serif dashboard-toggle"
+  onClick={() => setMostrarResumen(!mostrarResumen)}
+  style={{ cursor: 'pointer' }}
+>
+  Resumen del estudio
+  <span style={{ float: 'right' }}>
+    {mostrarResumen ? '−' : '+'}
+  </span>
+</h3>
 
 
       {mostrarResumen && (
