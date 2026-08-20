@@ -540,7 +540,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   </button>
 
 </div>
-
+</div>
       {aviso && (
         <p
           className="mono"
