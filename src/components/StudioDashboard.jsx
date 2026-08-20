@@ -1,4 +1,8 @@
-const [mostrarResumen, setMostrarResumen] = useState(false)
+import { useState } from 'react'
+
+export default function StudioDashboard({ proyectos }) {
+
+  const [mostrarResumen, setMostrarResumen] = useState(false)
 
   const valorTotal = proyectos.reduce(
     (total, p) => {
@@ -14,6 +18,7 @@ const [mostrarResumen, setMostrarResumen] = useState(false)
     0
   )
 
+
   const cobradoTotal = proyectos.reduce(
     (total, p) =>
       total +
@@ -24,70 +29,87 @@ const [mostrarResumen, setMostrarResumen] = useState(false)
     0
   )
 
+
   const pendienteTotal = valorTotal - cobradoTotal
+
 
   return (
     <div className="studio-dashboard">
 
-     <h3
-  className="serif dashboard-toggle"
-  onClick={() => setMostrarResumen(!mostrarResumen)}
-  style={{ cursor: 'pointer' }}
->
-  Resumen del estudio
-  <span style={{ float: 'right' }}>
-    {mostrarResumen ? '−' : '+'}
-  </span>
-</h3>
+      <h3
+        className="serif dashboard-toggle"
+        onClick={() => setMostrarResumen(!mostrarResumen)}
+        style={{ cursor: 'pointer' }}
+      >
+        Resumen del estudio
+
+        <span style={{ float: 'right' }}>
+          {mostrarResumen ? '−' : '+'}
+        </span>
+
+      </h3>
 
 
       {mostrarResumen && (
+
         <>
 
           <div className="field-row">
 
             <div className="field">
               <label>Valor contratado</label>
+
               <input
                 type="text"
                 readOnly
                 value={`${valorTotal.toLocaleString('es-ES')} €`}
               />
+
             </div>
 
 
             <div className="field">
               <label>Total cobrado</label>
+
               <input
                 type="text"
                 readOnly
                 value={`${cobradoTotal.toLocaleString('es-ES')} €`}
               />
+
             </div>
 
           </div>
 
 
           <div className="field">
+
             <label>Pendiente de cobro</label>
+
             <input
               type="text"
               readOnly
               value={`${pendienteTotal.toLocaleString('es-ES')} €`}
             />
+
           </div>
 
 
           <div className="field">
+
             <label>Proyectos activos</label>
+
             <input
               type="text"
               readOnly
               value={proyectos.length}
             />
+
           </div>
 
+
         </>
+
       )}
 
     </div>
