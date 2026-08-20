@@ -126,28 +126,40 @@ export default function App() {
   const [guardando, setGuardando] = useState(false)
   const [aviso, setAviso] = useState('')
   const fileInputRef = useRef(null)
-  const handleDragEnd = (event) => {
+ const handleDragEnd = async (event) => {
   const { active, over } = event
 
   if (!over || active.id === over.id) return
 
-  setProyectos((items) => {
-    const oldIndex = items.findIndex(
-      (item) => item.id === active.id
-    )
+  const nuevos = [...proyectos]
 
-    const newIndex = items.findIndex(
-      (item) => item.id === over.id
-    )
+  const oldIndex = nuevos.findIndex(
+    (item) => item.id === active.id
+  )
 
-    const nuevos = [...items]
+  const newIndex = nuevos.findIndex(
+    (item) => item.id === over.id
+  )
 
-    const [movido] = nuevos.splice(oldIndex, 1)
+  const [movido] = nuevos.splice(oldIndex, 1)
 
-    nuevos.splice(newIndex, 0, movido)
+  nuevos.splice(newIndex, 0, movido)
 
-    return nuevos
-  })
+  const ordenados = nuevos.map((p, index) => ({
+    ...p,
+    orden: index
+  }))
+
+  setProyectos(ordenados)
+
+  for (const proyecto of ordenados) {
+    await supabase
+      .from('proyectos')
+      .update({
+        orden: proyecto.orden
+      })
+      .eq('id', proyecto.id)
+  }
 }
   async function cargarDesdeSupabase(user) {
     const { data, error } = await supabase
