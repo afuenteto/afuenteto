@@ -43,6 +43,12 @@
 .drag-handle:active {
   cursor: grabbing;
 }
+.dashboard-toggle {
+  font-size: 18px;
+  color: var(--ink);
+  margin: 0 0 16px;
+  font-weight: 600;
+}
 /* =========================================================
    BASE
    ========================================================= */
