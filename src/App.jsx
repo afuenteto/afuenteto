@@ -112,6 +112,15 @@ presupuesto_pdf: proyecto.presupuestoPdf || null,
 }
 
 export default function App() {
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event
+
+    if (!over || active.id === over.id) return
+
+    console.log('Mover', active.id, 'a', over.id)
+  }
+
   const [usuario, setUsuario] = useState(null)
   const [splash, setSplash] = useState(true)
   const [email, setEmail] = useState('')
