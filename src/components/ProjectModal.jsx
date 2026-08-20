@@ -103,7 +103,7 @@ const pendienteCobro = totalProyecto - totalCobrado
     value={datos.prioridad || 'en_curso'}
     onChange={(e) =>
       setDatos((d) => ({
-        ...d,
+        ...datos,
         prioridad: e.target.value,
       }))
     }
