@@ -17,6 +17,7 @@ import {
 function proyectoDesdeBD(row) {
   return {
     id: row.id,
+    orden: row.orden ?? 0,
     nombre: row.nombre || '',
     cliente: row.cliente || '',
     telefono: row.telefono || '',
