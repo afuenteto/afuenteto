@@ -305,10 +305,10 @@ function agregarCobro() {
   <label>Prioridad</label>
 
   <select
-    value={proyecto.prioridad || 'en_curso'}
+    value={datos.prioridad || 'en_curso'}
     onChange={(e) =>
-      setProyecto({
-        ...proyecto,
+      setDatos({
+        ...datos,
         prioridad: e.target.value,
       })
     }
