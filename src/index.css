@@ -44,7 +44,7 @@
   cursor: grabbing;
 }
 .dashboard-toggle {
-  font-size: 18px;
+  font-size: 12px;
   color: var(--ink);
   margin: 0 0 16px;
   font-weight: 600;
