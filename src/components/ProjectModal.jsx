@@ -75,7 +75,24 @@ const pendienteCobro = totalProyecto - totalCobrado
         direccion,
       }))
     }
+<div className="field">
+  <label>Prioridad</label>
 
+  <select
+    value={proyecto.prioridad || 'en_curso'}
+    onChange={(e) =>
+      setProyecto({
+        ...proyecto,
+        prioridad: e.target.value
+      })
+    }
+  >
+    <option value="urgente">🔴 Urgente</option>
+    <option value="en_curso">🟡 En curso</option>
+    <option value="estable">🟢 Estable</option>
+    <option value="bloqueado">🔵 Bloqueado</option>
+  </select>
+</div>
     reader.readAsText(file)
 
     e.target.value = ''
