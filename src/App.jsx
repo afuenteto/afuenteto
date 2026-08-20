@@ -129,9 +129,24 @@ export default function App() {
 
   if (!over || active.id === over.id) return
 
-  console.log('Mover', active.id, 'a', over.id)
-}
+  setProyectos((items) => {
+    const oldIndex = items.findIndex(
+      (item) => item.id === active.id
+    )
 
+    const newIndex = items.findIndex(
+      (item) => item.id === over.id
+    )
+
+    const nuevos = [...items]
+
+    const [movido] = nuevos.splice(oldIndex, 1)
+
+    nuevos.splice(newIndex, 0, movido)
+
+    return nuevos
+  })
+}
   async function cargarDesdeSupabase(user) {
     const { data, error } = await supabase
       .from('proyectos')
