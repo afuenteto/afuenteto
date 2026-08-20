@@ -43,9 +43,23 @@ const pendienteCobro = valorProyecto - totalCobrado
   const dias = diasHasta(proyecto.fechaEntrega)
   const urgente = dias !== null && dias <= 7 && dias >= 0 && proyecto.fase !== 'Entrega'
   const vencido = dias !== null && dias < 0 && proyecto.fase !== 'Entrega'
+const coloresPrioridad = {
+  urgente: '#c43d32',
+  en_curso: '#ffd400',
+  estable: '#4caf50',
+  bloqueado: '#2196f3',
+}
 
+const colorPrioridad =
+  coloresPrioridad[proyecto.prioridad || 'en_curso']
   return (
-    <button className="card" onClick={onOpen}>
+    <button
+  className="card"
+  onClick={onOpen}
+  style={{
+    borderLeft: `5px solid ${colorPrioridad}`,
+  }}
+>
       <div className="card-head">
         <div>
           <h3 className="serif">{proyecto.nombre || 'Sin nombre'}</h3>
