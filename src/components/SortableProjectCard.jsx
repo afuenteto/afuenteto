@@ -23,16 +23,25 @@ export default function SortableProjectCard({
   }
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-    >
-      <ProjectCard
-        proyecto={proyecto}
-        onOpen={onOpen}
-      />
-    </div>
+   <div
+  ref={setNodeRef}
+  style={{
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }}
+>
+  <div
+    className="drag-handle"
+    {...attributes}
+    {...listeners}
+  >
+    ⠿
+  </div>
+
+  <ProjectCard
+    proyecto={proyecto}
+    onOpen={onOpen}
+  />
+</div>
   )
 }
