@@ -45,6 +45,7 @@ function proyectoDesdeBD(row) {
 function proyectoParaBD(proyecto, userId) {
   return {
     id: proyecto.id,
+    orden: proyecto.orden ?? 0,
     user_id: userId,
     nombre: proyecto.nombre || '',
     cliente: proyecto.cliente || '',
