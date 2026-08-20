@@ -374,54 +374,6 @@ useEffect(() => {
     }
   }
 
-  async function handleImportFile(e) {
-    const file = e.target.files?.[0]
-    e.target.value = ''
-
-    if (!file) return
-
-    try {
-      const datos = await importarJSON(file)
-
-      const confirmado = confirm(
-        `Se han encontrado ${datos.length} proyecto(s) en el archivo.\n\n` +
-          'Se añadirán a la base de datos. ¿Continuar?'
-      )
-
-      if (!confirmado) return
-
-      setGuardando(true)
-
-      for (const proyecto of datos) {
-        const fila = proyectoParaBD(proyecto, usuario.id)
-
-        const { error } = await supabase
-          .from('proyectos')
-          .upsert(fila)
-
-        if (error) throw error
-      }
-
-      const actualizados = await cargarDesdeSupabase(usuario)
-
-      setProyectos(actualizados)
-
-      setAviso(
-        `Importados ${datos.length} proyecto(s) correctamente.`
-      )
-
-      setTimeout(() => setAviso(''), 4000)
-    } catch (error) {
-      console.error(error)
-
-      alert(
-        `No se pudieron importar los proyectos.\n\n${error.message}`
-      )
-    } finally {
-      setGuardando(false)
-    }
-  }
-
   const proyectosFiltrados =
     filtro === 'Todos'
       ? proyectos
