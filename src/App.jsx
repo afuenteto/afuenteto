@@ -573,40 +573,25 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     </div>
   </div>
 
-        <div className="top-actions">
-          <button
-            className="btn"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={guardando}
-          >
-            Importar
-          </button>
+      <div className="top-actions">
 
-          <button
-            className="btn"
-            onClick={() => exportarJSON(proyectos)}
-            disabled={guardando}
-          >
-            Exportar copia
-          </button>
+  <button
+    className="btn btn-primary"
+    onClick={abrirNuevo}
+    disabled={guardando}
+  >
+    + Nuevo proyecto
+  </button>
 
-          <button
-            className="btn btn-primary"
-            onClick={abrirNuevo}
-            disabled={guardando}
-          >
-            + Nuevo proyecto
-          </button>
+  <button
+    className="btn"
+    onClick={cerrarSesion}
+    disabled={guardando}
+  >
+    Salir
+  </button>
 
-          <button
-            className="btn"
-            onClick={cerrarSesion}
-            disabled={guardando}
-          >
-            Salir
-          </button>
-        </div>
-      </div>
+</div>
 
       <input
         type="file"
