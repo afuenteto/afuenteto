@@ -49,6 +49,17 @@
   margin: 0 0 16px;
   font-weight: 600;
 }
+.dashboard-toggle {
+  background: #fff3a6;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
 /* =========================================================
    BASE
    ========================================================= */
