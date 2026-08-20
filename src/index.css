@@ -26,12 +26,18 @@
 }
 .drag-handle {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 99;
+  top: 12px;
+  right: 12px;
+
+  border: 0;
+  background: transparent;
+
   cursor: grab;
-  font-size: 22px;
+
+  font-size: 20px;
   color: var(--ink-faint);
+
+  z-index: 10;
 }
 
 .drag-handle:active {
