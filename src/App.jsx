@@ -429,12 +429,9 @@ useEffect(() => {
       ? proyectos
       : proyectos.filter((p) => p.fase === filtro)
 
-  const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
-    if (!a.fechaEntrega) return 1
-    if (!b.fechaEntrega) return -1
-
-    return a.fechaEntrega.localeCompare(b.fechaEntrega)
-  })
+const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
+  return (a.orden ?? 0) - (b.orden ?? 0)
+})
 
   /*
    * PANTALLA DE ENTRADA
