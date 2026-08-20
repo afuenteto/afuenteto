@@ -17,6 +17,7 @@ import {
 function proyectoDesdeBD(row) {
   return {
     id: row.id,
+    prioridad: row.prioridad || 'en_curso',
     orden: row.orden ?? 0,
     nombre: row.nombre || '',
     cliente: row.cliente || '',
@@ -45,6 +46,7 @@ function proyectoDesdeBD(row) {
 function proyectoParaBD(proyecto, userId) {
   return {
     id: proyecto.id,
+    prioridad: proyecto.prioridad || 'en_curso',
     orden: proyecto.orden ?? 0,
     user_id: userId,
     nombre: proyecto.nombre || '',
