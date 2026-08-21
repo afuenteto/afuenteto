@@ -507,7 +507,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     <div className="app">
      <div className="topbar">
   <div className="brand">
-    <StudioProfile>
+<StudioProfile usuario={usuario}>
   <img
     src="/afuenteto/icon-180.png"
     className="app-logo"
