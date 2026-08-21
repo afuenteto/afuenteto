@@ -1145,3 +1145,86 @@ a {
 .splash-subtitle {
   display: none !important;
 }
+.studio-profile {
+  position: relative;
+}
+
+
+.profile-trigger {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+
+.profile-trigger .app-logo {
+  transition: transform 0.2s ease;
+}
+
+
+.profile-trigger:hover .app-logo {
+  transform: scale(1.05);
+}
+
+
+.profile-panel {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  z-index: 50;
+
+  width: 280px;
+
+  padding: 20px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--line);
+
+  border-radius: var(--radius);
+
+  box-shadow: var(--shadow);
+}
+
+
+.profile-panel h3 {
+  margin-top: 0;
+  margin-bottom: 14px;
+
+  color: #7a1f1f;
+}
+
+
+.profile-panel p {
+  margin: 8px 0;
+
+  font-size: 14px;
+}
+
+
+.profile-panel a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+
+.profile-panel a:hover {
+  text-decoration: underline;
+}
+
+
+.profile-panel input {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-bottom: 10px;
+
+  padding: 10px 12px;
+
+  border: 1px solid var(--line);
+
+  border-radius: 6px;
+
+  font-size: 14px;
+}
