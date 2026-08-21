@@ -516,7 +516,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
       <p className="eyebrow">Panel de estudio</p>
 
       <h1 className="serif">
-        Proyectos de interiorismo
+        Proyectos
       </h1>
     </div>
   </div>
