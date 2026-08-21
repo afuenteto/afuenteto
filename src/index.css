@@ -62,8 +62,13 @@
 }
 .btn-primary {
   background: #7a1f1f;
-  color: #fff3a6;
-  border: 1px solid #7a1f1f;
+  border-color: #7a1f1f;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #5f1717;
+  border-color: #5f1717;
 }
 /* =========================================================
    BASE
