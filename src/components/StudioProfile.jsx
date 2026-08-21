@@ -1,46 +1,128 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { supabase } from '../supabase.js'
 
-export default function StudioProfile({ children }) {
+export default function StudioProfile({ children, usuario }) {
 
   const [abierto, setAbierto] = useState(false)
   const [editando, setEditando] = useState(false)
+  const [guardando, setGuardando] = useState(false)
 
   const [perfil, setPerfil] = useState({
-    nombre: 'Antonio Fuente',
+    id: null,
+    nombre: '',
     web: '',
     instagram: '',
     telefono: '',
   })
 
 
+  useEffect(() => {
+
+    if (!usuario) return
+
+    cargarPerfil()
+
+  }, [usuario])
+
+
+  async function cargarPerfil() {
+
+    const { data, error } = await supabase
+      .from('perfil_estudio')
+      .select('*')
+      .eq('user_id', usuario.id)
+      .single()
+
+
+    if (data) {
+
+      setPerfil({
+        id: data.id,
+        nombre: data.nombre || '',
+        web: data.web || '',
+        instagram: data.instagram || '',
+        telefono: data.telefono || '',
+      })
+
+    }
+
+  }
+
+
   function cambiarCampo(e) {
+
     setPerfil({
       ...perfil,
       [e.target.name]: e.target.value,
     })
+
+  }
+
+
+  async function guardarPerfil() {
+
+    setGuardando(true)
+
+
+    const fila = {
+
+      user_id: usuario.id,
+      nombre: perfil.nombre,
+      web: perfil.web,
+      instagram: perfil.instagram,
+      telefono: perfil.telefono,
+
+    }
+
+
+    const { data, error } = await supabase
+      .from('perfil_estudio')
+      .upsert(fila)
+      .select()
+      .single()
+
+
+    if (!error && data) {
+
+      setPerfil({
+        ...perfil,
+        id: data.id,
+      })
+
+      setEditando(false)
+
+    }
+
+
+    setGuardando(false)
+
   }
 
 
   return (
+
     <div className="studio-profile">
 
+
       <button
-  className="profile-trigger"
-  onClick={() => setAbierto(!abierto)}
->
-  {children}
-</button>
+        className="profile-trigger"
+        onClick={() => setAbierto(!abierto)}
+      >
+        {children}
+      </button>
 
 
       {abierto && (
 
         <div className="profile-panel">
 
+
           {!editando ? (
 
             <>
+
               <h3 className="serif">
-                {perfil.nombre}
+                {perfil.nombre || 'Sin nombre'}
               </h3>
 
 
@@ -125,19 +207,24 @@ export default function StudioProfile({ children }) {
 
               <button
                 className="btn btn-primary"
-                onClick={() => setEditando(false)}
+                onClick={guardarPerfil}
+                disabled={guardando}
               >
-                Guardar
+                {guardando ? 'Guardando...' : 'Guardar'}
               </button>
+
 
             </>
 
           )}
 
+
         </div>
 
       )}
 
+
     </div>
+
   )
 }
