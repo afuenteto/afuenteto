@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function StudioProfile() {
+export default function StudioProfile({ children }) {
 
   const [abierto, setAbierto] = useState(false)
   const [editando, setEditando] = useState(false)
@@ -25,11 +25,11 @@ export default function StudioProfile() {
     <div className="studio-profile">
 
       <button
-        className="profile-trigger"
-        onClick={() => setAbierto(!abierto)}
-      >
-        Perfil del estudio
-      </button>
+  className="profile-trigger"
+  onClick={() => setAbierto(!abierto)}
+>
+  {children}
+</button>
 
 
       {abierto && (
