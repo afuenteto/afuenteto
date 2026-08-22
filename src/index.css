@@ -24,25 +24,6 @@
     0 1px 2px rgba(0, 0, 0, 0.03),
     0 8px 30px rgba(0, 0, 0, 0.05);
 }
-.drag-handle {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-
-  border: 0;
-  background: transparent;
-
-  cursor: grab;
-
-  font-size: 20px;
-  color: var(--ink-faint);
-
-  z-index: 10;
-}
-
-.drag-handle:active {
-  cursor: grabbing;
-}
 .dashboard-toggle {
   font-size: 12px;
   color: var(--ink);
@@ -1330,4 +1311,88 @@ a {
   border-radius: 6px;
 
   font-size: 14px;
+}
+
+/* ASA PARA DESPLAZAR LAS FICHAS */
+.drag-handle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 84px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+
+  cursor: grab;
+  color: var(--ink-faint);
+
+  z-index: 10;
+  touch-action: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-dots {
+  font-size: 17px;
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.drag-handle-active {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.drag-arrows {
+  position: absolute;
+
+  width: 112px;
+  height: 58px;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  pointer-events: none;
+
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.arrow-up {
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.arrow-down {
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.arrow-left {
+  position: absolute;
+  left: 1px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.arrow-right {
+  position: absolute;
+  right: 1px;
+  top: 50%;
+  transform: translateY(-50%);
 }
