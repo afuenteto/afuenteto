@@ -43,10 +43,10 @@ export default function SortableProjectCard({
   aria-label="Mover proyecto"
 >
   <span className="drag-dots">
-    {Array.from({ length: 18 }).map((_, i) => (
-      <span key={i}></span>
-    ))}
-  </span>
+  {Array.from({ length: 10 }).map((_, i) => (
+    <span key={i}></span>
+  ))}
+</span>
 </button>
     </div>
   )
