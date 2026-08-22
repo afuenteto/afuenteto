@@ -35,33 +35,23 @@ export default function SortableProjectCard({
         onOpenTasks={onOpenTasks}
       />
 
-      <button
-        className={
-          'drag-handle' +
-          (moviendo ? ' drag-handle-active' : '')
-        }
-        {...attributes}
-        {...listeners}
-        type="button"
-        onPointerDown={() => setMoviendo(true)}
-        onPointerUp={() => setMoviendo(false)}
-        onPointerCancel={() => setMoviendo(false)}
-        onBlur={() => setMoviendo(false)}
-        aria-label="Mover proyecto"
-      >
-      <span className="drag-dots">
-  {Array.from({ length: 18 }).map((_, i) => (
-    <span key={i}></span>
-  ))}
-</span>
+  <button
+  className="drag-handle"
+  {...attributes}
+  {...listeners}
+  type="button"
+  aria-label="Mover proyecto"
+>
+  <span className="drag-dots">
+    {Array.from({ length: 18 }).map((_, i) => (
+      <span key={i}></span>
+    ))}
+  </span>
 
-        {moviendo && (
-         <span className="drag-arrows">
-  <span>↕</span>
-  <span>↔</span>
-</span>
-        )}
-      </button>
+  <span className="drag-arrows">
+    ↕ ↔
+  </span>
+</button>
     </div>
   )
 }
