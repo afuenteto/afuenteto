@@ -47,10 +47,6 @@ export default function SortableProjectCard({
       <span key={i}></span>
     ))}
   </span>
-
-  <span className="drag-arrows">
-    ↕ ↔
-  </span>
 </button>
     </div>
   )
