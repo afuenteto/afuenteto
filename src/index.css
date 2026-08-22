@@ -1339,7 +1339,7 @@ a {
 
 .drag-dots {
   display: grid;
-  grid-template-columns: repeat(6, 3px);
+  grid-template-columns: repeat(5, 3px);
   grid-template-rows: repeat(3, 3px);
   gap: 3px;
   transform: translateX(6px);
