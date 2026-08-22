@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import ProjectCard from './ProjectCard'
@@ -5,16 +6,18 @@ import ProjectCard from './ProjectCard'
 export default function SortableProjectCard({
   proyecto,
   onOpen,
-  onOpenTasks,
+  onOpenTasks
 }) {
+  const [moviendo, setMoviendo] = useState(false)
+
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
-    transition,
+    transition
   } = useSortable({
-    id: proyecto.id,
+    id: proyecto.id
   })
 
   return (
@@ -33,14 +36,31 @@ export default function SortableProjectCard({
       />
 
       <button
-        className="drag-handle"
+        className={
+          'drag-handle' +
+          (moviendo ? ' drag-handle-active' : '')
+        }
         {...attributes}
         {...listeners}
         type="button"
-        aria-label="Reordenar proyecto"
-        title="Reordenar proyecto"
+        onPointerDown={() => setMoviendo(true)}
+        onPointerUp={() => setMoviendo(false)}
+        onPointerCancel={() => setMoviendo(false)}
+        onBlur={() => setMoviendo(false)}
+        aria-label="Mover proyecto"
       >
-        ⠿
+        <span className="drag-dots">
+          ⠿ ⠿ ⠿
+        </span>
+
+        {moviendo && (
+          <span className="drag-arrows">
+            <span className="arrow-up">↑</span>
+            <span className="arrow-right">→</span>
+            <span className="arrow-down">↓</span>
+            <span className="arrow-left">←</span>
+          </span>
+        )}
       </button>
     </div>
   )
