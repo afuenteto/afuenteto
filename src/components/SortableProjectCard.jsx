@@ -49,9 +49,11 @@ export default function SortableProjectCard({
         onBlur={() => setMoviendo(false)}
         aria-label="Mover proyecto"
       >
-        <span className="drag-dots">
-          ⠿⠿⠿
-        </span>
+      <span className="drag-dots">
+  {Array.from({ length: 18 }).map((_, i) => (
+    <span key={i}></span>
+  ))}
+</span>
 
         {moviendo && (
           <span className="drag-arrows">
