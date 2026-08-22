@@ -301,11 +301,18 @@ a {
 
   flex-shrink: 0;
 }
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
 .login-logo {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  margin-bottom: 25px;
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 18px;
 }
 /* =========================================================
    ACCIONES
