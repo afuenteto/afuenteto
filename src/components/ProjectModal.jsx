@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { FASES, uid } from '../storage.js'
 import { supabase } from '../supabase.js'
 
-export default function ProjectModal({ proyecto, onSave, onDelete, onClose }) {
+export default function ProjectModal({ proyecto, onSave, onDelete, onClose, seccionInicial = null }) {
  const [datos, setDatos] = useState({
   ...proyecto,
   cobros: proyecto.cobros || []
@@ -43,6 +43,20 @@ const totalPrevisto =
 
 const pendienteCobro = totalProyecto - totalCobrado
  const contactoInputRef = useRef(null)
+ const tareasRef = useRef(null)
+
+ useEffect(() => {
+   if (seccionInicial !== 'tareas') return
+
+   const timer = setTimeout(() => {
+     tareasRef.current?.scrollIntoView({
+       behavior: 'smooth',
+       block: 'start',
+     })
+   }, 120)
+
+   return () => clearTimeout(timer)
+ }, [seccionInicial])
    function importarContacto(e) {
     const file = e.target.files?.[0]
 
@@ -96,24 +110,6 @@ const pendienteCobro = totalProyecto - totalCobrado
   const file = e.target.files?.[0]
 
   if (!file) return
-<div className="field">
-  <label>Prioridad</label>
-
-  <select
-    value={datos.prioridad || 'en_curso'}
-    onChange={(e) =>
-      setDatos((d) => ({
-        ...datos,
-        prioridad: e.target.value,
-      }))
-    }
-  >
-    <option value="urgente">🔴 Urgente</option>
-    <option value="en_curso">🟡 En curso</option>
-    <option value="estable">🟢 Estable</option>
-    <option value="bloqueado">🔵 Bloqueado</option>
-  </select>
-</div>
   if (file.type !== 'application/pdf') {
     alert('Selecciona un archivo PDF')
     return
@@ -572,7 +568,7 @@ function agregarCobro() {
 </button>
 
 </div>
-        <div className="section-label">Tareas</div>
+        <div ref={tareasRef} className="section-label">Tareas</div>
         {datos.tareas.map((t) => (
           <div className="list-row" key={t.id}>
             <input type="checkbox" checked={t.hecha} onChange={() => alternarTarea(t.id)} />
