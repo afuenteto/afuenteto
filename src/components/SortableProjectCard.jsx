@@ -4,17 +4,17 @@ import ProjectCard from './ProjectCard'
 
 export default function SortableProjectCard({
   proyecto,
-  onOpen
+  onOpen,
+  onOpenTasks,
 }) {
-
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
-    transition
+    transition,
   } = useSortable({
-    id: proyecto.id
+    id: proyecto.id,
   })
 
   return (
@@ -26,10 +26,10 @@ export default function SortableProjectCard({
         position: 'relative',
       }}
     >
-
       <ProjectCard
         proyecto={proyecto}
         onOpen={onOpen}
+        onOpenTasks={onOpenTasks}
       />
 
       <button
@@ -37,10 +37,11 @@ export default function SortableProjectCard({
         {...attributes}
         {...listeners}
         type="button"
+        aria-label="Reordenar proyecto"
+        title="Reordenar proyecto"
       >
         ⠿
       </button>
-
     </div>
   )
 }
