@@ -76,27 +76,35 @@ export default function StudioProfile({ children, usuario }) {
 
 
     const { data, error } = await supabase
-      .from('perfil_estudio')
-      .upsert(fila)
-      .select()
-      .single()
+  .from('perfil_estudio')
+  .upsert(fila, {
+    onConflict: 'user_id',
+  })
+  .select()
+  .single()
 
+if (error) {
+  console.error('ERROR GUARDANDO PERFIL:', error)
 
-    if (!error && data) {
+  alert(
+    `No se pudo guardar el perfil.\n\n${error.message}`
+  )
 
-      setPerfil({
-        ...perfil,
-        id: data.id,
-      })
+  setGuardando(false)
+  return
+}
 
-      setEditando(false)
+if (data) {
+  setPerfil({
+    ...perfil,
+    ...data,
+    id: data.id,
+  })
 
-    }
+  setEditando(false)
+}
 
-
-    setGuardando(false)
-
-  }
+setGuardando(false)
 
 
   return (
