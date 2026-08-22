@@ -50,7 +50,7 @@ export default function SortableProjectCard({
         aria-label="Mover proyecto"
       >
         <span className="drag-dots">
-          ⠿ ⠿ ⠿
+          ⠿⠿⠿
         </span>
 
         {moviendo && (
