@@ -1,7 +1,6 @@
 import StudioDashboard from './components/StudioDashboard.jsx'
 import EconomicChart from './components/EconomicChart.jsx'
 import { useEffect, useState } from 'react'
-import ProjectCard from './components/ProjectCard.jsx'
 import SortableProjectCard from './components/SortableProjectCard'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
@@ -122,6 +121,7 @@ export default function App() {
   const [cargando, setCargando] = useState(true)
   const [proyectos, setProyectos] = useState([])
   const [editando, setEditando] = useState(null)
+  const [seccionInicial, setSeccionInicial] = useState(null)
   const [filtro, setFiltro] = useState('Todos')
   const [guardando, setGuardando] = useState(false)
   const [aviso, setAviso] = useState('')
@@ -239,13 +239,6 @@ export default function App() {
       subscription.unsubscribe()
     }
   }, [])
-useEffect(() => {
-  const timer = setTimeout(() => {
-    setSplash(false)
-  }, 1600)
-
-  return () => clearTimeout(timer)
-}, [])
   async function iniciarSesion(e) {
     e.preventDefault()
 
@@ -283,13 +276,16 @@ useEffect(() => {
     setUsuario(null)
     setProyectos([])
     setEditando(null)
+    setSeccionInicial(null)
   }
 
   function abrirNuevo() {
+    setSeccionInicial(null)
     setEditando(nuevoProyecto())
   }
 
-  function abrirExistente(proyecto) {
+  function abrirExistente(proyecto, seccion = null) {
+    setSeccionInicial(seccion)
     setEditando(proyecto)
   }
 
@@ -325,6 +321,7 @@ useEffect(() => {
       })
 
       setEditando(null)
+      setSeccionInicial(null)
 
       setAviso('Proyecto guardado correctamente.')
       setTimeout(() => setAviso(''), 3000)
@@ -361,6 +358,7 @@ useEffect(() => {
 
       setProyectos((prev) => prev.filter((p) => p.id !== id))
       setEditando(null)
+      setSeccionInicial(null)
 
       setAviso('Proyecto eliminado.')
       setTimeout(() => setAviso(''), 3000)
@@ -628,6 +626,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
           key={proyecto.id}
           proyecto={proyecto}
           onOpen={() => abrirExistente(proyecto)}
+          onOpenTasks={() => abrirExistente(proyecto, 'tareas')}
         />
       ))}
     </div>
@@ -641,7 +640,11 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
       proyecto={editando}
       onSave={guardar}
       onDelete={eliminar}
-      onClose={() => setEditando(null)}
+      seccionInicial={seccionInicial}
+      onClose={() => {
+        setEditando(null)
+        setSeccionInicial(null)
+      }}
     />
   )}
 
