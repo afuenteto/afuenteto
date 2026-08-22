@@ -451,6 +451,11 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
             margin: '80px auto',
           }}
         >
+          <img
+  src="/afuenteto/icon-180.png"
+  className="login-logo"
+  alt=""
+/>
           <p className="eyebrow">Antonio Fuente</p>
 
           <h1 className="serif">
