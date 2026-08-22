@@ -1342,6 +1342,7 @@ a {
   grid-template-columns: repeat(6, 3px);
   grid-template-rows: repeat(3, 3px);
   gap: 3px;
+  transform: translateX(6px);
 }
 
 .drag-dots span {
