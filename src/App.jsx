@@ -5,6 +5,7 @@ import SortableProjectCard from './components/SortableProjectCard'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import ProjectModal from './components/ProjectModal.jsx'
+import TasksModal from './components/TasksModal.jsx'
 import StudioProfile from './components/StudioProfile.jsx'
 import { supabase } from './supabase.js'
 import {
@@ -121,6 +122,7 @@ export default function App() {
   const [cargando, setCargando] = useState(true)
   const [proyectos, setProyectos] = useState([])
   const [editando, setEditando] = useState(null)
+  const [tareasAbiertas, setTareasAbiertas] = useState(null)
   const [seccionInicial, setSeccionInicial] = useState(null)
   const [filtro, setFiltro] = useState('Todos')
   const [guardando, setGuardando] = useState(false)
@@ -276,6 +278,7 @@ export default function App() {
     setUsuario(null)
     setProyectos([])
     setEditando(null)
+    setTareasAbiertas(null)
     setSeccionInicial(null)
   }
 
@@ -287,6 +290,42 @@ export default function App() {
   function abrirExistente(proyecto, seccion = null) {
     setSeccionInicial(seccion)
     setEditando(proyecto)
+  }
+
+  function abrirTareas(proyecto) {
+    setTareasAbiertas(proyecto)
+  }
+
+  async function guardarTareas(proyectoId, tareas) {
+    if (!usuario) return
+
+    setGuardando(true)
+    setAviso('')
+
+    try {
+      const { error } = await supabase
+        .from('proyectos')
+        .update({ tareas })
+        .eq('id', proyectoId)
+        .eq('user_id', usuario.id)
+
+      if (error) throw error
+
+      setProyectos((prev) =>
+        prev.map((p) =>
+          p.id === proyectoId ? { ...p, tareas } : p
+        )
+      )
+
+      setTareasAbiertas(null)
+      setAviso('Tareas guardadas correctamente.')
+      setTimeout(() => setAviso(''), 3000)
+    } catch (error) {
+      console.error(error)
+      alert(`No se pudieron guardar las tareas.\n\n${error.message}`)
+    } finally {
+      setGuardando(false)
+    }
   }
 
   async function guardar(datos) {
@@ -626,7 +665,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
           key={proyecto.id}
           proyecto={proyecto}
           onOpen={() => abrirExistente(proyecto)}
-          onOpenTasks={() => abrirExistente(proyecto, 'tareas')}
+          onOpenTasks={() => abrirTareas(proyecto)}
         />
       ))}
     </div>
@@ -645,6 +684,15 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
         setEditando(null)
         setSeccionInicial(null)
       }}
+    />
+  )}
+
+  {tareasAbiertas && (
+    <TasksModal
+      proyecto={tareasAbiertas}
+      onSave={guardarTareas}
+      onClose={() => setTareasAbiertas(null)}
+      guardando={guardando}
     />
   )}
 
