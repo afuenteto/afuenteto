@@ -56,12 +56,10 @@ export default function SortableProjectCard({
 </span>
 
         {moviendo && (
-          <span className="drag-arrows">
-            <span className="arrow-up">↑</span>
-            <span className="arrow-right">→</span>
-            <span className="arrow-down">↓</span>
-            <span className="arrow-left">←</span>
-          </span>
+         <span className="drag-arrows">
+  <span>↕</span>
+  <span>↔</span>
+</span>
         )}
       </button>
     </div>
