@@ -146,15 +146,16 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks }) {
           Inicio: {formatearFecha(proyecto.fechaInicio)}
         </span>
 
-        {tareasPendientes > 0 && (
+        {tareas.length > 0 && (
           <button
             type="button"
             className="tasks-open-btn"
             onClick={onOpenTasks}
           >
-            {tareasPendientes}{' '}
-            tarea{tareasPendientes !== 1 ? 's' : ''}{' '}
-            pendiente{tareasPendientes !== 1 ? 's' : ''}
+            Tareas
+            {tareasPendientes > 0
+              ? ` · ${tareasPendientes} pendiente${tareasPendientes !== 1 ? 's' : ''}`
+              : ' · completadas'}
           </button>
         )}
       </div>
