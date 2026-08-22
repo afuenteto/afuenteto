@@ -1350,22 +1350,3 @@ a {
   background: var(--ink-faint);
   border-radius: 50%;
 }
-
-.drag-arrows {
-  position: absolute;
-  right: 75px;
-  top: 50%;
-
-  transform: translateY(-50%);
-
-  font-size: 11px;
-  color: var(--ink-faint);
-
-  opacity: 0;
-  transition: opacity .2s;
-  white-space: nowrap;
-}
-
-.drag-handle:hover .drag-arrows {
-  opacity: .7;
-}
