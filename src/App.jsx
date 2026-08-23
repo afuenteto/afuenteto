@@ -686,12 +686,6 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 
       <StudioDashboard proyectos={proyectos} />
 
-      <StudioToday
-        proyectos={proyectos}
-        onOpen={abrirExistente}
-        onOpenTasks={abrirTareas}
-      />
-
       {proyectosOrdenados.length === 0 ? (
         <div className="empty">
           <h3 className="serif">
@@ -710,6 +704,13 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
        ) : (
     <div>
       <EconomicChart proyectos={proyectosOrdenados} />
+
+        <StudioToday
+        proyectos={proyectos}
+        onOpen={abrirExistente}
+        onOpenTasks={abrirTareas}
+      />
+
 
      <DndContext
   collisionDetection={closestCenter}
