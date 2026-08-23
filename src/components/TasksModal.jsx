@@ -22,7 +22,7 @@ function cambiarEstado(id) {
       t.id === id
         ? {
             ...t,
-            feita: !t.hecha,
+            hecha: !t.hecha,
             fecha: t.fecha || '',
             prioridad: t.prioridad || 'normal'
           }
