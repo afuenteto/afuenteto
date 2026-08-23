@@ -403,20 +403,6 @@ export default function App() {
   })
 
 
-const proyectoActual = proyectos.find(
-  (p) => p.id === proyectoId
-)
-
-let historialNuevo = [
-  ...(proyectoActual?.historial || [])
-]
-
-
-const tareasAnteriores =
-  proyectoActual?.tareas || []
-
-
-tareas.forEach((tarea) => {
 
   const anterior = tareasAnteriores.find(
     (t) => t.id === tarea.id
