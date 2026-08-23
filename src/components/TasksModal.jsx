@@ -149,33 +149,30 @@ export default function TasksModal({
 
 
 
-        <div className="add-row">
+       <div className="add-row">
 
-          <input
-            value={nuevaTarea}
-            placeholder="Nueva tarea..."
-            onChange={(e) =>
-              setNuevaTarea(e.target.value)
-            }
-            onKeyDown={(e) => {
+  <input
+    value={nuevaTarea}
+    placeholder="Nueva tarea..."
+    onChange={(e) =>
+      setNuevaTarea(e.target.value)
+    }
+    onKeyDown={(e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        añadirTarea()
+      }
+    }}
+  />
 
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                añadirTarea()
-              }
+  <button
+    className="btn btn-sm"
+    onClick={añadirTarea}
+  >
+    Añadir
+  </button>
 
-            }}
-          />
-
-
-          <button
-            className="btn btn-sm"
-            onClick={añadirTarea}
-          >
-            Añadir
-          </button>
-
-        </div>
+</div>
 
 
 
