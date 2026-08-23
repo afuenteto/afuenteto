@@ -130,14 +130,78 @@ function cambiarEstado(id) {
             />
 
 
-            <div>
+       <div>
 
-  <span>
-    {t.texto}
-  </span>
+  <input
+    type="text"
+    value={t.texto}
+    onChange={(e) =>
+      setTareas((prev) =>
+        prev.map((x) =>
+          x.id === t.id
+            ? {
+                ...x,
+                texto: e.target.value
+              }
+            : x
+        )
+      )
+    }
+  />
 
 
-  {(t.fecha || t.prioridad) && (
+  <div className="task-options">
+
+    <input
+      type="date"
+      value={t.fecha || ''}
+      onChange={(e) =>
+        setTareas((prev) =>
+          prev.map((x) =>
+            x.id === t.id
+              ? {
+                  ...x,
+                  fecha: e.target.value
+                }
+              : x
+          )
+        )
+      }
+    />
+
+
+    <select
+      value={t.prioridad || 'normal'}
+      onChange={(e) =>
+        setTareas((prev) =>
+          prev.map((x) =>
+            x.id === t.id
+              ? {
+                  ...x,
+                  prioridad: e.target.value
+                }
+              : x
+          )
+        )
+      }
+    >
+      <option value="alta">
+        🔴 Alta
+      </option>
+
+      <option value="normal">
+        🟡 Normal
+      </option>
+
+      <option value="baja">
+        ⚪ Baja
+      </option>
+
+    </select>
+
+  </div>
+
+</div>
 
     <div className="task-info">
 
