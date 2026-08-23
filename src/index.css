@@ -1498,3 +1498,21 @@ a {
 .task-options select {
   font-size: 12px;
 }
+.task-done {
+  opacity: 0.45;
+}
+
+.task-done span {
+  text-decoration: line-through;
+}
+
+.task-completed-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-completed-content small {
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 3px;
+}
