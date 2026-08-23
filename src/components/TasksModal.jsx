@@ -128,10 +128,40 @@ export default function TasksModal({
             />
 
 
-            <span>
-              {t.texto}
-            </span>
+            <div>
 
+  <span>
+    {t.texto}
+  </span>
+
+
+  {(t.fecha || t.prioridad) && (
+
+    <div className="task-info">
+
+      {t.fecha && (
+        <span>
+          📅 {t.fecha}
+        </span>
+      )}
+
+      {t.prioridad === 'alta' && (
+        <span>
+          🔴 Alta
+        </span>
+      )}
+
+      {t.prioridad === 'normal' && (
+        <span>
+          🟡 Normal
+        </span>
+      )}
+
+    </div>
+
+  )}
+
+</div>
 
             <button
               className="icon-btn"
