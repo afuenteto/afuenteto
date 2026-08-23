@@ -393,25 +393,26 @@ function añadirHistorial(proyecto, texto, icono='•') {
   ]
 
 }
-  async function guardar(datos) {
-    if (!usuario) return
+async function guardar(datos) {
+  if (!usuario) return
 
-    setGuardando(true)
-    setAviso('')
-if (!datos.historial || datos.historial.length === 0) {
+  setGuardando(true)
+  setAviso('')
 
-  datos.historial = [
-    {
-      id: crypto.randomUUID(),
-      fecha: new Date().toISOString(),
-      texto: 'Proyecto creado',
-      icono: '✨'
+  try {
+
+    if (!datos.historial || datos.historial.length === 0) {
+      datos.historial = [
+        {
+          id: crypto.randomUUID(),
+          fecha: new Date().toISOString(),
+          texto: 'Proyecto creado',
+          icono: '✨'
+        }
+      ]
     }
-  ]
 
-}
-    try {
-      const fila = proyectoParaBD(datos, usuario.id)
+    const fila = proyectoParaBD(datos, usuario.id)
 
       const { data, error } = await supabase
         .from('proyectos')
