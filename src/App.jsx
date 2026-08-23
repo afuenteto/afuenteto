@@ -358,7 +358,7 @@ export default function App() {
     setGuardando(true)
     setAviso('')
 
-   try {
+  try {
 
   const proyectoActual =
     proyectos.find(
@@ -381,6 +381,7 @@ export default function App() {
         (t) => t.id === tarea.id
       )
 
+
     if (
       tarea.hecha &&
       anterior &&
@@ -399,38 +400,14 @@ export default function App() {
   })
 
 
-
-  const anterior = tareasAnteriores.find(
-    (t) => t.id === tarea.id
-  )
-
-
-  if (
-    tarea.hecha &&
-    anterior &&
-    !anterior.hecha
-  ) {
-
-    historialNuevo.push({
-      id: crypto.randomUUID(),
-      fecha: new Date().toISOString(),
-      texto: `Tarea completada: ${tarea.texto}`,
-      icono: '✓'
+  const { error } = await supabase
+    .from('proyectos')
+    .update({
+      tareas,
+      historial: historialNuevo
     })
-
-  }
-
-})
-
-
-const { error } = await supabase
-  .from('proyectos')
-  .update({
-    tareas,
-    historial: historialNuevo
-  })
-  .eq('id', proyectoId)
-  .eq('user_id', usuario.id)
+    .eq('id', proyectoId)
+    .eq('user_id', usuario.id)
 
   if (error) throw error
 
