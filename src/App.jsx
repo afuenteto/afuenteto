@@ -381,22 +381,18 @@ export default function App() {
         (t) => t.id === tarea.id
       )
 
-
     if (
       tarea.hecha &&
       anterior &&
       !anterior.hecha
     ) {
 
-      historialNuevo = [
-        ...historialNuevo,
-        {
-          id: crypto.randomUUID(),
-          fecha: new Date().toISOString(),
-          texto: `Tarea completada: ${tarea.texto}`,
-          icono: '✓'
-        }
-      ]
+      historialNuevo.push({
+        id: crypto.randomUUID(),
+        fecha: new Date().toISOString(),
+        texto: `Tarea completada: ${tarea.texto}`,
+        icono: '✓'
+      })
 
     }
 
