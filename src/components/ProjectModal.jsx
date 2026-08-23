@@ -649,7 +649,7 @@ function agregarCobro() {
             Añadir
           </button>
         </div>
-
+<ProjectHistory proyecto={datos} />
         <div className="section-label">Notas</div>
         <div className="field">
           <textarea value={datos.notas} onChange={(e) => set('notas', e.target.value)} placeholder="Observaciones, medidas, referencias…" />
