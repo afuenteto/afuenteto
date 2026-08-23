@@ -107,7 +107,9 @@ horas_reales:
     ? null
     : Number(proyecto.horasReales),
 
-
+historial: Array.isArray(proyecto.historial)
+  ? proyecto.historial
+  : [],
     
 presupuesto_pdf: proyecto.presupuestoPdf || null,
     notas: proyecto.notas || '',
