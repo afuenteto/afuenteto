@@ -341,9 +341,12 @@ export default function App() {
   }
 
   function abrirExistente(proyecto, seccion = null) {
-    setSeccionInicial(seccion)
-    setEditando(proyecto)
-  }
+
+  console.log('ABRIENDO PROYECTO:', proyecto)
+
+  setSeccionInicial(seccion)
+  setEditando(proyecto)
+}
 
   function abrirTareas(proyecto) {
     setTareasAbiertas(proyecto)
