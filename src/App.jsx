@@ -863,17 +863,8 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     />
   </>
 )}
-      onSave={guardar}
-      onDelete={eliminar}
-      seccionInicial={seccionInicial}
-      onClose={() => {
-        setEditando(null)
-        setSeccionInicial(null)
-      }}
-    />
-  )}
-
-  {tareasAbiertas && (
+     
+      {tareasAbiertas && (
     <TasksModal
       proyecto={tareasAbiertas}
       onSave={guardarTareas}
