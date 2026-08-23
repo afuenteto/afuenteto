@@ -100,9 +100,18 @@ export default function StudioToday({
 )}
 
 
-  {entregas.length > 0 && (
-    <button
-      className="today-counter"
+{entregas.length > 0 && (
+  <button
+    className="today-counter"
+    onClick={(e) => {
+      e.stopPropagation()
+
+      onOpen(entregas[0])
+    }}
+  >
+    📅 {entregas.length}
+  </button>
+)}
       onClick={(e) => {
         e.stopPropagation()
         setAbierto(true)
