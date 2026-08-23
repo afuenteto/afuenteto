@@ -83,30 +83,50 @@ export default function StudioToday({
 
   <span className="today-counters">
 
-    {tareasUrgentes.length > 0 && (
-      <span>
-        🔴 {tareasUrgentes.length}
-      </span>
-    )}
-
-    {entregas.length > 0 && (
-      <span>
-        📅 {entregas.length}
-      </span>
-    )}
-
-    {cobrosPendientes.length > 0 && (
-      <span>
-        💰 {cobrosPendientes.length}
-      </span>
-    )}
+  {tareasUrgentes.length > 0 && (
+    <button
+      className="today-counter"
+      onClick={(e) => {
+        e.stopPropagation()
+        setAbierto(true)
+      }}
+    >
+      🔴 {tareasUrgentes.length}
+    </button>
+  )}
 
 
-    <span>
-      {abierto ? '−' : '+'}
-    </span>
+  {entregas.length > 0 && (
+    <button
+      className="today-counter"
+      onClick={(e) => {
+        e.stopPropagation()
+        setAbierto(true)
+      }}
+    >
+      📅 {entregas.length}
+    </button>
+  )}
 
+
+  {cobrosPendientes.length > 0 && (
+    <button
+      className="today-counter"
+      onClick={(e) => {
+        e.stopPropagation()
+        setAbierto(true)
+      }}
+    >
+      💰 {cobrosPendientes.length}
+    </button>
+  )}
+
+
+  <span>
+    {abierto ? '−' : '+'}
   </span>
+
+</span>
 
 </div>
 
