@@ -241,6 +241,34 @@ export default function App() {
       subscription.unsubscribe()
     }
   }, [])
+  async function recuperarPassword() {
+  if (!email.trim()) {
+    alert('Escribe primero tu email para recuperar la contraseña.')
+    return
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(
+    email.trim(),
+    {
+      redirectTo:
+        window.location.origin,
+    }
+  )
+
+  if (error) {
+    console.error(error)
+
+    alert(
+      `No se pudo enviar el correo.\n\n${error.message}`
+    )
+
+    return
+  }
+
+  alert(
+    'Se ha enviado un correo para recuperar la contraseña.'
+  )
+}
   async function iniciarSesion(e) {
     e.preventDefault()
 
