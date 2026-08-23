@@ -18,17 +18,17 @@ export default function TasksModal({
   function cambiarEstado(id) {
 
     setTareas((prev) =>
-      prev.map((t) =>
-        t.id === id
-          ? {
-              ...t,
-              hecha: !t.hecha
-            }
-          : t
-      )
-    )
-
-  }
+  prev.map((t) =>
+    t.id === id
+      ? {
+          ...t,
+          hecha: !t.hecha,
+          fecha: t.fecha || '',
+          prioridad: t.prioridad || 'normal'
+        }
+      : t
+  )
+)
 
 
   function añadirTarea() {
