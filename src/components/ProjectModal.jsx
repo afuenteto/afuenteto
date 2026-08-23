@@ -650,7 +650,7 @@ function agregarCobro() {
         </button>
       </div>
 
-      <ProjectHistory proyecto={datos} />
+     {<ProjectHistory proyecto={datos} />}
 
       <div className="section-label">
         Notas
