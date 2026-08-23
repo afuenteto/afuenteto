@@ -47,11 +47,12 @@ function cambiarEstado(id) {
 
     setTareas((prev) => [
       ...prev,
-      {
-        id: uid(),
-        texto,
-        hecha: false
-      }
+     {
+  id: uid(),
+  texto,
+  hecha: false,
+  fechaCompletada: ''
+}
     ])
 
     setNuevaTarea('')
