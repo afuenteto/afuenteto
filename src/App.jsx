@@ -1,4 +1,5 @@
 import StudioDashboard from './components/StudioDashboard.jsx'
+import StudioToday from './components/StudioToday.jsx'
 import EconomicChart from './components/EconomicChart.jsx'
 import { useEffect, useState } from 'react'
 import SortableProjectCard from './components/SortableProjectCard'
