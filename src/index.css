@@ -25,21 +25,20 @@
     0 8px 30px rgba(0, 0, 0, 0.05);
 }
 .dashboard-toggle {
-  font-size: 12px;
-  color: var(--ink);
-  margin: 0 0 16px;
-  font-weight: 600;
-}
-.dashboard-toggle {
   background: #fff3a6;
   width: 100%;
   box-sizing: border-box;
   padding: 10px 14px;
   border-radius: 6px;
   color: var(--ink);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   margin: 0 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: none;
 }
 .btn-primary {
   background: #7a1f1f;
