@@ -1458,3 +1458,10 @@ a {
   border-bottom: none;
   margin: 0 0 16px;
 }
+.today-counters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
