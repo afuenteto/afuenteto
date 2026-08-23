@@ -87,7 +87,10 @@ const [abierto, setAbierto] = useState(false)
     {abierto ? '−' : '+'}
   </span>
 </div>
-
+      </>
+)}
+{abierto && (
+<>
       {vacio && (
         <p className="today-empty">
           No hay asuntos pendientes.
