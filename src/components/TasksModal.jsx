@@ -282,9 +282,14 @@ function cambiarEstado(id) {
         {t.texto}
       </span>
 
-      <small>
-        Completada
-      </small>
+     <small>
+  Completada {t.fechaCompletada && (
+    <>
+      {new Date(t.fechaCompletada)
+        .toLocaleDateString('es-ES')}
+    </>
+  )}
+</small>
 
     </div>
 
