@@ -1,3 +1,4 @@
+import ProjectHistory from './components/ProjectHistory.jsx'
 import StudioDashboard from './components/StudioDashboard.jsx'
 import StudioToday from './components/StudioToday.jsx'
 import EconomicChart from './components/EconomicChart.jsx'
