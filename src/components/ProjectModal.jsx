@@ -654,7 +654,9 @@ function agregarCobro() {
         <div className="field">
           <textarea value={datos.notas} onChange={(e) => set('notas', e.target.value)} placeholder="Observaciones, medidas, referencias…" />
         </div>
-
+<ProjectHistory
+  historial={datos.historial || []}
+/>
         <div className="modal-actions">
           <div>
             {!esNuevo && (
