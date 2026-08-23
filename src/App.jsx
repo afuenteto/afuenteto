@@ -400,7 +400,45 @@ export default function App() {
   })
 
 
- const { error } = await supabase
+const proyectoActual = proyectos.find(
+  (p) => p.id === proyectoId
+)
+
+let historialNuevo = [
+  ...(proyectoActual?.historial || [])
+]
+
+
+const tareasAnteriores =
+  proyectoActual?.tareas || []
+
+
+tareas.forEach((tarea) => {
+
+  const anterior = tareasAnteriores.find(
+    (t) => t.id === tarea.id
+  )
+
+
+  if (
+    tarea.hecha &&
+    anterior &&
+    !anterior.hecha
+  ) {
+
+    historialNuevo.push({
+      id: crypto.randomUUID(),
+      fecha: new Date().toISOString(),
+      texto: `Tarea completada: ${tarea.texto}`,
+      icono: '✓'
+    })
+
+  }
+
+})
+
+
+const { error } = await supabase
   .from('proyectos')
   .update({
     tareas,
@@ -408,7 +446,6 @@ export default function App() {
   })
   .eq('id', proyectoId)
   .eq('user_id', usuario.id)
-
 
   if (error) throw error
 
