@@ -255,40 +255,47 @@ function cambiarEstado(id) {
             </div>
 
 
-            {terminadas.map((t) => (
+         {terminadas.map((t) => (
 
-              <div
-                className="list-row task-done"
-                key={t.id}
-              >
+  <div
+    className="list-row task-done"
+    key={t.id}
+  >
 
-                <input
-                  type="checkbox"
-                  checked
-                  onChange={() =>
-                    cambiarEstado(t.id)
-                  }
-                />
-
-
-                <span>
-                  {t.texto}
-                </span>
+    <input
+      type="checkbox"
+      checked
+      onChange={() =>
+        cambiarEstado(t.id)
+      }
+    />
 
 
-                <button
-                  className="icon-btn"
-                  onClick={() =>
-                    borrarTarea(t.id)
-                  }
-                >
-                  ✕
-                </button>
+    <div className="task-completed-content">
 
-              </div>
+      <span>
+        {t.texto}
+      </span>
 
-            ))}
+      <small>
+        Completada
+      </small>
 
+    </div>
+
+
+    <button
+      className="icon-btn"
+      onClick={() =>
+        borrarTarea(t.id)
+      }
+    >
+      ✕
+    </button>
+
+  </div>
+
+))}
           </>
 
         )}
