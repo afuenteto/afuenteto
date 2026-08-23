@@ -1488,3 +1488,13 @@ a {
   font-size: 12px;
   color: var(--ink-faint);
 }
+.task-options {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.task-options input,
+.task-options select {
+  font-size: 12px;
+}
