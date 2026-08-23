@@ -355,25 +355,84 @@ export default function App() {
     setGuardando(true)
     setAviso('')
 
-    try {
-      const { error } = await supabase
-        .from('proyectos')
-        .update({ tareas })
-        .eq('id', proyectoId)
-        .eq('user_id', usuario.id)
+   try {
 
-      if (error) throw error
+  const proyectoActual =
+    proyectos.find(
+      (p) => p.id === proyectoId
+    )
 
-      setProyectos((prev) =>
-        prev.map((p) =>
-          p.id === proyectoId ? { ...p, tareas } : p
-        )
+
+  let historialNuevo =
+    proyectoActual?.historial || []
+
+
+  const tareasAnteriores =
+    proyectoActual?.tareas || []
+
+
+  tareas.forEach((tarea) => {
+
+    const anterior =
+      tareasAnteriores.find(
+        (t) => t.id === tarea.id
       )
 
-      setTareasAbiertas(null)
-      setAviso('Tareas guardadas correctamente.')
-      setTimeout(() => setAviso(''), 3000)
-    } catch (error) {
+
+    if (
+      tarea.hecha &&
+      anterior &&
+      !anterior.hecha
+    ) {
+
+      historialNuevo = [
+        ...historialNuevo,
+        {
+          id: crypto.randomUUID(),
+          fecha: new Date().toISOString(),
+          texto: `Tarea completada: ${tarea.texto}`,
+          icono: '✓'
+        }
+      ]
+
+    }
+
+  })
+
+
+  const { error } = await supabase
+    .from('proyectos')
+    .update({
+      tareas,
+      historial: historialNuevo
+    })
+    .eq('id', proyectoId)
+    .eq('user_id', usuario.id)
+
+
+  if (error) throw error
+
+
+  setProyectos((prev) =>
+    prev.map((p) =>
+      p.id === proyectoId
+        ? {
+            ...p,
+            tareas,
+            historial: historialNuevo
+          }
+        : p
+    )
+  )
+
+
+  setTareasAbiertas(null)
+
+  setAviso('Tareas guardadas correctamente.')
+
+  setTimeout(() => setAviso(''), 3000)
+
+} catch (error) {
       console.error(error)
       alert(`No se pudieron guardar las tareas.\n\n${error.message}`)
     } finally {
