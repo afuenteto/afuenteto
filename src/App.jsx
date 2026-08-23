@@ -400,14 +400,14 @@ export default function App() {
   })
 
 
-  const { error } = await supabase
-    .from('proyectos')
-    .update({
-      tareas,
-      historial: historialNuevo
-    })
-    .eq('id', proyectoId)
-    .eq('user_id', usuario.id)
+ const { error } = await supabase
+  .from('proyectos')
+  .update({
+    tareas,
+    historial: historialNuevo
+  })
+  .eq('id', proyectoId)
+  .eq('user_id', usuario.id)
 
 
   if (error) throw error
