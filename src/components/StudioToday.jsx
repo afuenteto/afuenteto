@@ -77,8 +77,15 @@ const [abierto, setAbierto] = useState(false)
 
     <div className="studio-today">
 
-     <div className="section-label dashboard-toggle">
+  <div
+  className="section-label dashboard-toggle"
+  onClick={() => setAbierto(!abierto)}
+>
   Hoy en el estudio
+
+  <span style={{ float: 'right' }}>
+    {abierto ? '−' : '+'}
+  </span>
 </div>
 
       {vacio && (
