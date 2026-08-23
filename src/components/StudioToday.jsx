@@ -71,7 +71,7 @@ export default function StudioToday({
 
     <div className="studio-today">
 
-     <div
+   <div
   className="dashboard-toggle"
   onClick={() => setAbierto(!abierto)}
 >
@@ -80,8 +80,32 @@ export default function StudioToday({
     Hoy en el estudio
   </span>
 
-  <span>
-    {abierto ? '−' : '+'}
+
+  <span className="today-counters">
+
+    {tareasUrgentes.length > 0 && (
+      <span>
+        🔴 {tareasUrgentes.length}
+      </span>
+    )}
+
+    {entregas.length > 0 && (
+      <span>
+        📅 {entregas.length}
+      </span>
+    )}
+
+    {cobrosPendientes.length > 0 && (
+      <span>
+        💰 {cobrosPendientes.length}
+      </span>
+    )}
+
+
+    <span>
+      {abierto ? '−' : '+'}
+    </span>
+
   </span>
 
 </div>
