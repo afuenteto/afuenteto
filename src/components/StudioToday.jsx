@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { diasHasta } from '../storage.js'
 
 export default function StudioToday({
@@ -5,7 +6,7 @@ export default function StudioToday({
   onOpen,
   onOpenTasks
 }) {
-
+const [abierto, setAbierto] = useState(false)
   const tareasPendientes = []
 
   proyectos.forEach((proyecto) => {
