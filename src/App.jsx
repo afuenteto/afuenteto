@@ -683,7 +683,16 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
           </button>
         ))}
       </div>
-<StudioDashboard proyectos={proyectos} />
+ </div>
+
+      <StudioDashboard proyectos={proyectos} />
+
+      <StudioToday
+        proyectos={proyectos}
+        onOpen={abrirExistente}
+        onOpenTasks={abrirTareas}
+      />
+
       {proyectosOrdenados.length === 0 ? (
         <div className="empty">
           <h3 className="serif">
