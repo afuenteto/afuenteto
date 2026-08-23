@@ -15,20 +15,22 @@ export default function TasksModal({
   const [nuevaTarea, setNuevaTarea] = useState('')
 
 
-  function cambiarEstado(id) {
+function cambiarEstado(id) {
 
-    setTareas((prev) =>
-  prev.map((t) =>
-    t.id === id
-      ? {
-          ...t,
-          hecha: !t.hecha,
-          fecha: t.fecha || '',
-          prioridad: t.prioridad || 'normal'
-        }
-      : t
+  setTareas((prev) =>
+    prev.map((t) =>
+      t.id === id
+        ? {
+            ...t,
+            feita: !t.hecha,
+            fecha: t.fecha || '',
+            prioridad: t.prioridad || 'normal'
+          }
+        : t
+    )
   )
-)
+
+}
 
 
   function añadirTarea() {
