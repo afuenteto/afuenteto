@@ -20,33 +20,50 @@ function proyectoDesdeBD(row) {
     id: row.id,
     prioridad: row.prioridad || 'en_curso',
     orden: row.orden ?? 0,
+
     nombre: row.nombre || '',
     cliente: row.cliente || '',
     telefono: row.telefono || '',
     email: row.email || '',
     direccion: row.direccion || '',
+
     fechaInicio: row.fecha_inicio || '',
     fechaEntrega: row.fecha_entrega || '',
+
     fase: row.fase || FASES[0],
+
     presupuestoTotal: row.presupuesto_total ?? '',
     presupuestoGastado: row.presupuesto_gastado ?? '',
     presupuestoPdf: row.presupuesto_pdf || '',
+
     notas: row.notas || '',
-    tareas: Array.isArray(row.tareas) ? row.tareas : [],
-    proveedores: Array.isArray(row.proveedores) ? row.proveedores : [],
+
+    tareas: Array.isArray(row.tareas)
+      ? row.tareas
+      : [],
+
+    proveedores: Array.isArray(row.proveedores)
+      ? row.proveedores
+      : [],
+
     tipoProyecto: row.tipo_proyecto || 'Vivienda',
+
     honorariosDiseno: row.honorarios_diseno ?? '',
     honorariosGestion: row.honorarios_gestion ?? '',
     otrosImportes: row.otros_importes ?? '',
-    cobros: Array.isArray(row.cobros) ? row.cobros : [],
+
+    cobros: Array.isArray(row.cobros)
+      ? row.cobros
+      : [],
+
+    historial: Array.isArray(row.historial)
+      ? row.historial
+      : [],
+
     horasEstimadas: row.horas_estimadas ?? '',
     horasReales: row.horas_reales ?? '',
-    historial: Array.isArray(row.historial)
-  ? row.historial
-  : [],
   }
 }
-
 function proyectoParaBD(proyecto, userId) {
   return {
     id: proyecto.id,
@@ -115,6 +132,7 @@ historial: Array.isArray(proyecto.historial)
 presupuesto_pdf: proyecto.presupuestoPdf || null,
     notas: proyecto.notas || '',
     tareas: Array.isArray(proyecto.tareas) ? proyecto.tareas : [],
+    
     proveedores: Array.isArray(proyecto.proveedores)
       ? proyecto.proveedores
       : [],
