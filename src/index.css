@@ -1477,3 +1477,7 @@ a {
 .today-counter:hover {
   opacity: 0.7;
 }
+.task-done {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
