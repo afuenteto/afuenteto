@@ -847,9 +847,22 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     </div>
   )}
 
-  {editando && (
+ {editando && (
+  <>
+    {console.log('EDITANDO:', editando)}
+
     <ProjectModal
       proyecto={editando}
+      onSave={guardar}
+      onDelete={eliminar}
+      seccionInicial={seccionInicial}
+      onClose={() => {
+        setEditando(null)
+        setSeccionInicial(null)
+      }}
+    />
+  </>
+)}
       onSave={guardar}
       onDelete={eliminar}
       seccionInicial={seccionInicial}
