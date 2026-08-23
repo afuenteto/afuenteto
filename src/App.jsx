@@ -352,92 +352,98 @@ export default function App() {
     setTareasAbiertas(proyecto)
   }
 
-  async function guardarTareas(proyectoId, tareas) {
-    if (!usuario) return
+async function guardarTareas(proyectoId, tareas) {
+  if (!usuario) return
 
-    setGuardando(true)
-    setAviso('')
+  setGuardando(true)
+  setAviso('')
 
   try {
 
-  const proyectoActual =
-    proyectos.find(
+    const proyectoActual = proyectos.find(
       (p) => p.id === proyectoId
     )
 
+    let historialNuevo = [
+      ...(proyectoActual?.historial || [])
+    ]
 
-  let historialNuevo =
-    proyectoActual?.historial || []
+    const tareasAnteriores =
+      proyectoActual?.tareas || []
 
 
-  const tareasAnteriores =
-    proyectoActual?.tareas || []
+    tareas.forEach((tarea) => {
 
-
-  tareas.forEach((tarea) => {
-
-    const anterior =
-      tareasAnteriores.find(
+      const anterior = tareasAnteriores.find(
         (t) => t.id === tarea.id
       )
 
 
-    if (
-      tarea.hecha &&
-      anterior &&
-      !anterior.hecha
-    ) {
+      if (
+        tarea.hecha &&
+        anterior &&
+        !anterior.hecha
+      ) {
 
-      historialNuevo.push({
-        id: crypto.randomUUID(),
-        fecha: new Date().toISOString(),
-        texto: `Tarea completada: ${tarea.texto}`,
-        icono: '✓'
-      })
+        historialNuevo.push({
+          id: crypto.randomUUID(),
+          fecha: new Date().toISOString(),
+          texto: `Tarea completada: ${tarea.texto}`,
+          icono: '✓'
+        })
 
-    }
+      }
 
-  })
-
-
-  const { error } = await supabase
-    .from('proyectos')
-    .update({
-      tareas,
-      historial: historialNuevo
     })
-    .eq('id', proyectoId)
-    .eq('user_id', usuario.id)
-
-  if (error) throw error
 
 
-  setProyectos((prev) =>
-    prev.map((p) =>
-      p.id === proyectoId
-        ? {
-            ...p,
-            tareas,
-            historial: historialNuevo
-          }
-        : p
+    const { error } = await supabase
+      .from('proyectos')
+      .update({
+        tareas,
+        historial: historialNuevo
+      })
+      .eq('id', proyectoId)
+      .eq('user_id', usuario.id)
+
+
+    if (error) throw error
+
+
+    setProyectos((prev) =>
+      prev.map((p) =>
+        p.id === proyectoId
+          ? {
+              ...p,
+              tareas,
+              historial: historialNuevo
+            }
+          : p
+      )
     )
-  )
 
 
-  setTareasAbiertas(null)
+    setTareasAbiertas(null)
 
-  setAviso('Tareas guardadas correctamente.')
+    setAviso('Tareas guardadas correctamente.')
 
-  setTimeout(() => setAviso(''), 3000)
+    setTimeout(() => setAviso(''), 3000)
 
-} catch (error) {
-      console.error(error)
-      alert(`No se pudieron guardar las tareas.\n\n${error.message}`)
-    } finally {
-      setGuardando(false)
-    }
+
+  } catch (error) {
+
+    console.error(error)
+
+    alert(
+      `No se pudieron guardar las tareas.\n\n${error.message}`
+    )
+
+  } finally {
+
+    setGuardando(false)
+
   }
+}
 function añadirHistorial(proyecto, texto, icono='•') {
 
   return [
