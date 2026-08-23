@@ -71,7 +71,6 @@ export default function StudioToday({
 
     <div className="studio-today">
 
-   <div
  <div
   className="dashboard-toggle"
   onClick={() => setAbierto(!abierto)}
