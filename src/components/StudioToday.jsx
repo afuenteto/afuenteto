@@ -76,10 +76,9 @@ export default function StudioToday({
 
     <div className="studio-today">
 
-      <div className="section-label">
-        Hoy en el estudio
-      </div>
-
+     <div className="section-label dashboard-toggle">
+  Hoy en el estudio
+</div>
 
       {vacio && (
         <p className="today-empty">
