@@ -1436,3 +1436,25 @@ a {
   justify-content: space-between;
   align-items: center;
 }
+/* Botones desplegables del dashboard */
+.dashboard-toggle {
+  background: #fff3a6;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: var(--ink);
+
+  font-size: 16px;
+  font-weight: 600;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  cursor: pointer;
+
+  border: none;
+  border-bottom: none;
+  margin: 0 0 16px;
+}
