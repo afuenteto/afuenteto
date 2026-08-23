@@ -40,6 +40,9 @@ function proyectoDesdeBD(row) {
     cobros: Array.isArray(row.cobros) ? row.cobros : [],
     horasEstimadas: row.horas_estimadas ?? '',
     horasReales: row.horas_reales ?? '',
+    historial: Array.isArray(row.historial)
+  ? row.historial
+  : [],
   }
 }
 
