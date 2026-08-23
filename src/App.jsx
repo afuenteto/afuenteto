@@ -546,6 +546,17 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
             >
               Entrar
             </button>
+            <button
+  type="button"
+  className="btn btn-ghost"
+  style={{
+    width: '100%',
+    marginTop: '12px',
+  }}
+  onClick={recuperarPassword}
+>
+  ¿Has olvidado la contraseña?
+</button>
           </form>
         </div>
       </div>
