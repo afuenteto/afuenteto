@@ -83,17 +83,21 @@ export default function StudioToday({
 
   <span className="today-counters">
 
-  {tareasUrgentes.length > 0 && (
-    <button
-      className="today-counter"
-      onClick={(e) => {
-        e.stopPropagation()
-        setAbierto(true)
-      }}
-    >
-      🔴 {tareasUrgentes.length}
-    </button>
-  )}
+{tareasUrgentes.length > 0 && (
+  <button
+    className="today-counter"
+    onClick={(e) => {
+      e.stopPropagation()
+
+      const primerProyecto =
+        tareasUrgentes[0].proyecto
+
+      onOpenTasks(primerProyecto)
+    }}
+  >
+    🔴 {tareasUrgentes.length}
+  </button>
+)}
 
 
   {entregas.length > 0 && (
