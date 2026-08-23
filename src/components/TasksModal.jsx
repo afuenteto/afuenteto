@@ -18,16 +18,21 @@ export default function TasksModal({
 function cambiarEstado(id) {
 
   setTareas((prev) =>
-    prev.map((t) =>
-      t.id === id
-        ? {
-            ...t,
-            hecha: !t.hecha,
-            fecha: t.fecha || '',
-            prioridad: t.prioridad || 'normal'
-          }
-        : t
-    )
+    prev.map((t) => {
+
+      if (t.id !== id) return t
+
+      const nuevaEstado = !t.hecha
+
+      return {
+        ...t,
+        hecha: nuevaEstado,
+        fechaCompletada: nuevaEstado
+          ? new Date().toISOString().split('T')[0]
+          : ''
+      }
+
+    })
   )
 
 }
