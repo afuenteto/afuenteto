@@ -109,17 +109,17 @@ export default function StudioToday({
     )}
 
 
-    {cobrosPendientes.length > 0 && (
-      <button
-        className="today-counter"
-        onClick={(e) => {
-          e.stopPropagation()
-          onOpen(cobrosPendientes[0].proyecto)
-        }}
-      >
-        💰 {cobrosPendientes.length}
-      </button>
-    )}
+  {cobrosPendientes.length > 0 && (
+  <button
+    className="today-counter"
+    onClick={(e) => {
+      e.stopPropagation()
+      onOpen(cobrosPendientes[0].proyecto)
+    }}
+  >
+    💰 {cobrosPendientes.length}
+  </button>
+)}
 
 
     <span>
