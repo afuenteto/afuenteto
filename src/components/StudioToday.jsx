@@ -183,14 +183,12 @@ export default function StudioToday({
             >
 
               <strong>
-                {item.proyecto.nombre}
-              </strong>
+  {item.proyecto.nombre}
+</strong>
 
-              <span>
-                {Number(item.importe)
-                  .toLocaleString('es-ES')}
-                €
-              </span>
+<span>
+  {Number(item.importe).toLocaleString('es-ES')} €
+</span>
 
             </button>
 
