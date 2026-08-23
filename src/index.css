@@ -314,6 +314,11 @@ a {
   object-fit: cover;
   border-radius: 18px;
 }
+
+.login-brand .eyebrow,
+.login-brand h1 {
+  margin: 0;
+}
 /* =========================================================
    ACCIONES
    ========================================================= */
