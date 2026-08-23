@@ -72,6 +72,7 @@ export default function StudioToday({
     <div className="studio-today">
 
    <div
+ <div
   className="dashboard-toggle"
   onClick={() => setAbierto(!abierto)}
 >
@@ -81,74 +82,52 @@ export default function StudioToday({
   </span>
 
 
-  <span className="today-counters">
+  <div className="today-counters">
 
-{tareasUrgentes.length > 0 && (
-  <button
-    className="today-counter"
-    onClick={(e) => {
-      e.stopPropagation()
-
-      const primerProyecto =
-        tareasUrgentes[0].proyecto
-
-      onOpenTasks(primerProyecto)
-    }}
-  >
-    🔴 {tareasUrgentes.length}
-  </button>
-)}
+    {tareasUrgentes.length > 0 && (
+      <button
+        className="today-counter"
+        onClick={(e) => {
+          e.stopPropagation()
+          onOpenTasks(tareasUrgentes[0].proyecto)
+        }}
+      >
+        🔴 {tareasUrgentes.length}
+      </button>
+    )}
 
 
-{entregas.length > 0 && (
-  <button
-    className="today-counter"
-    onClick={(e) => {
-      e.stopPropagation()
-
-      onOpen(entregas[0])
-    }}
-  >
-    📅 {entregas.length}
-  </button>
-)}
-      onClick={(e) => {
-        e.stopPropagation()
-        setAbierto(true)
-      }}
-    >
-      📅 {entregas.length}
-    </button>
-  )}
+    {entregas.length > 0 && (
+      <button
+        className="today-counter"
+        onClick={(e) => {
+          e.stopPropagation()
+          onOpen(entregas[0])
+        }}
+      >
+        📅 {entregas.length}
+      </button>
+    )}
 
 
- {cobrosPendientes.length > 0 && (
-  <button
-    className="today-counter"
-    onClick={(e) => {
-      e.stopPropagation()
-
-      onOpen(cobrosPendientes[0].proyecto)
-    }}
-  >
-    💰 {cobrosPendientes.length}
-  </button>
-)}
-      onClick={(e) => {
-        e.stopPropagation()
-        setAbierto(true)
-      }}
-    >
-      💰 {cobrosPendientes.length}
-    </button>
-  )}
+    {cobrosPendientes.length > 0 && (
+      <button
+        className="today-counter"
+        onClick={(e) => {
+          e.stopPropagation()
+          onOpen(cobrosPendientes[0].proyecto)
+        }}
+      >
+        💰 {cobrosPendientes.length}
+      </button>
+    )}
 
 
-  <span>
-    {abierto ? '−' : '+'}
-  </span>
+    <span>
+      {abierto ? '−' : '+'}
+    </span>
 
-</span>
+  </div>
 
 </div>
 
