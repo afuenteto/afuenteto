@@ -6,19 +6,19 @@ export default function StudioToday({
   onOpen,
   onOpenTasks
 }) {
-const [abierto, setAbierto] = useState(false)
+
+  const [abierto, setAbierto] = useState(false)
+
   const tareasPendientes = []
 
   proyectos.forEach((proyecto) => {
     ;(proyecto.tareas || []).forEach((tarea) => {
 
       if (!tarea.hecha) {
-
         tareasPendientes.push({
           ...tarea,
           proyecto
         })
-
       }
 
     })
@@ -36,10 +36,10 @@ const [abierto, setAbierto] = useState(false)
   })
 
 
-  const entregas = proyectos.filter((p) => {
+  const entregas = proyectos.filter((proyecto) => {
 
     const dias = diasHasta(
-      p.fechaEntrega
+      proyecto.fechaEntrega
     )
 
     return dias !== null && dias <= 14
@@ -67,142 +67,140 @@ const [abierto, setAbierto] = useState(false)
   })
 
 
-  const vacio =
-    tareasUrgentes.length === 0 &&
-    entregas.length === 0 &&
-    cobrosPendientes.length === 0
-
-
   return (
 
     <div className="studio-today">
 
-  <div
-  className="section-label dashboard-toggle"
-  onClick={() => setAbierto(!abierto)}
->
-  Hoy en el estudio
+      <div
+        className="section-label dashboard-toggle"
+        onClick={() => setAbierto(!abierto)}
+      >
 
-  <span style={{ float: 'right' }}>
-    {abierto ? '−' : '+'}
-  </span>
-</div>
-      </>
-)}
-{abierto && (
-<>
-      {vacio && (
-        <p className="today-empty">
-          No hay asuntos pendientes.
-        </p>
-      )}
+        <span>
+          Hoy en el estudio
+        </span>
+
+        <span>
+          {abierto ? '−' : '+'}
+        </span>
+
+      </div>
 
 
-      {tareasUrgentes.length > 0 && (
+      {abierto && (
 
-        <div className="today-block">
-
-          <h3>
-            🔴 Tareas próximas
-          </h3>
-
-          {tareasUrgentes.map((item) => (
-
-            <button
-              key={item.id}
-              className="today-item"
-              onClick={() =>
-                onOpenTasks(item.proyecto)
-              }
-            >
-
-              <strong>
-                {item.proyecto.nombre}
-              </strong>
-
-              <span>
-                {item.texto}
-              </span>
-
-            </button>
-
-          ))}
-
-        </div>
-
-      )}
+        <div className="today-content">
 
 
+          {tareasUrgentes.length > 0 && (
 
-      {entregas.length > 0 && (
+            <div className="today-block">
 
-        <div className="today-block">
-
-          <h3>
-            📅 Entregas próximas
-          </h3>
+              <h3>
+                🔴 Tareas próximas
+              </h3>
 
 
-          {entregas.map((proyecto) => (
+              {tareasUrgentes.map((item) => (
 
-            <button
-              key={proyecto.id}
-              className="today-item"
-              onClick={() =>
-                onOpen(proyecto)
-              }
-            >
+                <button
+                  key={item.id}
+                  className="today-item"
+                  onClick={() =>
+                    onOpenTasks(item.proyecto)
+                  }
+                >
 
-              <strong>
-                {proyecto.nombre}
-              </strong>
+                  <strong>
+                    {item.proyecto.nombre}
+                  </strong>
 
-              <span>
-                Entrega:
-                {' '}
-                {proyecto.fechaEntrega}
-              </span>
+                  <span>
+                    {item.texto}
+                  </span>
 
-            </button>
+                </button>
 
-          ))}
+              ))}
 
-        </div>
+            </div>
 
-      )}
+          )}
 
 
 
-      {cobrosPendientes.length > 0 && (
+          {entregas.length > 0 && (
 
-        <div className="today-block">
+            <div className="today-block">
 
-          <h3>
-            💰 Cobros previstos
-          </h3>
+              <h3>
+                📅 Entregas próximas
+              </h3>
 
 
-          {cobrosPendientes.map((item) => (
+              {entregas.map((proyecto) => (
 
-            <button
-              key={item.id}
-              className="today-item"
-              onClick={() =>
-                onOpen(item.proyecto)
-              }
-            >
+                <button
+                  key={proyecto.id}
+                  className="today-item"
+                  onClick={() =>
+                    onOpen(proyecto)
+                  }
+                >
 
-              <strong>
-  {item.proyecto.nombre}
-</strong>
+                  <strong>
+                    {proyecto.nombre}
+                  </strong>
 
-<span>
-  {Number(item.importe).toLocaleString('es-ES')} €
-</span>
+                  <span>
+                    {proyecto.fechaEntrega}
+                  </span>
 
-            </button>
+                </button>
 
-          ))}
+              ))}
+
+            </div>
+
+          )}
+
+
+
+          {cobrosPendientes.length > 0 && (
+
+            <div className="today-block">
+
+              <h3>
+                💰 Cobros previstos
+              </h3>
+
+
+              {cobrosPendientes.map((item) => (
+
+                <button
+                  key={item.id}
+                  className="today-item"
+                  onClick={() =>
+                    onOpen(item.proyecto)
+                  }
+                >
+
+                  <strong>
+                    {item.proyecto.nombre}
+                  </strong>
+
+                  <span>
+                    {Number(item.importe).toLocaleString('es-ES')} €
+                  </span>
+
+                </button>
+
+              ))}
+
+            </div>
+
+          )}
+
 
         </div>
 
