@@ -646,14 +646,23 @@ function agregarCobro() {
             }}
           />
           <button type="button" className="btn btn-sm" onClick={agregarProveedor}>
-            Añadir
-          </button>
-        </div>
-<ProjectHistory proyecto={datos} />
-        <div className="section-label">Notas</div>
-        <div className="field">
-          <textarea value={datos.notas} onChange={(e) => set('notas', e.target.value)} placeholder="Observaciones, medidas, referencias…" />
-        </div>
+          Añadir
+        </button>
+      </div>
+
+      <ProjectHistory proyecto={datos} />
+
+      <div className="section-label">
+        Notas
+      </div>
+
+      <div className="field">
+        <textarea
+          value={datos.notas}
+          onChange={(e) => set('notas', e.target.value)}
+          placeholder="Observaciones, medidas, referencias…"
+        />
+      </div>
 <ProjectHistory
   historial={datos.historial || []}
 />
