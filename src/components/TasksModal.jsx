@@ -197,47 +197,21 @@ function cambiarEstado(id) {
         ⚪ Baja
       </option>
 
-    </select>
+     </select>
 
   </div>
 
 </div>
 
-    <div className="task-info">
 
-      {t.fecha && (
-        <span>
-          📅 {t.fecha}
-        </span>
-      )}
-
-      {t.prioridad === 'alta' && (
-        <span>
-          🔴 Alta
-        </span>
-      )}
-
-      {t.prioridad === 'normal' && (
-        <span>
-          🟡 Normal
-        </span>
-      )}
-
-    </div>
-
-  )}
-
-</div>
-
-            <button
-              className="icon-btn"
-              onClick={() =>
-                borrarTarea(t.id)
-              }
-            >
-              ✕
-            </button>
-
+<button
+  className="icon-btn"
+  onClick={() =>
+    borrarTarea(t.id)
+  }
+>
+  ✕
+</button>
 
           </div>
 
