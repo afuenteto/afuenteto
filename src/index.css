@@ -1060,7 +1060,14 @@ a {
 
   color: var(--ink-soft);
 }
-
+.dashboard-toggle {
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .section-label::after {
   content: '';
 
