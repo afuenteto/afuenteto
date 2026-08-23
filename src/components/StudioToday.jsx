@@ -71,21 +71,20 @@ export default function StudioToday({
 
     <div className="studio-today">
 
-      <div
-        className="section-label dashboard-toggle"
-        onClick={() => setAbierto(!abierto)}
-      >
+     <div
+  className="dashboard-toggle"
+  onClick={() => setAbierto(!abierto)}
+>
 
-        <span>
-          Hoy en el estudio
-        </span>
+  <span>
+    Hoy en el estudio
+  </span>
 
-        <span>
-          {abierto ? '−' : '+'}
-        </span>
+  <span>
+    {abierto ? '−' : '+'}
+  </span>
 
-      </div>
-
+</div>
 
       {abierto && (
 
