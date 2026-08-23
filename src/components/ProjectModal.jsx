@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { FASES, uid } from '../storage.js'
 import { supabase } from '../supabase.js'
+import ProjectHistory from './ProjectHistory.jsx'
 
 export default function ProjectModal({ proyecto, onSave, onDelete, onClose, seccionInicial = null }) {
  const [datos, setDatos] = useState({
