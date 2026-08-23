@@ -380,13 +380,36 @@ export default function App() {
       setGuardando(false)
     }
   }
+function añadirHistorial(proyecto, texto, icono='•') {
 
+  return [
+    ...(proyecto.historial || []),
+    {
+      id: crypto.randomUUID(),
+      fecha: new Date().toISOString(),
+      texto,
+      icono
+    }
+  ]
+
+}
   async function guardar(datos) {
     if (!usuario) return
 
     setGuardando(true)
     setAviso('')
+if (!datos.historial || datos.historial.length === 0) {
 
+  datos.historial = [
+    {
+      id: crypto.randomUUID(),
+      fecha: new Date().toISOString(),
+      texto: 'Proyecto creado',
+      icono: '✨'
+    }
+  ]
+
+}
     try {
       const fila = proyectoParaBD(datos, usuario.id)
 
