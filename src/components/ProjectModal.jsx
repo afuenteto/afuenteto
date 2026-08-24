@@ -288,13 +288,39 @@ function agregarCobro() {
         <div className="field-row">
           <div className="field">
             <label htmlFor="fase">Fase actual</label>
-            <select id="fase" value={datos.fase} onChange={(e) => set('fase', e.target.value)}>
-              {FASES.map((f) => (
-                <option key={f} value={f}>
-                  {f}
-                </option>
-              ))}
-            </select>
+          <select
+  id="fase"
+  value={datos.fase}
+  onChange={(e) => {
+
+    const nuevaFase = e.target.value
+
+    if (nuevaFase !== datos.fase) {
+
+      setDatos({
+        ...datos,
+        fase: nuevaFase,
+        historial: [
+          ...(datos.historial || []),
+          {
+            id: crypto.randomUUID(),
+            fecha: new Date().toISOString(),
+            texto: `Fase cambiada: ${datos.fase} → ${nuevaFase}`,
+            icono: '🔄'
+          }
+        ]
+      })
+
+    }
+
+  }}
+>
+  {FASES.map((f) => (
+    <option key={f} value={f}>
+      {f}
+    </option>
+  ))}
+</select>
           </div>
           <div />
         </div>
