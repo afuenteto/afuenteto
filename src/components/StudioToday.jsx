@@ -118,14 +118,14 @@ export default function StudioToday({
           {entregas.length > 0 && (
 
             <button
-              className="today-counter"
-              onClick={(e) => {
-                e.stopPropagation()
-                onOpen(entregas[0])
-              }}
-            >
-              📅 {entregas.length}
-            </button>
+  className="today-counter"
+  onClick={(e) => {
+    e.stopPropagation()
+    setAbierto(true)
+  }}
+>
+  📅 {entregas.length}
+</button>
 
           )}
 
@@ -136,12 +136,10 @@ export default function StudioToday({
             <button
               className="today-counter"
               onClick={(e) => {
-                e.stopPropagation()
-                onOpen(
-                  cobrosPendientes[0].proyecto
-                )
-              }}
-            >
+  e.stopPropagation()
+  setAbierto(true)
+}}
+              >
               💰 {cobrosPendientes.length}
             </button>
 
@@ -154,11 +152,9 @@ export default function StudioToday({
             <button
               className="today-counter"
               onClick={(e) => {
-                e.stopPropagation()
-                onOpen(
-                  proyectosBloqueados[0]
-                )
-              }}
+  e.stopPropagation()
+  setAbierto(true)
+}}
             >
               🔵 {proyectosBloqueados.length}
             </button>
