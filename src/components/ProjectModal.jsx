@@ -45,20 +45,41 @@ const totalPrevisto =
 const pendienteCobro = totalProyecto - totalCobrado
  const contactoInputRef = useRef(null)
  const tareasRef = useRef(null)
+ const economiaRef = useRef(null)
 
- useEffect(() => {
-   if (seccionInicial !== 'tareas') return
+useEffect(() => {
 
-   const timer = setTimeout(() => {
-     tareasRef.current?.scrollIntoView({
-       behavior: 'smooth',
-       block: 'start',
-     })
-   }, 120)
+  if (!seccionInicial) return
 
-   return () => clearTimeout(timer)
- }, [seccionInicial])
-   function importarContacto(e) {
+
+  const timer = setTimeout(() => {
+
+    if (seccionInicial === 'tareas') {
+
+      tareasRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+
+    }
+
+
+    if (seccionInicial === 'economia') {
+
+      economiaRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+
+    }
+
+
+  }, 120)
+
+
+  return () => clearTimeout(timer)
+
+}, [seccionInicial])   function importarContacto(e) {
     const file = e.target.files?.[0]
 
     if (!file) return
