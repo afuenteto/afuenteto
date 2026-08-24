@@ -156,6 +156,9 @@ export default function App() {
   const [guardando, setGuardando] = useState(false)
   const [aviso, setAviso] = useState('')
   const [panelAbierto, setPanelAbierto] = useState(null)
+  useEffect(() => {
+  console.log('PANEL CAMBIADO:', panelAbierto)
+}, [panelAbierto])
   const handleDragEnd = async (event) => {
   const { active, over } = event
 
