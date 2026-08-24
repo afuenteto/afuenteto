@@ -872,10 +872,11 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
      
 {panelAbierto === 'tareas' && (
   <TasksPanel
-    proyectos={proyectos}
-    onClose={() => setPanelAbierto(null)}
-    onOpenTasks={abrirTareas}
-  />
+  proyectos={proyectos}
+  onClose={() => setPanelAbierto(null)}
+  onOpenTasks={abrirTareas}
+  onCompleteTask={completarTareaDesdePanel}
+/>
 )}
 
 {panelAbierto === 'entregas' && (
