@@ -49,29 +49,47 @@ export default function TasksPanel({
         </div>
 
 
-        {tareas.map((t)=>(
+       {tareas.map((t)=>(
 
-          <button
-            key={t.id}
-            className="panel-item"
-            onClick={() =>
-              onOpenTasks(t.proyecto)
-            }
-          >
+  <div
+    key={t.id}
+    className="panel-item"
+  >
 
-            <strong>
-              {t.proyecto.nombre}
-            </strong>
+    <input
+      type="checkbox"
+      onChange={() =>
+        onCompleteTask(
+          t.proyecto.id,
+          t.id
+        )
+      }
+    />
 
-            <span>
-              {t.texto}
-            </span>
+
+    <div
+      onClick={() =>
+        onOpenTasks(t.proyecto)
+      }
+      style={{
+        cursor:'pointer'
+      }}
+    >
+
+      <strong>
+        {t.proyecto.nombre}
+      </strong>
+
+      <span>
+        {t.texto}
+      </span>
+
+    </div>
 
 
-          </button>
+  </div>
 
-        ))}
-
+))}
 
       </div>
 
