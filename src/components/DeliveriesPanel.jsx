@@ -22,7 +22,14 @@ export default function DeliveriesPanel({
 
   return (
 
-    <div className="panel-overlay">
+    <div
+  className="panel-overlay"
+  onMouseDown={(e) => {
+    if (e.target === e.currentTarget) {
+      onClose()
+    }
+  }}
+>
 
       <div className="panel">
 
