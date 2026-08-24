@@ -650,7 +650,7 @@ function agregarCobro() {
         </button>
       </div>
 
-     {<ProjectHistory proyecto={datos} />}
+     <ProjectHistory proyecto={datos} />
 
       <div className="section-label">
         Notas
@@ -663,9 +663,7 @@ function agregarCobro() {
           placeholder="Observaciones, medidas, referencias…"
         />
       </div>
-<ProjectHistory
-  historial={datos.historial || []}
-/>
+
         <div className="modal-actions">
           <div>
             {!esNuevo && (
