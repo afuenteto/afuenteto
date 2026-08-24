@@ -9,19 +9,24 @@ export default function StudioToday({
 
   const [abierto, setAbierto] = useState(false)
 
+
   const tareasPendientes = []
 
   proyectos.forEach((proyecto) => {
+
     ;(proyecto.tareas || []).forEach((tarea) => {
 
       if (!tarea.hecha) {
+
         tareasPendientes.push({
           ...tarea,
           proyecto
         })
+
       }
 
     })
+
   })
 
 
@@ -46,6 +51,7 @@ export default function StudioToday({
 
   })
 
+
   const cobrosPendientes = []
 
   proyectos.forEach((proyecto) => {
@@ -66,72 +72,116 @@ export default function StudioToday({
   })
 
 
+  const proyectosBloqueados =
+    proyectos.filter(
+      (proyecto) =>
+        proyecto.prioridad === 'bloqueado'
+    )
+
+
   return (
 
     <div className="studio-today">
 
- <div
-  className="dashboard-toggle"
-  onClick={() => setAbierto(!abierto)}
->
 
-  <span>
-    Hoy en el estudio
-  </span>
-
-
-  <div className="today-counters">
-
-    {tareasUrgentes.length > 0 && (
-      <button
-        className="today-counter"
-        onClick={(e) => {
-          e.stopPropagation()
-          onOpenTasks(tareasUrgentes[0].proyecto)
-        }}
+      <div
+        className="dashboard-toggle"
+        onClick={() => setAbierto(!abierto)}
       >
-        🔴 {tareasUrgentes.length}
-      </button>
-    )}
+
+        <span>
+          Hoy en el estudio
+        </span>
 
 
-    {entregas.length > 0 && (
-      <button
-        className="today-counter"
-        onClick={(e) => {
-          e.stopPropagation()
-          onOpen(entregas[0])
-        }}
-      >
-        📅 {entregas.length}
-      </button>
-    )}
+        <div className="today-counters">
 
 
-  {cobrosPendientes.length > 0 && (
-  <button
-    className="today-counter"
-    onClick={(e) => {
-      e.stopPropagation()
-      onOpen(cobrosPendientes[0].proyecto)
-    }}
-  >
-    💰 {cobrosPendientes.length}
-  </button>
-)}
+          {tareasUrgentes.length > 0 && (
+
+            <button
+              className="today-counter"
+              onClick={(e) => {
+                e.stopPropagation()
+                onOpenTasks(
+                  tareasUrgentes[0].proyecto
+                )
+              }}
+            >
+              🔴 {tareasUrgentes.length}
+            </button>
+
+          )}
 
 
-    <span>
-      {abierto ? '−' : '+'}
-    </span>
 
-  </div>
+          {entregas.length > 0 && (
 
-</div>
+            <button
+              className="today-counter"
+              onClick={(e) => {
+                e.stopPropagation()
+                onOpen(entregas[0])
+              }}
+            >
+              📅 {entregas.length}
+            </button>
+
+          )}
+
+
+
+          {cobrosPendientes.length > 0 && (
+
+            <button
+              className="today-counter"
+              onClick={(e) => {
+                e.stopPropagation()
+                onOpen(
+                  cobrosPendientes[0].proyecto
+                )
+              }}
+            >
+              💰 {cobrosPendientes.length}
+            </button>
+
+          )}
+
+
+
+          {proyectosBloqueados.length > 0 && (
+
+            <button
+              className="today-counter"
+              onClick={(e) => {
+                e.stopPropagation()
+                onOpen(
+                  proyectosBloqueados[0]
+                )
+              }}
+            >
+              🔵 {proyectosBloqueados.length}
+            </button>
+
+          )}
+
+
+
+          <span>
+            {abierto ? '−' : '+'}
+          </span>
+
+
+        </div>
+
+      </div>
+
+
 
       {abierto && (
 
         <div className="today-content">
+
 
 
           {tareasUrgentes.length > 0 && (
@@ -149,7 +199,9 @@ export default function StudioToday({
                   key={item.id}
                   className="today-item"
                   onClick={() =>
-                    onOpenTasks(item.proyecto)
+                    onOpenTasks(
+                      item.proyecto
+                    )
                   }
                 >
 
@@ -157,17 +209,22 @@ export default function StudioToday({
                     {item.proyecto.nombre}
                   </strong>
 
+
                   <span>
                     {item.texto}
                   </span>
+
 
                 </button>
 
               ))}
 
+
             </div>
 
           )}
+
+
 
 
 
@@ -194,17 +251,26 @@ export default function StudioToday({
                     {proyecto.nombre}
                   </strong>
 
+
                   <span>
                     {proyecto.fechaEntrega}
+                    {' · '}
+                    {diasHasta(
+                      proyecto.fechaEntrega
+                    )} días
                   </span>
+
 
                 </button>
 
               ))}
 
+
             </div>
 
           )}
+
+
 
 
 
@@ -223,7 +289,9 @@ export default function StudioToday({
                   key={item.id}
                   className="today-item"
                   onClick={() =>
-                    onOpen(item.proyecto)
+                    onOpen(
+                      item.proyecto
+                    )
                   }
                 >
 
@@ -231,24 +299,75 @@ export default function StudioToday({
                     {item.proyecto.nombre}
                   </strong>
 
+
                   <span>
-                    {Number(item.importe).toLocaleString('es-ES')} €
+                    {Number(
+                      item.importe
+                    ).toLocaleString('es-ES')} €
                   </span>
+
 
                 </button>
 
               ))}
+
 
             </div>
 
           )}
 
 
+
+
+
+
+          {proyectosBloqueados.length > 0 && (
+
+            <div className="today-block">
+
+              <h3>
+                🔵 Proyectos bloqueados
+              </h3>
+
+
+              {proyectosBloqueados.map((proyecto) => (
+
+                <button
+                  key={proyecto.id}
+                  className="today-item"
+                  onClick={() =>
+                    onOpen(proyecto)
+                  }
+                >
+
+                  <strong>
+                    {proyecto.nombre}
+                  </strong>
+
+
+                  <span>
+                    Proyecto bloqueado
+                  </span>
+
+
+                </button>
+
+              ))}
+
+
+            </div>
+
+          )}
+
+
+
         </div>
 
       )}
 
+
     </div>
 
   )
+
 }
