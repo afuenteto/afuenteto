@@ -101,13 +101,12 @@ export default function StudioToday({
           {tareasUrgentes.length > 0 && (
 
 <button
-  className="today-counter"
   type="button"
- onClick={(e) => {
-  e.stopPropagation()
-  console.log('BOTON TAREAS')
-  setPanelAbierto('tareas')
-}}
+  className="today-counter"
+  onClick={() => {
+    alert('BOTON TAREAS')
+    setPanelAbierto('tareas')
+  }}
 >
   🔴 {tareasUrgentes.length}
 </button>
