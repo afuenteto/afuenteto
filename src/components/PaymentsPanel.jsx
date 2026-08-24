@@ -25,7 +25,7 @@ export default function PaymentsPanel({
 
 
   cobros.sort(
-    (a,b) =>
+    (a, b) =>
       new Date(a.fecha) -
       new Date(b.fecha)
   )
@@ -34,15 +34,16 @@ export default function PaymentsPanel({
   return (
 
     <div
-  className="panel-overlay"
-  onMouseDown={(e) => {
-    if (e.target === e.currentTarget) {
-      onClose()
-    }
-  }}
->
+      className="panel-overlay"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose()
+        }
+      }}
+    >
 
       <div className="panel">
+
 
         <div className="panel-head">
 
@@ -60,7 +61,18 @@ export default function PaymentsPanel({
         </div>
 
 
-        {cobros.map((item)=>(
+
+        {cobros.length === 0 && (
+
+          <p className="mono">
+            No hay cobros pendientes.
+          </p>
+
+        )}
+
+
+
+        {cobros.map((item) => (
 
           <button
             key={item.id}
@@ -74,16 +86,24 @@ export default function PaymentsPanel({
               {item.proyecto.nombre}
             </strong>
 
+
+            <span>
+              Cliente: {item.proyecto.cliente || 'Sin cliente'}
+            </span>
+
+
             <span>
               {item.concepto}
             </span>
 
+
             <span>
-              {item.fecha}
+              📅 {item.fecha}
             </span>
 
+
             <b>
-              {Number(item.importe)
+              💰 {Number(item.importe)
                 .toLocaleString('es-ES')} €
             </b>
 
