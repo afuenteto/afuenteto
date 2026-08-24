@@ -345,7 +345,10 @@ async function cargarClientes(user) {
 
       const datos = await cargarDesdeSupabase(data.user)
       setProyectos(datos)
+const datosClientes =
+  await cargarClientes(data.user)
 
+setClientes(datosClientes)
       setPassword('')
     } catch (error) {
       console.error(error)
