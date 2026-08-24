@@ -875,6 +875,37 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
       guardando={guardando}
     />
   )}
+      {panelAbierto === 'tareas' && (
+  <TasksPanel
+    proyectos={proyectos}
+    onClose={() => setPanelAbierto(null)}
+    onOpenTasks={abrirTareas}
+  />
+)}
+
+{panelAbierto === 'entregas' && (
+  <DeliveriesPanel
+    proyectos={proyectos}
+    onClose={() => setPanelAbierto(null)}
+    onOpen={abrirExistente}
+  />
+)}
+
+{panelAbierto === 'cobros' && (
+  <PaymentsPanel
+    proyectos={proyectos}
+    onClose={() => setPanelAbierto(null)}
+    onOpen={abrirExistente}
+  />
+)}
+
+{panelAbierto === 'bloqueados' && (
+  <BlockedPanel
+    proyectos={proyectos}
+    onClose={() => setPanelAbierto(null)}
+    onOpen={abrirExistente}
+  />
+)}
 
 </div>
 )
