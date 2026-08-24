@@ -12,6 +12,7 @@ export default function TasksPanel({
 
   const tareas = []
 
+
   proyectos.forEach((proyecto) => {
 
     ;(proyecto.tareas || []).forEach((tarea) => {
@@ -30,12 +31,44 @@ export default function TasksPanel({
   })
 
 
+  // Ordenar por fecha de entrega más cercana
+  tareas.sort((a, b) => {
+
+    const diasA = a.proyecto.fechaEntrega
+      ? Math.ceil(
+          (
+            new Date(a.proyecto.fechaEntrega) -
+            new Date()
+          ) /
+          (1000 * 60 * 60 * 24)
+        )
+      : 9999
+
+
+    const diasB = b.proyecto.fechaEntrega
+      ? Math.ceil(
+          (
+            new Date(b.proyecto.fechaEntrega) -
+            new Date()
+          ) /
+          (1000 * 60 * 60 * 24)
+        )
+      : 9999
+
+
+    return diasA - diasB
+
+  })
+
+
+
   function completar(tarea) {
 
     setCompletadas([
       ...completadas,
       tarea.id
     ])
+
 
     setTimeout(() => {
 
@@ -51,14 +84,35 @@ export default function TasksPanel({
   }
 
 
+
+  function diasEntrega(fecha) {
+
+    if (!fecha) return null
+
+    const dias = Math.ceil(
+      (
+        new Date(fecha) -
+        new Date()
+      ) /
+      (1000 * 60 * 60 * 24)
+    )
+
+    return dias
+
+  }
+
+
+
   return (
 
     <div
       className="panel-overlay"
       onMouseDown={(e) => {
+
         if (e.target === e.currentTarget) {
           onClose()
         }
+
       }}
     >
 
@@ -70,6 +124,7 @@ export default function TasksPanel({
           <h2 className="serif">
             🔴 Tareas pendientes
           </h2>
+
 
           <button
             className="icon-btn"
@@ -100,19 +155,20 @@ export default function TasksPanel({
               'panel-item ' +
               (
                 completadas.includes(tarea.id)
-                ? 'task-completed'
-                : ''
+                  ? 'task-completed'
+                  : ''
               )
             }
           >
+
 
             <button
               className="task-button"
               onClick={() =>
                 setConfirmando(
                   confirmando?.id === tarea.id
-                  ? null
-                  : tarea
+                    ? null
+                    : tarea
                 )
               }
             >
@@ -121,9 +177,24 @@ export default function TasksPanel({
                 {tarea.proyecto.nombre}
               </strong>
 
+
               <span>
                 {tarea.texto}
               </span>
+
+
+              {diasEntrega(
+                tarea.proyecto.fechaEntrega
+              ) !== null && (
+
+                <small>
+                  📅 Entrega en {diasEntrega(
+                    tarea.proyecto.fechaEntrega
+                  )} días
+                </small>
+
+              )}
+
 
             </button>
 
@@ -133,12 +204,14 @@ export default function TasksPanel({
 
               <div className="task-confirm-inline">
 
+
                 <p>
                   ¿Dar por finalizada esta tarea?
                 </p>
 
 
                 <div className="task-confirm-actions">
+
 
                   <button
                     className="btn btn-ghost"
@@ -159,11 +232,14 @@ export default function TasksPanel({
                     ✓ Completar
                   </button>
 
+
                 </div>
+
 
               </div>
 
             )}
+
 
           </div>
 
