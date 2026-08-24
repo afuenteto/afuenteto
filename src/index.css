@@ -1567,3 +1567,24 @@ a {
   margin-bottom: 10px;
   cursor: pointer;
 }
+.task-panel-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+}
+
+
+.task-panel-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+
+.task-panel-row div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
