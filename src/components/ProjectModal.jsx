@@ -177,10 +177,22 @@ function agregarCobro() {
     estado: nuevoCobro.estado || 'cobrado'
   }
 
-  set(
-    'cobros',
-    [...(datos.cobros || []), cobro]
-  )
+ setDatos({
+  ...datos,
+  cobros: [
+    ...(datos.cobros || []),
+    cobro
+  ],
+  historial: [
+    ...(datos.historial || []),
+    {
+      id: crypto.randomUUID(),
+      fecha: new Date().toISOString(),
+      texto: `Cobro añadido: ${cobro.concepto} (${cobro.importe} €)`,
+      icono: '💰'
+    }
+  ]
+})
 
   setNuevoCobro({
     fecha: '',
