@@ -4,7 +4,8 @@ import { diasHasta } from '../storage.js'
 export default function StudioToday({
   proyectos,
   onOpen,
-  onOpenTasks
+  onOpenTasks,
+  setPanelAbierto
 }) {
 
   const [abierto, setAbierto] = useState(false)
