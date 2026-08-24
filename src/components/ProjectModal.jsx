@@ -451,33 +451,42 @@ function agregarCobro() {
             <input id="fechaInicio" type="date" value={datos.fechaInicio} onChange={(e) => set('fechaInicio', e.target.value)} />
           </div>
           <div className="field">
-            <label htmlFor="fechaEntrega">Fecha de entrega estimada</label>
-           onChange={(e) => {
+  <label htmlFor="fechaEntrega">
+    Fecha de entrega estimada
+  </label>
 
-  const nuevaFecha = e.target.value
+  <input
+    id="fechaEntrega"
+    type="date"
+    value={datos.fechaEntrega || ''}
+    onChange={(e) => {
 
-  if (
-    nuevaFecha !== datos.fechaEntrega
-  ) {
+      const nuevaFecha = e.target.value
 
-    setDatos({
-      ...datos,
-      fechaEntrega: nuevaFecha,
-      historial: [
-        ...(datos.historial || []),
-        {
-          id: crypto.randomUUID(),
-          fecha: new Date().toISOString(),
-          texto: `Fecha de entrega cambiada a: ${nuevaFecha}`,
-          icono: '📅'
-        }
-      ]
-    })
+      if (
+        nuevaFecha !== datos.fechaEntrega
+      ) {
 
-  }
+        setDatos({
+          ...datos,
+          fechaEntrega: nuevaFecha,
+          historial: [
+            ...(datos.historial || []),
+            {
+              id: crypto.randomUUID(),
+              fecha: new Date().toISOString(),
+              texto: `Fecha de entrega cambiada a: ${nuevaFecha}`,
+              icono: '📅'
+            }
+          ]
+        })
 
-}}
-          </div>
+      }
+
+    }}
+  />
+
+</div>
         </div>
 
         <div className="field-row">
