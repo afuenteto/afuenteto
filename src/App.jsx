@@ -819,11 +819,12 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     <div>
       <EconomicChart proyectos={proyectosOrdenados} />
 
-        <StudioToday
-        proyectos={proyectos}
-        onOpen={abrirExistente}
-        onOpenTasks={abrirTareas}
-      />
+       <StudioToday
+  proyectos={proyectos}
+  onOpen={abrirExistente}
+  onOpenTasks={abrirTareas}
+  setPanelAbierto={setPanelAbierto}
+/>
 
 
      <DndContext
