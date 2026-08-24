@@ -211,7 +211,22 @@ export default function App() {
 
   useEffect(() => {
     let activo = true
+async function cargarClientes(user) {
 
+  const { data, error } = await supabase
+    .from('clientes')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('nombre')
+
+  if (error) {
+    console.error(error)
+    throw error
+  }
+
+  return data || []
+
+}
     async function iniciar() {
       try {
         const {
