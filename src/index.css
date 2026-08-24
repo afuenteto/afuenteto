@@ -1374,6 +1374,7 @@ a {
   background: var(--ink-faint);
   border-radius: 50%;
 }
+
 .studio-today {
   margin: 28px 0;
 }
@@ -1418,6 +1419,7 @@ a {
   font-size: 13px;
   color: #666;
 }
+
 .section-label.dashboard-toggle {
   background: #fff3a6;
   width: 100%;
@@ -1430,12 +1432,14 @@ a {
   color: #111;
   margin: 20px 0;
 }
+
 .dashboard-toggle {
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 /* Botones desplegables del dashboard */
 .dashboard-toggle {
   background: #fff3a6;
@@ -1458,6 +1462,7 @@ a {
   border-bottom: none;
   margin: 0 0 16px;
 }
+
 .today-counters {
   display: flex;
   align-items: center;
@@ -1465,6 +1470,7 @@ a {
   font-size: 13px;
   font-weight: 500;
 }
+
 .today-counter {
   border: none;
   background: transparent;
@@ -1477,10 +1483,12 @@ a {
 .today-counter:hover {
   opacity: 0.7;
 }
+
 .task-done {
   opacity: 0.45;
   text-decoration: line-through;
 }
+
 .task-info {
   display: flex;
   gap: 10px;
@@ -1488,6 +1496,7 @@ a {
   font-size: 12px;
   color: var(--ink-faint);
 }
+
 .task-options {
   display: flex;
   gap: 8px;
@@ -1498,6 +1507,7 @@ a {
 .task-options select {
   font-size: 12px;
 }
+
 .task-done {
   opacity: 0.45;
 }
@@ -1516,6 +1526,7 @@ a {
   color: var(--ink-faint);
   margin-top: 3px;
 }
+
 .history-row {
   display: flex;
   gap: 10px;
@@ -1532,6 +1543,7 @@ a {
   color: var(--ink-faint);
   font-size: 11px;
 }
+
 .panel-overlay {
   position: fixed;
   inset: 0;
@@ -1567,6 +1579,7 @@ a {
   margin-bottom: 10px;
   cursor: pointer;
 }
+
 .task-panel-row {
   display: flex;
   align-items: center;
@@ -1574,17 +1587,41 @@ a {
   text-align: left;
 }
 
-
 .task-panel-row input[type="checkbox"] {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
 }
 
-
 .task-panel-row div {
   display: flex;
   flex-direction: column;
   gap: 4px;
   flex: 1;
+}
+
+.task-button {
+  width:100%;
+  border:0;
+  background:none;
+  text-align:left;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.task-completed {
+  opacity:0;
+  transform:translateX(20px);
+  transition:all .7s ease;
+}
+
+.task-confirm {
+  margin-top:20px;
+  padding:20px;
+  border-top:1px solid #ddd;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
