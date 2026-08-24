@@ -285,9 +285,7 @@ export default function StudioToday({
                   key={item.id}
                   className="today-item"
                   onClick={() =>
-                    onOpen(
-                      item.proyecto
-                    )
+                   onOpen(item.proyecto, 'economia')
                   }
                 >
 
