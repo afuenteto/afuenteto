@@ -562,6 +562,16 @@ function agregarCobro() {
   {Number(c.importe).toLocaleString('es-ES')} € 
   {c.estado === 'previsto' ? ' ⏳ Previsto' : ' ✓ Cobrado'}
 </strong>
+   
+   {c.estado === 'previsto' && (
+  <button
+    type="button"
+    className="btn btn-sm"
+    onClick={() => marcarCobrado(c.id)}
+  >
+    ✓ Cobrar
+  </button>
+)}
 
     <button
       type="button"
