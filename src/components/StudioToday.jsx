@@ -131,19 +131,22 @@ export default function StudioToday({
 
 
 
-          {cobrosPendientes.length > 0 && (
+        {cobrosPendientes.length > 0 && (
 
-            <button
-              className="today-counter"
-              onClick={(e) => {
-  e.stopPropagation()
-  setAbierto(true)
-}}
-              >
-              💰 {cobrosPendientes.length}
-            </button>
+  <button
+    className="today-counter"
+    onClick={(e) => {
+      e.stopPropagation()
+      onOpen(
+        cobrosPendientes[0].proyecto,
+        'economia'
+      )
+    }}
+  >
+    💰 {cobrosPendientes.length}
+  </button>
 
-          )}
+)}
 
 
 
