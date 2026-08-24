@@ -100,17 +100,18 @@ export default function StudioToday({
 
           {tareasUrgentes.length > 0 && (
 
-            <button
-              className="today-counter"
-              onClick={(e) => {
-  e.stopPropagation()
-  setPanelAbierto('entregas')
-}}
-            >
-              🔴 {tareasUrgentes.length}
-            </button>
+<button
+  className="today-counter"
+  type="button"
+  onClick={(e) => {
+    e.stopPropagation()
+    setPanelAbierto('tareas')
+  }}
+>
+  🔴 {tareasUrgentes.length}
+</button>
 
-          )}
+)}
 
 
 
@@ -118,9 +119,10 @@ export default function StudioToday({
 
             <button
   className="today-counter"
+  type="button"
   onClick={(e) => {
     e.stopPropagation()
-    setAbierto(true)
+    setPanelAbierto('entregas')
   }}
 >
   📅 {entregas.length}
@@ -133,14 +135,15 @@ export default function StudioToday({
         {cobrosPendientes.length > 0 && (
 
   <button
-    className="today-counter"
-   onClick={(e) => {
-  e.stopPropagation()
-  setPanelAbierto('cobros')
-}}
-  >
-    💰 {cobrosPendientes.length}
-  </button>
+  className="today-counter"
+  type="button"
+  onClick={(e) => {
+    e.stopPropagation()
+    setPanelAbierto('cobros')
+  }}
+>
+  💰 {cobrosPendientes.length}
+</button>
 
 )}
 
@@ -148,15 +151,16 @@ export default function StudioToday({
 
           {proyectosBloqueados.length > 0 && (
 
-            <button
-              className="today-counter"
-             onClick={(e) => {
-  e.stopPropagation()
-  setPanelAbierto('bloqueados')
-}}
-            >
-              🔵 {proyectosBloqueados.length}
-            </button>
+           <button
+  className="today-counter"
+  type="button"
+  onClick={(e) => {
+    e.stopPropagation()
+    setPanelAbierto('bloqueados')
+  }}
+>
+  🔵 {proyectosBloqueados.length}
+</button>
 
           )}
 
