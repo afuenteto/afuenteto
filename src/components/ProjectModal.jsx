@@ -166,6 +166,40 @@ if (error) {
     set('proveedores', [...datos.proveedores, { id: uid(), nombre, contacto: '' }])
     setNuevoProveedor('')
   }
+ function marcarCobrado(id) {
+
+  const cobro = datos.cobros.find(
+    (c) => c.id === id
+  )
+
+  if (!cobro) return
+
+
+  setDatos({
+    ...datos,
+
+    cobros: datos.cobros.map((c) =>
+      c.id === id
+        ? {
+            ...c,
+            estado: 'cobrado'
+          }
+        : c
+    ),
+
+    historial: [
+      ...(datos.historial || []),
+      {
+        id: crypto.randomUUID(),
+        fecha: new Date().toISOString(),
+        texto: `Cobro recibido: ${cobro.concepto} (${cobro.importe} €)`,
+        icono: '💰'
+      }
+    ]
+
+  })
+
+}
 function agregarCobro() {
   if (!nuevoCobro.fecha || !nuevoCobro.importe) return
 
