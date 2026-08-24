@@ -46,7 +46,6 @@ export default function StudioToday({
 
   })
 
-
   const cobrosPendientes = []
 
   proyectos.forEach((proyecto) => {
