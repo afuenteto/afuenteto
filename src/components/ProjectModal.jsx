@@ -336,7 +336,31 @@ function agregarCobro() {
           </div>
           <div className="field">
             <label htmlFor="fechaEntrega">Fecha de entrega estimada</label>
-            <input id="fechaEntrega" type="date" value={datos.fechaEntrega} onChange={(e) => set('fechaEntrega', e.target.value)} />
+           onChange={(e) => {
+
+  const nuevaFecha = e.target.value
+
+  if (
+    nuevaFecha !== datos.fechaEntrega
+  ) {
+
+    setDatos({
+      ...datos,
+      fechaEntrega: nuevaFecha,
+      historial: [
+        ...(datos.historial || []),
+        {
+          id: crypto.randomUUID(),
+          fecha: new Date().toISOString(),
+          texto: `Fecha de entrega cambiada a: ${nuevaFecha}`,
+          icono: '📅'
+        }
+      ]
+    })
+
+  }
+
+}}
           </div>
         </div>
 
