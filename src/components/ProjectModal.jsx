@@ -741,8 +741,10 @@ function agregarCobro() {
         </button>
       </div>
 
-     <ProjectHistory proyecto={datos} />
-
+    <ProjectHistory
+  proyecto={datos}
+  onDeleteHistory={borrarHistorial}
+/>
       <div className="section-label">
         Notas
       </div>
