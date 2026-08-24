@@ -1,7 +1,8 @@
 export default function TasksPanel({
   proyectos,
   onClose,
-  onOpenTasks
+  onOpenTasks,
+  onCompleteTask
 }) {
 
   const tareas=[]
