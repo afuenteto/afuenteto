@@ -346,68 +346,7 @@ export default function App() {
     setSeccionInicial(null)
     setEditando(nuevoProyecto())
   }
-async function completarTareaDesdePanel(
-  proyectoId,
-  tareaId
-) {
 
-  const proyecto =
-    proyectos.find(
-      p => p.id === proyectoId
-    )
-
-  if (!proyecto) return
-
-
-  const tareas =
-    proyecto.tareas.map(t =>
-      t.id === tareaId
-        ? {
-            ...t,
-            hecha:true
-          }
-        : t
-    )
-
-
-  const historialNuevo = [
-    ...(proyecto.historial || []),
-    {
-      id: crypto.randomUUID(),
-      fecha:new Date().toISOString(),
-      texto:
-        `Tarea completada: ${
-          proyecto.tareas.find(
-            t=>t.id===tareaId
-          ).texto
-        }`,
-      icono:'✓'
-    }
-  ]
-
-
-  await supabase
-    .from('proyectos')
-    .update({
-      tareas,
-      historial:historialNuevo
-    })
-    .eq('id',proyectoId)
-
-
-  setProyectos(prev =>
-    prev.map(p =>
-      p.id===proyectoId
-      ? {
-          ...p,
-          tareas,
-          historial:historialNuevo
-        }
-      : p
-    )
-  )
-
-}
 function abrirExistente(proyecto, seccion = null) {
 
   setSeccionInicial(seccion)
@@ -509,6 +448,68 @@ async function guardarTareas(proyectoId, tareas) {
     setGuardando(false)
 
   }
+}
+  async function completarTareaDesdePanel(
+  proyectoId,
+  tareaId
+) {
+
+  const proyecto =
+    proyectos.find(
+      p => p.id === proyectoId
+    )
+
+  if (!proyecto) return
+
+
+  const tareas =
+    proyecto.tareas.map(t =>
+      t.id === tareaId
+        ? {
+            ...t,
+            hecha:true
+          }
+        : t
+    )
+
+
+  const historialNuevo = [
+    ...(proyecto.historial || []),
+    {
+      id: crypto.randomUUID(),
+      fecha:new Date().toISOString(),
+      texto:
+        `Tarea completada: ${
+          proyecto.tareas.find(
+            t=>t.id===tareaId
+          ).texto
+        }`,
+      icono:'✓'
+    }
+  ]
+
+
+  await supabase
+    .from('proyectos')
+    .update({
+      tareas,
+      historial:historialNuevo
+    })
+    .eq('id',proyectoId)
+
+
+  setProyectos(prev =>
+    prev.map(p =>
+      p.id===proyectoId
+      ? {
+          ...p,
+          tareas,
+          historial:historialNuevo
+        }
+      : p
+    )
+  )
+
 }
 function añadirHistorial(proyecto, texto, icono='•') {
 
