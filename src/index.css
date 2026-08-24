@@ -1625,3 +1625,21 @@ a {
   flex-direction:column;
   gap:12px;
 }
+.task-confirm-inline {
+  padding: 12px 0 8px;
+  border-top: 1px solid #ddd;
+  margin-top: 10px;
+}
+
+
+.task-confirm-actions {
+  display:flex;
+  gap:10px;
+}
+
+
+.task-completed {
+  opacity:0;
+  transform:translateX(30px);
+  transition:all .7s ease;
+}
