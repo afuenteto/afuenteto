@@ -52,9 +52,9 @@ export default function TasksPanel({
        {tareas.map((t)=>(
 
   <div
-    key={t.id}
-    className="panel-item"
-  >
+  key={t.id}
+  className="panel-item task-panel-row"
+>
 
     <input
       type="checkbox"
