@@ -76,82 +76,79 @@ export default function TasksPanel({
 
 
 
-        {tareas.map((t) => (
+       {tareas.map((t) => (
 
-          <div
-            key={t.id}
-            className={
-              'panel-item ' +
-              (completadas.includes(t.id)
-                ? 'task-completed'
-                : '')
+  <div
+    key={t.id}
+    className={
+      'panel-item ' +
+      (completadas.includes(t.id)
+        ? 'task-completed'
+        : '')
+    }
+  >
+
+    <button
+      className="task-button"
+      onClick={() =>
+        setConfirmando(
+          confirmando?.id === t.id
+            ? null
+            : t
+        )
+      }
+    >
+
+      <strong>
+        {t.proyecto.nombre}
+      </strong>
+
+      <span>
+        {t.texto}
+      </span>
+
+    </button>
+
+
+    {confirmando?.id === t.id && (
+
+      <div className="task-confirm-inline">
+
+        <p>
+          ¿Dar por finalizada esta tarea?
+        </p>
+
+
+        <div className="task-confirm-actions">
+
+          <button
+            className="btn btn-ghost"
+            onClick={() =>
+              setConfirmando(null)
             }
           >
-
-            <button
-              className="task-button"
-              onClick={() =>
-                setConfirmando(t)
-              }
-            >
-
-              <strong>
-                {t.proyecto.nombre}
-              </strong>
-
-              <span>
-                {t.texto}
-              </span>
-
-            </button>
+            Cancelar
+          </button>
 
 
-          </div>
+          <button
+            className="btn btn-primary"
+            onClick={() =>
+              completar(t)
+            }
+          >
+            ✓ Completar
+          </button>
 
-        ))}
+        </div>
 
+      </div>
 
+    )}
 
-        {confirmando && (
+  </div>
 
-          <div className="task-confirm">
-
-            <p>
-              ¿Dar por finalizada esta tarea?
-            </p>
-
-            <strong>
-              {confirmando.texto}
-            </strong>
-
-
-            <div>
-
-              <button
-                className="btn btn-ghost"
-                onClick={() =>
-                  setConfirmando(null)
-                }
-              >
-                Cancelar
-              </button>
-
-
-              <button
-                className="btn btn-primary"
-                onClick={() =>
-                  completar(confirmando)
-                }
-              >
-                ✓ Completar
-              </button>
-
-            </div>
-
-          </div>
-
-        )}
-
+))}
 
       </div>
 
