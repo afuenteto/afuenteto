@@ -155,6 +155,7 @@ export default function App() {
   const [filtro, setFiltro] = useState('Todos')
   const [guardando, setGuardando] = useState(false)
   const [aviso, setAviso] = useState('')
+  const [panelAbierto, setPanelAbierto] = useState(null)
   const handleDragEnd = async (event) => {
   const { active, over } = event
 
