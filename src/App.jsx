@@ -8,6 +8,10 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import ProjectModal from './components/ProjectModal.jsx'
 import TasksModal from './components/TasksModal.jsx'
 import StudioProfile from './components/StudioProfile.jsx'
+import TasksPanel from './components/TasksPanel.jsx'
+import DeliveriesPanel from './components/DeliveriesPanel.jsx'
+import PaymentsPanel from './components/PaymentsPanel.jsx'
+import BlockedPanel from './components/BlockedPanel.jsx'
 import { supabase } from './supabase.js'
 import {
   FASES,
