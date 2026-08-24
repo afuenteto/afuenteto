@@ -455,13 +455,12 @@ function agregarCobro() {
             />
           </div>
 
-
-
-
-
-
-         
-         <div className="section-label">Economía del proyecto</div>
+        <div
+  ref={economiaRef}
+  className="section-label"
+>
+  Economía del proyecto
+</div>
 
 <div className="field-row">
   <div className="field">
