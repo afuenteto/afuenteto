@@ -159,7 +159,16 @@ if (error) {
   function borrarTarea(id) {
     set('tareas', datos.tareas.filter((t) => t.id !== id))
   }
+function borrarHistorial(id) {
 
+  setDatos({
+    ...datos,
+    historial: (datos.historial || []).filter(
+      (evento) => evento.id !== id
+    )
+  })
+
+}
   function agregarProveedor() {
     const nombre = nuevoProveedor.trim()
     if (!nombre) return
