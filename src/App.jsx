@@ -149,6 +149,7 @@ export default function App() {
   const [errorLogin, setErrorLogin] = useState('')
   const [cargando, setCargando] = useState(true)
   const [proyectos, setProyectos] = useState([])
+  const [clientes, setClientes] = useState([])
   const [editando, setEditando] = useState(null)
   const [tareasAbiertas, setTareasAbiertas] = useState(null)
   const [seccionInicial, setSeccionInicial] = useState(null)
