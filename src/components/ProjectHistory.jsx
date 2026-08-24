@@ -1,5 +1,6 @@
 export default function ProjectHistory({
-  proyecto
+  proyecto,
+  onDeleteHistory
 }) {
 
   const historial = proyecto.historial || []
@@ -28,33 +29,31 @@ export default function ProjectHistory({
         .map((evento) => (
 
           <div
-            className="history-row"
-            key={evento.id}
-          >
+  className="history-row"
+  key={evento.id}
+>
 
-            <span className="history-icon">
-              {evento.icono || '•'}
-            </span>
+  <span className="history-icon">
+    {evento.icono || '•'}
+  </span>
 
-
-            <div>
-
-              <div>
-                {evento.texto}
-              </div>
-
-              <small>
-                {new Date(evento.fecha)
-                  .toLocaleDateString('es-ES')}
-              </small>
-
-            </div>
-
-          </div>
-
-        ))}
-
+  <div>
+    <div>
+      {evento.texto}
     </div>
 
-  )
-}
+    <small>
+      {new Date(evento.fecha)
+        .toLocaleDateString('es-ES')}
+    </small>
+  </div>
+
+  <button
+    type="button"
+    className="icon-btn"
+    onClick={() => onDeleteHistory(evento.id)}
+  >
+    ✕
+  </button>
+
+</div>
