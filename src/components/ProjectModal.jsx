@@ -79,7 +79,9 @@ useEffect(() => {
 
   return () => clearTimeout(timer)
 
-}, [seccionInicial])   function importarContacto(e) {
+}, [seccionInicial])  
+ 
+ function importarContacto(e) {
     const file = e.target.files?.[0]
 
     if (!file) return
