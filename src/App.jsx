@@ -867,15 +867,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   </>
 )}
      
-      {tareasAbiertas && (
-    <TasksModal
-      proyecto={tareasAbiertas}
-      onSave={guardarTareas}
-      onClose={() => setTareasAbiertas(null)}
-      guardando={guardando}
-    />
-  )}
-      {panelAbierto === 'tareas' && (
+    {panelAbierto === 'tareas' && (
   <TasksPanel
     proyectos={proyectos}
     onClose={() => setPanelAbierto(null)}
