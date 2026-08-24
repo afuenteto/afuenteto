@@ -1572,12 +1572,22 @@ a {
 
 .panel-item {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  padding: 15px;
+  background: #e8c65a;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 16px;
   margin-bottom: 10px;
   cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: inherit;
+  transition: transform .15s ease, opacity .15s ease;
+}
+
+.panel-item:hover {
+  transform: translateY(-1px);
 }
 
 .task-panel-row {
