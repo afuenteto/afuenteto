@@ -325,8 +325,54 @@ function agregarCobro() {
         <div className="field-row">
           <div className="field">
             <label htmlFor="cliente">Cliente / contacto</label>
-            <input
-           id="cliente" type="text" value={datos.cliente} onChange={(e) => set('cliente', e.target.value)} />
+          <select
+  value=""
+  onChange={(e) => {
+
+    const clienteSeleccionado =
+      clientes.find(
+        (c) => c.id === e.target.value
+      )
+
+    if (!clienteSeleccionado) return
+
+
+    setDatos((d) => ({
+      ...d,
+      cliente: clienteSeleccionado.nombre,
+      telefono: clienteSeleccionado.telefono || '',
+      email: clienteSeleccionado.email || '',
+      direccion: clienteSeleccionado.direccion || ''
+    }))
+
+  }}
+>
+  <option value="">
+    Seleccionar cliente guardado...
+  </option>
+
+  {clientes.map((cliente) => (
+
+    <option
+      key={cliente.id}
+      value={cliente.id}
+    >
+      {cliente.nombre}
+    </option>
+
+  ))}
+
+</select>
+
+
+<input
+ id="cliente"
+ type="text"
+ value={datos.cliente}
+ onChange={(e) =>
+   set('cliente', e.target.value)
+ }
+/>
              <button
   type="button"
   className="btn"
