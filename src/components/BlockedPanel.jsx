@@ -7,22 +7,24 @@ export default function BlockedPanel({
 
   const bloqueados =
     proyectos.filter(
-      p => p.prioridad === 'bloqueado'
+      (proyecto) =>
+        proyecto.prioridad === 'bloqueado'
     )
 
 
   return (
 
     <div
-  className="panel-overlay"
-  onMouseDown={(e) => {
-    if (e.target === e.currentTarget) {
-      onClose()
-    }
-  }}
->
+      className="panel-overlay"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose()
+        }
+      }}
+    >
 
       <div className="panel">
+
 
         <div className="panel-head">
 
@@ -40,23 +42,50 @@ export default function BlockedPanel({
         </div>
 
 
-        {bloqueados.map((p)=>(
+
+        {bloqueados.length === 0 && (
+
+          <p className="mono">
+            No hay proyectos bloqueados.
+          </p>
+
+        )}
+
+
+
+        {bloqueados.map((proyecto) => (
 
           <button
-            key={p.id}
+            key={proyecto.id}
             className="panel-item"
             onClick={() =>
-              onOpen(p)
+              onOpen(proyecto)
             }
           >
 
             <strong>
-              {p.nombre}
+              {proyecto.nombre}
             </strong>
 
+
             <span>
-              {p.cliente}
+              Cliente: {proyecto.cliente || 'Sin cliente'}
             </span>
+
+
+            <span>
+              🔵 Proyecto bloqueado
+            </span>
+
+
+            {proyecto.notas && (
+
+              <span>
+                {proyecto.notas}
+              </span>
+
+            )}
+
 
           </button>
 
