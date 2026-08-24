@@ -51,7 +51,7 @@ export default function ProjectHistory({
             <button
               type="button"
               className="icon-btn"
-              onClick={() => onDeleteHistory(evento.id)}
+              onClick={() => onDeleteHistory?.(evento.id)}
             >
               ✕
             </button>
