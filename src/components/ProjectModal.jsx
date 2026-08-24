@@ -3,7 +3,7 @@ import { FASES, uid } from '../storage.js'
 import { supabase } from '../supabase.js'
 import ProjectHistory from './ProjectHistory.jsx'
 
-export default function ProjectModal({ 
+export default function ProjectModal({
   proyecto,
   clientes = [],
   setClientes,
@@ -340,6 +340,45 @@ function agregarCobro() {
     setDatos((d) => ({
       ...d,
       cliente: clienteSeleccionado.nombre,
+      telefono: clienteSeleccionado.telefono || '',
+      email: clienteSeleccionado.email || '',
+      direccion: clienteSeleccionado.direccion || ''
+    }))
+
+  }}
+>
+  <option value="">
+    Seleccionar cliente guardado...
+  </option>
+
+  {clientes.map((cliente) => (
+
+    <option
+      key={cliente.id}
+      value={cliente.id}
+    >
+      {cliente.nombre}
+    </option>
+
+  ))}
+
+</select>
+
+
+<select
+  value=""
+  onChange={(e) => {
+
+    const clienteSeleccionado =
+      clientes.find(
+        (c) => c.id === e.target.value
+      )
+
+    if (!clienteSeleccionado) return
+
+    setDatos((d) => ({
+      ...d,
+      cliente: clienteSeleccionado.nombre || '',
       telefono: clienteSeleccionado.telefono || '',
       email: clienteSeleccionado.email || '',
       direccion: clienteSeleccionado.direccion || ''
