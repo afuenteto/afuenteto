@@ -1614,11 +1614,12 @@ a {
   width:100%;
   border:0;
   background:none;
-  text-align:left;
   cursor:pointer;
+  text-align:left;
   display:flex;
   flex-direction:column;
   gap:5px;
+  color:inherit;
 }
 
 .task-completed {
@@ -1636,10 +1637,11 @@ a {
   gap:12px;
 }
 .task-confirm-inline {
-  padding: 12px 0 8px;
-  border-top: 1px solid #ddd;
-  margin-top: 10px;
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid rgba(0,0,0,.15);
 }
+
 
 
 .task-confirm-actions {
@@ -1648,8 +1650,8 @@ a {
 }
 
 
-.task-completed {
+..task-completed {
   opacity:0;
-  transform:translateX(30px);
+  transform:translateX(25px);
   transition:all .7s ease;
 }
