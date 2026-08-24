@@ -339,9 +339,7 @@ export default function App() {
     setEditando(nuevoProyecto())
   }
 
-  function abrirExistente(proyecto, seccion = null) {
-
-  console.log('ABRIENDO PROYECTO:', proyecto)
+function abrirExistente(proyecto, seccion = null) {
 
   setSeccionInicial(seccion)
   setEditando(proyecto)
