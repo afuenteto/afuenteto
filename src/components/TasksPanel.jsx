@@ -3,7 +3,6 @@ import { useState } from 'react'
 export default function TasksPanel({
   proyectos,
   onClose,
-  onOpenTasks,
   onCompleteTask
 }) {
 
@@ -13,15 +12,15 @@ export default function TasksPanel({
 
   const tareas = []
 
-  proyectos.forEach((p) => {
+  proyectos.forEach((proyecto) => {
 
-    ;(p.tareas || []).forEach((t) => {
+    ;(proyecto.tareas || []).forEach((tarea) => {
 
-      if (!t.hecha) {
+      if (!tarea.hecha) {
 
         tareas.push({
-          ...t,
-          proyecto: p
+          ...tarea,
+          proyecto
         })
 
       }
@@ -55,13 +54,13 @@ export default function TasksPanel({
   return (
 
     <div
-  className="panel-overlay"
-  onMouseDown={(e) => {
-    if (e.target === e.currentTarget) {
-      onClose()
-    }
-  }}
->
+      className="panel-overlay"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose()
+        }
+      }}
+    >
 
       <div className="panel">
 
@@ -83,79 +82,93 @@ export default function TasksPanel({
 
 
 
-       {tareas.map((t) => (
+        {tareas.length === 0 && (
 
-  <div
-    key={t.id}
-    className={
-      'panel-item ' +
-      (completadas.includes(t.id)
-        ? 'task-completed'
-        : '')
-    }
-  >
+          <p className="mono">
+            No hay tareas pendientes.
+          </p>
 
-    <button
-      className="task-button"
-      onClick={() =>
-        setConfirmando(
-          confirmando?.id === t.id
-            ? null
-            : t
-        )
-      }
-    >
-
-      <strong>
-        {t.proyecto.nombre}
-      </strong>
-
-      <span>
-        {t.texto}
-      </span>
-
-    </button>
+        )}
 
 
-    {confirmando?.id === t.id && (
 
-      <div className="task-confirm-inline">
+        {tareas.map((tarea) => (
 
-        <p>
-          ¿Dar por finalizada esta tarea?
-        </p>
-
-
-        <div className="task-confirm-actions">
-
-          <button
-            className="btn btn-ghost"
-            onClick={() =>
-              setConfirmando(null)
+          <div
+            key={tarea.id}
+            className={
+              'panel-item ' +
+              (
+                completadas.includes(tarea.id)
+                ? 'task-completed'
+                : ''
+              )
             }
           >
-            Cancelar
-          </button>
+
+            <button
+              className="task-button"
+              onClick={() =>
+                setConfirmando(
+                  confirmando?.id === tarea.id
+                  ? null
+                  : tarea
+                )
+              }
+            >
+
+              <strong>
+                {tarea.proyecto.nombre}
+              </strong>
+
+              <span>
+                {tarea.texto}
+              </span>
+
+            </button>
 
 
-          <button
-            className="btn btn-primary"
-            onClick={() =>
-              completar(t)
-            }
-          >
-            ✓ Completar
-          </button>
 
-        </div>
+            {confirmando?.id === tarea.id && (
 
-      </div>
+              <div className="task-confirm-inline">
 
-    )}
+                <p>
+                  ¿Dar por finalizada esta tarea?
+                </p>
 
-  </div>
 
-))}
+                <div className="task-confirm-actions">
+
+                  <button
+                    className="btn btn-ghost"
+                    onClick={() =>
+                      setConfirmando(null)
+                    }
+                  >
+                    Cancelar
+                  </button>
+
+
+                  <button
+                    className="btn btn-primary"
+                    onClick={() =>
+                      completar(tarea)
+                    }
+                  >
+                    ✓ Completar
+                  </button>
+
+                </div>
+
+              </div>
+
+            )}
+
+          </div>
+
+        ))}
+
 
       </div>
 
