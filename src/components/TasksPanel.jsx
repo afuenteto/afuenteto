@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 export default function TasksPanel({
   proyectos,
   onClose,
@@ -5,18 +7,21 @@ export default function TasksPanel({
   onCompleteTask
 }) {
 
-  const tareas=[]
+  const [confirmando, setConfirmando] = useState(null)
+  const [completadas, setCompletadas] = useState([])
 
 
-  proyectos.forEach((p)=>{
+  const tareas = []
 
-    ;(p.tareas || []).forEach((t)=>{
+  proyectos.forEach((p) => {
 
-      if(!t.hecha){
+    ;(p.tareas || []).forEach((t) => {
+
+      if (!t.hecha) {
 
         tareas.push({
           ...t,
-          proyecto:p
+          proyecto: p
         })
 
       }
@@ -24,6 +29,27 @@ export default function TasksPanel({
     })
 
   })
+
+
+  function completar(tarea) {
+
+    setCompletadas([
+      ...completadas,
+      tarea.id
+    ])
+
+    setTimeout(() => {
+
+      onCompleteTask(
+        tarea.proyecto.id,
+        tarea.id
+      )
+
+      setConfirmando(null)
+
+    }, 700)
+
+  }
 
 
   return (
@@ -49,47 +75,83 @@ export default function TasksPanel({
         </div>
 
 
-       {tareas.map((t)=>(
 
-  <div
-  key={t.id}
-  className="panel-item task-panel-row"
->
+        {tareas.map((t) => (
 
-    <input
-      type="checkbox"
-      onChange={() =>
-        onCompleteTask(
-          t.proyecto.id,
-          t.id
-        )
-      }
-    />
+          <div
+            key={t.id}
+            className={
+              'panel-item ' +
+              (completadas.includes(t.id)
+                ? 'task-completed'
+                : '')
+            }
+          >
 
+            <button
+              className="task-button"
+              onClick={() =>
+                setConfirmando(t)
+              }
+            >
 
-    <div
-      onClick={() =>
-        onOpenTasks(t.proyecto)
-      }
-      style={{
-        cursor:'pointer'
-      }}
-    >
+              <strong>
+                {t.proyecto.nombre}
+              </strong>
 
-      <strong>
-        {t.proyecto.nombre}
-      </strong>
+              <span>
+                {t.texto}
+              </span>
 
-      <span>
-        {t.texto}
-      </span>
-
-    </div>
+            </button>
 
 
-  </div>
+          </div>
 
-))}
+        ))}
+
+
+
+        {confirmando && (
+
+          <div className="task-confirm">
+
+            <p>
+              ¿Dar por finalizada esta tarea?
+            </p>
+
+            <strong>
+              {confirmando.texto}
+            </strong>
+
+
+            <div>
+
+              <button
+                className="btn btn-ghost"
+                onClick={() =>
+                  setConfirmando(null)
+                }
+              >
+                Cancelar
+              </button>
+
+
+              <button
+                className="btn btn-primary"
+                onClick={() =>
+                  completar(confirmando)
+                }
+              >
+                ✓ Completar
+              </button>
+
+            </div>
+
+          </div>
+
+        )}
+
 
       </div>
 
