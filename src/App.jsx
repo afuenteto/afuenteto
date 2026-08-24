@@ -235,15 +235,25 @@ async function cargarClientes(user) {
 
         if (!activo) return
 
-        if (session?.user) {
-          setUsuario(session.user)
+    if (session?.user) {
 
-          const datos = await cargarDesdeSupabase(session.user)
+  setUsuario(session.user)
 
-          if (activo) {
-            setProyectos(datos)
-          }
-        }
+  const datos =
+    await cargarDesdeSupabase(session.user)
+
+  const datosClientes =
+    await cargarClientes(session.user)
+
+  if (activo) {
+
+    setProyectos(datos)
+
+    setClientes(datosClientes)
+
+  }
+
+}
       } catch (error) {
         console.error(error)
 
