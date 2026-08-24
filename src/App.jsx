@@ -870,12 +870,20 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   </>
 )}
      
-    {panelAbierto === 'tareas' && (
-  <TasksPanel
-    proyectos={proyectos}
-    onClose={() => setPanelAbierto(null)}
-    onOpenTasks={abrirTareas}
-  />
+{panelAbierto === 'tareas' && (
+  <div
+    style={{
+      position: 'fixed',
+      top: '100px',
+      right: '50px',
+      background: 'white',
+      color: 'black',
+      padding: '30px',
+      zIndex: 99999
+    }}
+  >
+    PANEL TAREAS FUNCIONA
+  </div>
 )}
 
 {panelAbierto === 'entregas' && (
