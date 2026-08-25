@@ -326,7 +326,7 @@ function agregarCobro() {
           <div className="field">
             <label htmlFor="cliente">Cliente / contacto</label>
          
-  }}
+  
 
 <select
   value=""
