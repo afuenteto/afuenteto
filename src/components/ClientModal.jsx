@@ -1,6 +1,7 @@
 export default function ClientModal({
   cliente,
   proyectos,
+  onOpenProject,
   onClose
 }) {
 
@@ -173,21 +174,23 @@ export default function ClientModal({
 
         {proyectosCliente.map((p)=>(
 
-          <div
-            key={p.id}
-            className="panel-item"
-          >
+         <button
+  key={p.id}
+  className="panel-item"
+  onClick={() =>
+    onOpenProject(p)
+  }
+>
 
-            <strong>
-              {p.nombre}
-            </strong>
+  <strong>
+    {p.nombre}
+  </strong>
 
+  <span>
+    {p.fase}
+  </span>
 
-            <span>
-              {p.fase}
-            </span>
-
-          </div>
+</button>
 
         ))}
 
