@@ -243,7 +243,9 @@ async function cargarClientes(user) {
     await cargarDesdeSupabase(session.user)
 
   const datosClientes =
-    await cargarClientes(session.user)
+   await cargarClientes(session.user)
+
+setClientes(datosClientes)
 
   if (activo) {
 
