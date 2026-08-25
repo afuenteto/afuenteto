@@ -28,6 +28,8 @@ useEffect(() => {
 }, [proyecto])
 const [nuevaTarea, setNuevaTarea] = useState('')
 const [nuevoProveedor, setNuevoProveedor] = useState('')
+const [busquedaCliente, setBusquedaCliente] = useState('')
+const [mostrarClientes, setMostrarClientes] = useState(false)
 
 const [nuevoCobro, setNuevoCobro] = useState({
   fecha: '',
