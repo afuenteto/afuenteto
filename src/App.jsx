@@ -279,27 +279,51 @@ useEffect(() => {
   let activo = true
 
 
-  iniciar() = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!activo) return
+ iniciar()
 
-      if (session?.user) {
-        setUsuario(session.user)
 
-        try {
-          const datos = await cargarDesdeSupabase(session.user)
+const {
+  data: { subscription },
+} = supabase.auth.onAuthStateChange(async (_event, session) => {
 
-          if (activo) {
-            setProyectos(datos)
-          }
-        } catch (error) {
-          console.error(error)
-        }
-      } else {
-        setUsuario(null)
-        setProyectos([])
+  if (!activo) return
+
+
+  if (session?.user) {
+
+    setUsuario(session.user)
+
+    try {
+
+      const datos =
+        await cargarDesdeSupabase(session.user)
+
+      const datosClientes =
+        await cargarClientes(session.user)
+
+
+      if (activo) {
+
+        setProyectos(datos)
+        setClientes(datosClientes)
+
       }
-    })
 
+    } catch (error) {
+
+      console.error(error)
+
+    }
+
+  } else {
+
+    setUsuario(null)
+    setProyectos([])
+    setClientes([])
+
+  }
+
+})
     return () => {
       activo = false
       subscription.unsubscribe()
