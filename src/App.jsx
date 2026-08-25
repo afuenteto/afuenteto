@@ -209,8 +209,6 @@ export default function App() {
     return (data || []).map(proyectoDesdeBD)
   }
 
-  useEffect(() => {
-    let activo = true
 async function cargarClientes(user) {
 
   const { data, error } = await supabase
@@ -227,11 +225,61 @@ async function cargarClientes(user) {
   return data || []
 
 }
-    iniciar()
+
+
+async function iniciar() {
+
+  try {
 
     const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      data: { session },
+    } = await supabase.auth.getSession()
+
+
+    if (!session) return
+
+
+    setUsuario(session.user)
+
+
+    const datos =
+      await cargarDesdeSupabase(session.user)
+
+
+    const datosClientes =
+      await cargarClientes(session.user)
+
+
+    setProyectos(datos)
+
+    setClientes(datosClientes)
+
+
+    console.log(
+      'CLIENTES CARGADOS APP:',
+      datosClientes
+    )
+
+
+  } catch (error) {
+
+    console.error(error)
+
+  } finally {
+
+    setCargando(false)
+
+  }
+
+}
+
+
+useEffect(() => {
+
+  let activo = true
+
+
+  iniciar() = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!activo) return
 
       if (session?.user) {
