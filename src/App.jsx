@@ -159,7 +159,6 @@ export default function App() {
   const [guardando, setGuardando] = useState(false)
   const [aviso, setAviso] = useState('')
   const [panelAbierto, setPanelAbierto] = useState(null)
-  const [clienteAbierto, setClienteAbierto] = useState(null)
   useEffect(() => {
   console.log('PANEL CAMBIADO:', panelAbierto)
 }, [panelAbierto])
