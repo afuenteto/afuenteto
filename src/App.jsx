@@ -227,51 +227,38 @@ async function cargarClientes(user) {
   return data || []
 
 }
-    async function iniciar() {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession()
+1s
+Run npm run build
+> interiorismo-tracker@1.0.0 build
+> vite build
+vite v5.4.21 building for production...
+transforming...
+✓ 3 modules transformed.
+x Build failed in 96ms
+error during build:
+[vite:esbuild] Transform failed with 1 error:
+/home/runner/work/afuenteto/afuenteto/src/App.jsx:261:8: ERROR: Unexpected "catch"
+file: /home/runner/work/afuenteto/afuenteto/src/App.jsx:261:8
 
-        if (!activo) return
+Unexpected "catch"
+259|  
+260|  }
+261|        } catch (error) {
+   |          ^
+262|          console.error(error)
+263|  
 
-    if (session?.user) {
-
-  setUsuario(session.user)
-
-  const datos =
-    await cargarDesdeSupabase(session.user)
-
-const datosClientes =
-  await cargarClientes(session.user)
-
-
-if (activo) {
-
-  setProyectos(datos)
-
-  setClientes(datosClientes)
-
-  console.log(
-    'CLIENTES CARGADOS APP:',
-    datosClientes
-  )
-
-}
-      } catch (error) {
-        console.error(error)
-
-        if (activo) {
-          setErrorLogin(
-            'No se han podido cargar los datos. Comprueba la configuración de Supabase.'
-          )
-        }
-      } finally {
-        if (activo) {
-          setCargando(false)
-        }
-      }
-    }
+    at failureErrorWithLog (/home/runner/work/afuenteto/afuenteto/node_modules/esbuild/lib/main.js:1472:15)
+    at /home/runner/work/afuenteto/afuenteto/node_modules/esbuild/lib/main.js:755:50
+    at responseCallbacks.<computed> (/home/runner/work/afuenteto/afuenteto/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/home/runner/work/afuenteto/afuenteto/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/home/runner/work/afuenteto/afuenteto/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:509:28)
+    at addChunk (node:internal/streams/readable:563:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)
+    at Readable.push (node:internal/streams/readable:394:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)
+Error: Process completed with exit code 1.
 
     iniciar()
 
