@@ -339,42 +339,61 @@ function agregarCobro() {
   Cliente / contacto
 </label>
 
-<select
-  value=""
+<input
+  type="text"
+  placeholder="🔍 Buscar cliente..."
+  value={busquedaCliente}
+  onFocus={() => setMostrarClientes(true)}
   onChange={(e) => {
-
-    const clienteSeleccionado =
-      clientes.find(
-        (c) => c.id === e.target.value
-      )
-
-    if (!clienteSeleccionado) return
-
-    setDatos((d) => ({
-      ...d,
-      cliente: clienteSeleccionado.nombre || '',
-      telefono: clienteSeleccionado.telefono || '',
-      email: clienteSeleccionado.email || '',
-      direccion: clienteSeleccionado.direccion || ''
-    }))
-
+    setBusquedaCliente(e.target.value)
+    setMostrarClientes(true)
   }}
->
-  <option value="">
-    Seleccionar cliente guardado...
-  </option>
+/>
 
-  {clientes.map((cliente) => (
-    <option
-      key={cliente.id}
-      value={cliente.id}
-    >
-      {cliente.nombre}
-    </option>
-  ))}
 
-</select>
+{mostrarClientes && clientes.length > 0 && (
 
+  <div className="client-results">
+
+    {clientes
+      .filter((c) =>
+        c.nombre
+          .toLowerCase()
+          .includes(
+            busquedaCliente.toLowerCase()
+          )
+      )
+      .map((cliente) => (
+
+        <button
+          type="button"
+          key={cliente.id}
+          className="client-result-item"
+          onClick={() => {
+
+            setDatos((d) => ({
+              ...d,
+              cliente: cliente.nombre,
+              telefono: cliente.telefono || '',
+              email: cliente.email || '',
+              direccion: cliente.direccion || ''
+            }))
+
+            setBusquedaCliente(cliente.nombre)
+            setMostrarClientes(false)
+
+          }}
+        >
+
+          {cliente.nombre}
+
+        </button>
+
+      ))}
+
+  </div>
+
+)}
 
 <input
  id="cliente"
