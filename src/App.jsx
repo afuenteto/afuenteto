@@ -623,7 +623,71 @@ async function guardar(datos) {
       }
 
     }
+// Comprobar cambios en cliente existente
+if (datos.cliente) {
 
+  const clienteActual =
+    clientes.find(
+      (c) =>
+        c.nombre.toLowerCase().trim() ===
+        datos.cliente.toLowerCase().trim()
+    )
+
+
+  if (clienteActual) {
+
+    const cambios =
+      clienteActual.telefono !== datos.telefono ||
+      clienteActual.email !== datos.email ||
+      clienteActual.direccion !== datos.direccion
+
+
+    if (cambios) {
+
+      const actualizar =
+        window.confirm(
+          `Los datos de ${clienteActual.nombre} han cambiado.\n\n¿Actualizar ficha del cliente?`
+        )
+
+
+      if (actualizar) {
+
+        const { error } =
+          await supabase
+            .from('clientes')
+            .update({
+              telefono: datos.telefono || '',
+              email: datos.email || '',
+              direccion: datos.direccion || ''
+            })
+            .eq('id', clienteActual.id)
+
+
+        if (error) {
+          throw error
+        }
+
+
+        setClientes((prev) =>
+          prev.map((c) =>
+            c.id === clienteActual.id
+              ? {
+                  ...c,
+                  telefono: datos.telefono,
+                  email: datos.email,
+                  direccion: datos.direccion
+                }
+              : c
+          )
+        )
+
+      }
+
+    }
+
+  }
+
+}
 
     if (!datos.historial || datos.historial.length === 0) {
       datos.historial = [
