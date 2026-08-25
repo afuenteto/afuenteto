@@ -1655,3 +1655,23 @@ a {
   transform:translateX(25px);
   transition:all .7s ease;
 }
+.client-results {
+  margin-top: 5px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+
+.client-result-item {
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  background: var(--accent-soft);
+  border: none;
+  cursor: pointer;
+}
+
+
+.client-result-item:hover {
+  opacity: .8;
+}
