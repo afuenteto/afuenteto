@@ -584,6 +584,47 @@ async function guardar(datos) {
 
   try {
 
+    // Crear cliente si no existe todavía
+    if (datos.cliente) {
+
+      const clienteExiste = clientes.some(
+        (c) =>
+          c.nombre.toLowerCase().trim() ===
+          datos.cliente.toLowerCase().trim()
+      )
+
+
+      if (!clienteExiste) {
+
+        const { data: nuevoCliente, error: errorCliente } =
+          await supabase
+            .from('clientes')
+            .insert({
+              user_id: usuario.id,
+              nombre: datos.cliente,
+              telefono: datos.telefono || '',
+              email: datos.email || '',
+              direccion: datos.direccion || ''
+            })
+            .select()
+            .single()
+
+
+        if (errorCliente) {
+          throw errorCliente
+        }
+
+
+        setClientes((prev) => [
+          ...prev,
+          nuevoCliente
+        ])
+
+      }
+
+    }
+
+
     if (!datos.historial || datos.historial.length === 0) {
       datos.historial = [
         {
@@ -594,7 +635,6 @@ async function guardar(datos) {
         }
       ]
     }
-
     const fila = proyectoParaBD(datos, usuario.id)
 
       const { data, error } = await supabase
