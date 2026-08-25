@@ -18,7 +18,14 @@ export default function ProjectModal({
   ...proyecto,
   cobros: proyecto.cobros || []
 })
+useEffect(() => {
 
+  setDatos({
+    ...proyecto,
+    cobros: proyecto.cobros || []
+  })
+
+}, [proyecto])
 const [nuevaTarea, setNuevaTarea] = useState('')
 const [nuevoProveedor, setNuevoProveedor] = useState('')
 
