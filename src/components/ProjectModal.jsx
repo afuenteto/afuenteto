@@ -4,6 +4,7 @@ import { supabase } from '../supabase.js'
 import ProjectHistory from './ProjectHistory.jsx'
 
 export default function ProjectModal({
+  console.log('CLIENTES:', clientes)
   proyecto,
   clientes = [],
   setClientes,
