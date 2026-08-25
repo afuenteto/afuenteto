@@ -242,18 +242,20 @@ async function cargarClientes(user) {
   const datos =
     await cargarDesdeSupabase(session.user)
 
-  const datosClientes =
-   await cargarClientes(session.user)
+const datosClientes =
+  await cargarClientes(session.user)
 
-setClientes(datosClientes)
 
-  if (activo) {
+if (activo) {
 
-    setProyectos(datos)
+  setProyectos(datos)
 
-    setClientes(datosClientes)
+  setClientes(datosClientes)
 
-  }
+  console.log(
+    'CLIENTES CARGADOS APP:',
+    datosClientes
+  )
 
 }
       } catch (error) {
