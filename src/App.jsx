@@ -1081,6 +1081,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   proyecto={editando}
   clientes={clientes}
   setClientes={setClientes}
+  onOpenClient={setClienteAbierto}
   onSave={guardar}
   onDelete={eliminar}
   seccionInicial={seccionInicial}
