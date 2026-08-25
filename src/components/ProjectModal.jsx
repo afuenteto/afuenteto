@@ -375,6 +375,29 @@ function agregarCobro() {
    set('cliente', e.target.value)
  }
 />
+            {datos.cliente && onOpenClient && (
+
+  <button
+    type="button"
+    className="btn"
+    onClick={() => {
+
+      const cliente =
+        clientes.find(
+          (c) =>
+            c.nombre === datos.cliente
+        )
+
+      if (cliente) {
+        onOpenClient(cliente)
+      }
+
+    }}
+  >
+    👤 Ver ficha cliente
+  </button>
+
+)}
              <button
   type="button"
   className="btn"
