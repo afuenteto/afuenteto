@@ -4,7 +4,6 @@ import { supabase } from '../supabase.js'
 import ProjectHistory from './ProjectHistory.jsx'
 
 export default function ProjectModal({
-  console.log('CLIENTES:', clientes)
   proyecto,
   clientes = [],
   setClientes,
@@ -13,6 +12,7 @@ export default function ProjectModal({
   onClose,
   seccionInicial = null
 }) {
+    console.log('CLIENTES:', clientes)
  const [datos, setDatos] = useState({
   ...proyecto,
   cobros: proyecto.cobros || []
