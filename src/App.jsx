@@ -254,13 +254,6 @@ async function iniciar() {
 
     setClientes(datosClientes)
 
-
-    console.log(
-      'CLIENTES CARGADOS APP:',
-      datosClientes
-    )
-
-
   } catch (error) {
 
     console.error(error)
