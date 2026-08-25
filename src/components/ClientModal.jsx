@@ -14,14 +14,47 @@ export default function ClientModal({
     )
 
 
+  const totalContratado =
+    proyectosCliente.reduce(
+      (total, p) =>
+        total +
+        Number(p.honorariosDiseno || 0) +
+        Number(p.honorariosGestion || 0) +
+        Number(p.otrosImportes || 0),
+      0
+    )
+
+
+  const totalCobrado =
+    proyectosCliente.reduce(
+      (total, p) =>
+        total +
+        (p.cobros || [])
+          .filter(c => c.estado !== 'previsto')
+          .reduce(
+            (suma, c) =>
+              suma + Number(c.importe || 0),
+            0
+          ),
+      0
+    )
+
+
+  const pendiente =
+    totalContratado - totalCobrado
+
+
+
   return (
 
     <div
       className="panel-overlay"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) {
+      onMouseDown={(e)=>{
+
+        if(e.target === e.currentTarget){
           onClose()
         }
+
       }}
     >
 
@@ -34,6 +67,7 @@ export default function ClientModal({
             👤 {cliente.nombre}
           </h2>
 
+
           <button
             className="icon-btn"
             onClick={onClose}
@@ -44,8 +78,8 @@ export default function ClientModal({
         </div>
 
 
-        <div className="panel-item">
 
+        <div className="panel-item">
           <strong>
             Teléfono
           </strong>
@@ -53,12 +87,11 @@ export default function ClientModal({
           <span>
             {cliente.telefono || '-'}
           </span>
-
         </div>
 
 
-        <div className="panel-item">
 
+        <div className="panel-item">
           <strong>
             Email
           </strong>
@@ -66,12 +99,11 @@ export default function ClientModal({
           <span>
             {cliente.email || '-'}
           </span>
-
         </div>
 
 
-        <div className="panel-item">
 
+        <div className="panel-item">
           <strong>
             Dirección
           </strong>
@@ -79,13 +111,64 @@ export default function ClientModal({
           <span>
             {cliente.direccion || '-'}
           </span>
-
         </div>
+
 
 
         <div className="section-label">
-          Proyectos
+          Resumen económico
         </div>
+
+
+        <div className="panel-item">
+          <strong>
+            Proyectos
+          </strong>
+
+          <span>
+            {proyectosCliente.length}
+          </span>
+        </div>
+
+
+        <div className="panel-item">
+          <strong>
+            Contratado
+          </strong>
+
+          <span>
+            {totalContratado.toLocaleString('es-ES')} €
+          </span>
+        </div>
+
+
+        <div className="panel-item">
+          <strong>
+            Cobrado
+          </strong>
+
+          <span>
+            {totalCobrado.toLocaleString('es-ES')} €
+          </span>
+        </div>
+
+
+        <div className="panel-item">
+          <strong>
+            Pendiente
+          </strong>
+
+          <span>
+            {pendiente.toLocaleString('es-ES')} €
+          </span>
+        </div>
+
+
+
+        <div className="section-label">
+          Proyectos del cliente
+        </div>
+
 
 
         {proyectosCliente.map((p)=>(
@@ -98,6 +181,7 @@ export default function ClientModal({
             <strong>
               {p.nombre}
             </strong>
+
 
             <span>
               {p.fase}
