@@ -327,24 +327,6 @@ function agregarCobro() {
             <label htmlFor="cliente">Cliente / contacto</label>
          
   }}
->
-  <option value="">
-    Seleccionar cliente guardado...
-  </option>
-
-  {clientes.map((cliente) => (
-
-    <option
-      key={cliente.id}
-      value={cliente.id}
-    >
-      {cliente.nombre}
-    </option>
-
-  ))}
-
-</select>
-
 
 <select
   value=""
