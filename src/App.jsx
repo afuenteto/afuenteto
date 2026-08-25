@@ -1125,7 +1125,13 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     onOpen={abrirExistente}
   />
 )}
-
+{clienteAbierto && (
+  <ClientModal
+    cliente={clienteAbierto}
+    proyectos={proyectos}
+    onClose={() => setClienteAbierto(null)}
+  />
+)}
 </div>
 )
 }
