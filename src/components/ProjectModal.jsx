@@ -7,6 +7,7 @@ export default function ProjectModal({
   proyecto,
   clientes = [],
   setClientes,
+  onOpenClient,
   onSave,
   onDelete,
   onClose,
