@@ -1130,10 +1130,17 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     cliente={clienteAbierto}
     proyectos={proyectos}
 
-    onOpenProject={(proyecto) => {
-      setClienteAbierto(null)
-      abrirExistente(proyecto)
-    }}
+ onOpenProject={(proyecto) => {
+
+  setClienteAbierto(null)
+
+  setSeccionInicial(null)
+
+  setEditando({
+    ...proyecto
+  })
+
+}}
 
     onClose={() => setClienteAbierto(null)}
   />
