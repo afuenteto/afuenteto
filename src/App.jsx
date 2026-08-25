@@ -12,6 +12,7 @@ import TasksPanel from './components/TasksPanel.jsx'
 import DeliveriesPanel from './components/DeliveriesPanel.jsx'
 import PaymentsPanel from './components/PaymentsPanel.jsx'
 import BlockedPanel from './components/BlockedPanel.jsx'
+import ClientModal from './components/ClientModal.jsx'
 import { supabase } from './supabase.js'
 import {
   FASES,
@@ -150,6 +151,7 @@ export default function App() {
   const [cargando, setCargando] = useState(true)
   const [proyectos, setProyectos] = useState([])
   const [clientes, setClientes] = useState([])
+  const [clienteAbierto, setClienteAbierto] = useState(null)
   const [editando, setEditando] = useState(null)
   const [tareasAbiertas, setTareasAbiertas] = useState(null)
   const [seccionInicial, setSeccionInicial] = useState(null)
