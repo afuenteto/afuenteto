@@ -89,7 +89,7 @@ useEffect(() => {
   return () => clearTimeout(timer)
 
 }, [seccionInicial])  
- console.log('CLIENTES EN MODAL:', clientes)
+ 
  function importarContacto(e) {
     const file = e.target.files?.[0]
 
