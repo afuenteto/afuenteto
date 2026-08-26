@@ -351,6 +351,7 @@ export default function ClientModal({
           </span>
 
         </div>
+        
 <div className="panel-item">
 
   <strong>
