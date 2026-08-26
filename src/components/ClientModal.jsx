@@ -351,7 +351,17 @@ export default function ClientModal({
           </span>
 
         </div>
+<div className="panel-item">
 
+  <strong>
+    Notas
+  </strong>
+
+  <span>
+    {cliente.notas || '-'}
+  </span>
+
+</div>
 
 
         <div className="section-label">
