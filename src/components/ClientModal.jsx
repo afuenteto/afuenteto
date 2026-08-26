@@ -261,7 +261,7 @@ const [datosCliente, setDatosCliente] = useState({
     }}
   >
     💾 Guardar cliente
-  </button>
+ </button>
 </div>
 )}
 
