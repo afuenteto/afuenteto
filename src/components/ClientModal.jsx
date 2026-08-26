@@ -168,9 +168,8 @@ const [datosCliente, setDatosCliente] = useState({
 
     <button
       className="btn"
-      onClick={() => {
-        onDeleteClient(cliente)
-      }}
+      type="button"
+      onClick={() => onDeleteClient(cliente)}
     >
       Sí, eliminar
     </button>
@@ -178,81 +177,91 @@ const [datosCliente, setDatosCliente] = useState({
 
     <button
       className="btn"
-      onClick={() =>
-        setConfirmarBorrado(false)
-      }
+      type="button"
+      onClick={() => setConfirmarBorrado(false)}
     >
       Cancelar
     </button>
+
 
   </div>
 
 )}
 
-    <button
-      className="btn"
-      type="button"
-     onClick={async () => {
-
-  const { error } =
-    await supabase
-      .from('clientes')
-      .update(datosCliente)
-      .eq('id', cliente.id)
 
 
-  if (error) {
-    alert(error.message)
-    return
-  }
+{editando && (
+
+  <button
+    className="btn"
+    type="button"
+    onClick={async () => {
 
 
-  setClientes((prev) =>
-    prev.map((c) =>
-      c.id === cliente.id
-        ? {
-            ...c,
-            ...datosCliente
-          }
-        : c
-    )
-  )
-// Actualizar nombre del cliente en proyectos relacionados
-if (cliente.nombre !== datosCliente.nombre) {
-
-  const { error: errorProyectos } =
-    await supabase
-      .from('proyectos')
-      .update({
-        cliente: datosCliente.nombre
-      })
-      .eq('cliente', cliente.nombre)
+      const { error } =
+        await supabase
+          .from('clientes')
+          .update(datosCliente)
+          .eq('id', cliente.id)
 
 
-  if (errorProyectos) {
-    console.error(
-      'Error actualizando proyectos:',
-      errorProyectos
-    )
-  }
+      if (error) {
 
-}
+        alert(error.message)
+        return
 
-  cliente.nombre = datosCliente.nombre
-  cliente.telefono = datosCliente.telefono
-  cliente.email = datosCliente.email
-  cliente.direccion = datosCliente.direccion
+      }
 
 
-  setEditando(false)
+      setClientes((prev) =>
+        prev.map((c) =>
+          c.id === cliente.id
+            ? {
+                ...c,
+                ...datosCliente
+              }
+            : c
+        )
+      )
 
-}}
-    >
-      💾 Guardar cliente
-    </button>
+
+      // Actualizar nombre del cliente en proyectos relacionados
+
+      if (cliente.nombre !== datosCliente.nombre) {
+
+        const { error: errorProyectos } =
+          await supabase
+            .from('proyectos')
+            .update({
+              cliente: datosCliente.nombre
+            })
+            .eq('cliente', cliente.nombre)
 
 
-  </div>
+        if (errorProyectos) {
+
+          console.error(
+            'Error actualizando proyectos:',
+            errorProyectos
+          )
+
+        }
+
+      }
+
+
+      cliente.nombre = datosCliente.nombre
+      cliente.telefono = datosCliente.telefono
+      cliente.email = datosCliente.email
+      cliente.direccion = datosCliente.direccion
+
+
+      setEditando(false)
+
+    }}
+  >
+    💾 Guardar cliente
+  </button>
 
 )}
 
