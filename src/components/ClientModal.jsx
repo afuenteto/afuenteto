@@ -151,12 +151,11 @@ const [datosCliente, setDatosCliente] = useState({
       onClick={async () => {
 
         const { data, error } =
+ const { error } =
   await supabase
     .from('clientes')
     .update(datosCliente)
     .eq('id', cliente.id)
-    .select()
-    .single()
 
 
 console.log('RESPUESTA CLIENTE:', data)
@@ -180,7 +179,10 @@ console.log('CLIENTE ACTUALIZADO:', datosCliente)
               : c
           )
         )
-
+cliente.nombre = datosCliente.nombre
+cliente.telefono = datosCliente.telefono
+cliente.email = datosCliente.email
+cliente.direccion = datosCliente.direccion
 
         setEditando(false)
 
