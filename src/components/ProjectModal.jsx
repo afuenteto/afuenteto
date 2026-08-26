@@ -437,8 +437,43 @@ const existeCliente = clientes.some(
         <button
           type="button"
           className="client-result-item"
-          onClick={() => {
-            // aquí añadiremos crear cliente
+          onClick={async () => {
+
+  const { data, error } =
+    await supabase
+      .from('clientes')
+      .insert({
+        user_id: usuario.id,
+        nombre: busquedaCliente,
+        telefono: datos.telefono || '',
+        email: datos.email || '',
+        direccion: datos.direccion || ''
+      })
+      .select()
+      .single()
+
+  if (error) {
+    console.error(error)
+    alert(error.message)
+    return
+  }
+
+  setClientes((prev) => [
+    ...prev,
+    data
+  ])
+
+  setDatos({
+    ...datos,
+    cliente: data.nombre,
+    telefono: data.telefono || '',
+    email: data.email || '',
+    direccion: data.direccion || ''
+  })
+
+  setBusquedaCliente('')
+  setMostrarClientes(false)
+
           }}
         >
           ➕ Crear cliente "{busquedaCliente}"
