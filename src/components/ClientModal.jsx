@@ -150,16 +150,19 @@ const [datosCliente, setDatosCliente] = useState({
       type="button"
       onClick={async () => {
 
-        const { error } =
-          await supabase
-            .from('clientes')
-            .update(datosCliente)
-            .eq('id', cliente.id)
+        const { data, error } =
+  await supabase
+    .from('clientes')
+    .update(datosCliente)
+    .eq('id', cliente.id)
+    .select()
+    .single()
 
 
-      
-        if (error) {
-  console.error('ERROR GUARDANDO CLIENTE:', error)
+console.log('RESPUESTA CLIENTE:', data)
+console.log('ERROR CLIENTE:', error)
+
+if (error) {
   alert(error.message)
   return
 }
