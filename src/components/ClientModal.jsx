@@ -70,36 +70,39 @@ const [datosCliente, setDatosCliente] = useState({
       }}
     >
 
-      <div className="panel">
+     <div className="panel-head">
+
+  <h2 className="serif">
+    👤 {cliente.nombre}
+  </h2>
 
 
-        <div className="panel-head">
+  <button
+    className="btn"
+    type="button"
+    onClick={() => setEditando(!editando)}
+  >
+    ✏️ Editar
+  </button>
 
-          <h2 className="serif">
-            👤 {cliente.nombre}
-          </h2>
-<button
-  className="btn"
-  type="button"
-  onClick={() => setEditando(!editando)}
->
-  ✏️ Editar
-</button>
-<button
-  className="btn"
-  type="button"
-  onClick={() => setConfirmarBorrado(true)}
->
-  🗑️ Eliminar
-</button>
-          <button
-            className="icon-btn"
-            onClick={onClose}
-          >
-            ✕
-          </button>
 
-        </div>
+  <button
+    className="btn"
+    type="button"
+    onClick={() => setConfirmarBorrado(true)}
+  >
+    🗑️ Eliminar
+  </button>
+
+
+  <button
+    className="icon-btn"
+    onClick={onClose}
+  >
+    ✕
+  </button>
+
+</div>
 {editando && (
 
   <div className="panel-item">
