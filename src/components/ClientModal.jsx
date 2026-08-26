@@ -150,7 +150,41 @@ const [datosCliente, setDatosCliente] = useState({
         })
       }
     />
+{confirmarBorrado && (
 
+  <div className="panel-item">
+
+    <strong>
+      ¿Eliminar cliente?
+    </strong>
+
+    <span>
+      Esta acción no se puede deshacer.
+    </span>
+
+
+    <button
+      className="btn"
+      onClick={() => {
+        onDeleteClient(cliente)
+      }}
+    >
+      Sí, eliminar
+    </button>
+
+
+    <button
+      className="btn"
+      onClick={() =>
+        setConfirmarBorrado(false)
+      }
+    >
+      Cancelar
+    </button>
+
+  </div>
+
+)}
 
     <button
       className="btn"
