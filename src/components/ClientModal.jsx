@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { supabase } from '../supabase.js'
+
+
 export default function ClientModal({
-   cliente,
+  cliente,
   proyectos,
   setClientes,
   onDeleteClient,
@@ -9,21 +11,29 @@ export default function ClientModal({
   onClose
 }) {
 
+
+  const [editando, setEditando] = useState(false)
+  const [confirmarBorrado, setConfirmarBorrado] = useState(false)
+
+
+  const [datosCliente, setDatosCliente] = useState({
+    nombre: cliente?.nombre || '',
+    telefono: cliente?.telefono || '',
+    email: cliente?.email || '',
+    direccion: cliente?.direccion || ''
+  })
+
+
   if (!cliente) return null
-const [editando, setEditando] = useState(false)
-const [confirmarBorrado, setConfirmarBorrado] = useState(false)
-const [datosCliente, setDatosCliente] = useState({
-  nombre: cliente.nombre || '',
-  telefono: cliente.telefono || '',
-  email: cliente.email || '',
-  direccion: cliente.direccion || ''
-})
+
+
 
   const proyectosCliente =
     proyectos.filter(
       (p) =>
         p.cliente === cliente.nombre
     )
+
 
 
   const totalContratado =
@@ -37,12 +47,15 @@ const [datosCliente, setDatosCliente] = useState({
     )
 
 
+
   const totalCobrado =
     proyectosCliente.reduce(
       (total, p) =>
         total +
         (p.cobros || [])
-          .filter(c => c.estado !== 'previsto')
+          .filter(
+            c => c.estado !== 'previsto'
+          )
           .reduce(
             (suma, c) =>
               suma + Number(c.importe || 0),
@@ -57,7 +70,68 @@ const [datosCliente, setDatosCliente] = useState({
 
 
 
-  return (
+  async function guardarCliente() {
+
+    const { error } =
+      await supabase
+        .from('clientes')
+        .update(datosCliente)
+        .eq('id', cliente.id)
+
+
+    if (error) {
+
+      alert(error.message)
+      return
+
+    }
+
+
+    setClientes((prev) =>
+      prev.map((c) =>
+        c.id === cliente.id
+          ? {
+              ...c,
+              ...datosCliente
+            }
+          : c
+      )
+    )
+
+
+    if (cliente.nombre !== datosCliente.nombre) {
+
+      const { error: errorProyectos } =
+        await supabase
+          .from('proyectos')
+          .update({
+            cliente: datosCliente.nombre
+          })
+          .eq('cliente', cliente.nombre)
+
+
+      if (errorProyectos) {
+
+        console.error(
+          'Error actualizando proyectos:',
+          errorProyectos
+        )
+
+      }
+
+    }
+
+
+    cliente.nombre = datosCliente.nombre
+    cliente.telefono = datosCliente.telefono
+    cliente.email = datosCliente.email
+    cliente.direccion = datosCliente.direccion
+
+
+    setEditando(false)
+
+  }
+     return (
 
     <div
       className="panel-overlay"
@@ -70,245 +144,210 @@ const [datosCliente, setDatosCliente] = useState({
       }}
     >
 
-     <div className="panel-head">
 
-  <h2 className="serif">
-    👤 {cliente.nombre}
-  </h2>
+      <div className="panel">
 
 
-  <button
-    className="btn"
-    type="button"
-    onClick={() => setEditando(!editando)}
-  >
-    ✏️ Editar
-  </button>
+        <div className="panel-head">
+
+          <h2 className="serif">
+            👤 {cliente.nombre}
+          </h2>
 
 
-  <button
-    className="btn"
-    type="button"
-    onClick={() => setConfirmarBorrado(true)}
-  >
-    🗑️ Eliminar
-  </button>
+          <button
+            className="btn"
+            type="button"
+            onClick={() => setEditando(!editando)}
+          >
+            ✏️ Editar
+          </button>
 
 
-  <button
-    className="icon-btn"
-    onClick={onClose}
-  >
-    ✕
-  </button>
-
-</div>
-{editando && (
-
-  <div className="panel-item">
-
-    <label>Nombre</label>
-    <input
-      value={datosCliente.nombre}
-      onChange={(e) =>
-        setDatosCliente({
-          ...datosCliente,
-          nombre: e.target.value
-        })
-      }
-    />
+          <button
+            className="btn"
+            type="button"
+            onClick={() => setConfirmarBorrado(true)}
+          >
+            🗑️ Eliminar
+          </button>
 
 
-    <label>Teléfono</label>
-    <input
-      value={datosCliente.telefono}
-      onChange={(e) =>
-        setDatosCliente({
-          ...datosCliente,
-          telefono: e.target.value
-        })
-      }
-    />
+          <button
+            className="icon-btn"
+            onClick={onClose}
+          >
+            ✕
+          </button>
+
+        </div>
 
 
-    <label>Email</label>
-    <input
-      value={datosCliente.email}
-      onChange={(e) =>
-        setDatosCliente({
-          ...datosCliente,
-          email: e.target.value
-        })
-      }
-    />
+
+        {editando && (
+
+          <div className="panel-item">
+
+            <label>
+              Nombre
+            </label>
+
+            <input
+              value={datosCliente.nombre}
+              onChange={(e)=>
+                setDatosCliente({
+                  ...datosCliente,
+                  nombre:e.target.value
+                })
+              }
+            />
 
 
-    <label>Dirección</label>
-    <input
-      value={datosCliente.direccion}
-      onChange={(e) =>
-        setDatosCliente({
-          ...datosCliente,
-          direccion: e.target.value
-        })
-      }
-    />
+            <label>
+              Teléfono
+            </label>
 
-{editando && (
-
-  <div className="panel-item">
-
-    <label>Nombre</label>
-
-    <input
-      value={datosCliente.nombre}
-      onChange={(e) =>
-        setDatosCliente({
-          ...datosCliente,
-          nombre: e.target.value
-        })
-      }
-    />
+            <input
+              value={datosCliente.telefono}
+              onChange={(e)=>
+                setDatosCliente({
+                  ...datosCliente,
+                  telefono:e.target.value
+                })
+              }
+            />
 
 
-    <label>Teléfono</label>
+            <label>
+              Email
+            </label>
 
-    <input
-      value={datosCliente.telefono}
-      onChange={(e) =>
-        setDatosCliente({
-          ...datosCliente,
-          telefono: e.target.value
-        })
-      }
-    />
-
-
-    <label>Email</label>
-
-    <input
-      value={datosCliente.email}
-      onChange={(e) =>
-        setDatosCliente({
-          ...datosCliente,
-          email: e.target.value
-        })
-      }
-    />
+            <input
+              value={datosCliente.email}
+              onChange={(e)=>
+                setDatosCliente({
+                  ...datosCliente,
+                  email:e.target.value
+                })
+              }
+            />
 
 
-    <label>Dirección</label>
+            <label>
+              Dirección
+            </label>
 
-    <input
-      value={datosCliente.direccion}
-      onChange={(e) =>
-        setDatosCliente({
-          ...datosCliente,
-          direccion: e.target.value
-        })
-      }
-    />
-
-
-    <button
-      className="btn"
-      type="button"
-      onClick={async () => {
-
-        const { error } =
-          await supabase
-            .from('clientes')
-            .update(datosCliente)
-            .eq('id', cliente.id)
+            <input
+              value={datosCliente.direccion}
+              onChange={(e)=>
+                setDatosCliente({
+                  ...datosCliente,
+                  direccion:e.target.value
+                })
+              }
+            />
 
 
-        if (error) {
-          alert(error.message)
-          return
-        }
+            <button
+              className="btn"
+              type="button"
+              onClick={guardarCliente}
+            >
+              💾 Guardar cliente
+            </button>
 
 
-        setClientes((prev) =>
-          prev.map((c) =>
-            c.id === cliente.id
-              ? {
-                  ...c,
-                  ...datosCliente
-                }
-              : c
-          )
-        )
+          </div>
+
+        )}
 
 
-        if (cliente.nombre !== datosCliente.nombre) {
 
-          await supabase
-            .from('proyectos')
-            .update({
-              cliente: datosCliente.nombre
-            })
-            .eq('cliente', cliente.nombre)
+        {confirmarBorrado && (
 
-        }
+          <div className="panel-item">
+
+            <strong>
+              ¿Eliminar cliente?
+            </strong>
 
 
-        cliente.nombre = datosCliente.nombre
-        cliente.telefono = datosCliente.telefono
-        cliente.email = datosCliente.email
-        cliente.direccion = datosCliente.direccion
+            <span>
+              Esta acción no se puede deshacer.
+            </span>
 
 
-        setEditando(false)
-
-      }}
-    >
-      💾 Guardar cliente
-    </button>
-
-  </div>
-
-)}
+            <button
+              className="btn"
+              type="button"
+              onClick={() => onDeleteClient(cliente)}
+            >
+              Sí, eliminar
+            </button>
 
 
-{confirmarBorrado && (
-
-  <div className="panel-item">
-
-    <strong>
-      ¿Eliminar cliente?
-    </strong>
-
-    <span>
-      Esta acción no se puede deshacer.
-    </span>
+            <button
+              className="btn"
+              type="button"
+              onClick={() => setConfirmarBorrado(false)}
+            >
+              Cancelar
+            </button>
 
 
-    <button
-      className="btn"
-      type="button"
-      onClick={() => onDeleteClient(cliente)}
-    >
-      Sí, eliminar
-    </button>
+          </div>
+
+        )}
+                <div className="panel-item">
+
+          <strong>
+            Teléfono
+          </strong>
+
+          <span>
+            {cliente.telefono || '-'}
+          </span>
+
+        </div>
 
 
-    <button
-      className="btn"
-      type="button"
-      onClick={() => setConfirmarBorrado(false)}
-    >
-      Cancelar
-    </button>
 
-  </div>
+        <div className="panel-item">
 
-)}    
+          <strong>
+            Email
+          </strong>
+
+          <span>
+            {cliente.email || '-'}
+          </span>
+
+        </div>
+
+
+
+        <div className="panel-item">
+
+          <strong>
+            Dirección
+          </strong>
+
+          <span>
+            {cliente.direccion || '-'}
+          </span>
+
+        </div>
+
+
+
         <div className="section-label">
           Resumen económico
         </div>
 
 
+
         <div className="panel-item">
+
           <strong>
             Proyectos
           </strong>
@@ -316,10 +355,13 @@ const [datosCliente, setDatosCliente] = useState({
           <span>
             {proyectosCliente.length}
           </span>
+
         </div>
 
 
+
         <div className="panel-item">
+
           <strong>
             Contratado
           </strong>
@@ -327,10 +369,13 @@ const [datosCliente, setDatosCliente] = useState({
           <span>
             {totalContratado.toLocaleString('es-ES')} €
           </span>
+
         </div>
 
 
+
         <div className="panel-item">
+
           <strong>
             Cobrado
           </strong>
@@ -338,10 +383,13 @@ const [datosCliente, setDatosCliente] = useState({
           <span>
             {totalCobrado.toLocaleString('es-ES')} €
           </span>
+
         </div>
 
 
+
         <div className="panel-item">
+
           <strong>
             Pendiente
           </strong>
@@ -349,6 +397,7 @@ const [datosCliente, setDatosCliente] = useState({
           <span>
             {pendiente.toLocaleString('es-ES')} €
           </span>
+
         </div>
 
 
@@ -361,31 +410,31 @@ const [datosCliente, setDatosCliente] = useState({
 
         {proyectosCliente.map((p)=>(
 
-         <button
-  key={p.id}
-  className="panel-item"
-  onClick={() =>
-    onOpenProject(p)
-  }
->
+          <button
+            key={p.id}
+            className="panel-item"
+            onClick={() =>
+              onOpenProject(p)
+            }
+          >
 
-  <strong>
-    {p.nombre}
-  </strong>
+            <strong>
+              {p.nombre}
+            </strong>
 
-  <span>
-    {p.fase}
-  </span>
+            <span>
+              {p.fase}
+            </span>
 
-</button>
+          </button>
 
         ))}
 
 
-</div>
+      </div>
 
-</div>
+    </div>
 
   )
 
-}
+} 
