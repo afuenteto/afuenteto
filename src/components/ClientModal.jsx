@@ -16,13 +16,13 @@ export default function ClientModal({
   const [confirmarBorrado, setConfirmarBorrado] = useState(false)
 
 
-  const [datosCliente, setDatosCliente] = useState({
-    nombre: cliente?.nombre || '',
-    telefono: cliente?.telefono || '',
-    email: cliente?.email || '',
-    direccion: cliente?.direccion || ''
-  })
-
+ const [datosCliente, setDatosCliente] = useState({
+  nombre: cliente?.nombre || '',
+  telefono: cliente?.telefono || '',
+  email: cliente?.email || '',
+  direccion: cliente?.direccion || '',
+  notas: cliente?.notas || ''
+})
 
   if (!cliente) return null
 
@@ -245,17 +245,31 @@ export default function ClientModal({
                   direccion:e.target.value
                 })
               }
-            />
+              />
 
 
-            <button
-              className="btn"
-              type="button"
-              onClick={guardarCliente}
-            >
-              💾 Guardar cliente
-            </button>
+  <label>
+    Notas
+  </label>
 
+  <textarea
+    value={datosCliente.notas}
+    onChange={(e)=>
+      setDatosCliente({
+        ...datosCliente,
+        notas:e.target.value
+      })
+    }
+  />
+
+
+  <button
+    className="btn"
+    type="button"
+    onClick={guardarCliente}
+  >
+    💾 Guardar cliente
+  </button>
 
           </div>
 
