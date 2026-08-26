@@ -153,42 +153,6 @@ const [datosCliente, setDatosCliente] = useState({
         })
       }
     />
-{confirmarBorrado && (
-
-  <div className="panel-item">
-
-    <strong>
-      ¿Eliminar cliente?
-    </strong>
-
-    <span>
-      Esta acción no se puede deshacer.
-    </span>
-
-
-    <button
-      className="btn"
-      type="button"
-      onClick={() => onDeleteClient(cliente)}
-    >
-      Sí, eliminar
-    </button>
-
-
-    <button
-      className="btn"
-      type="button"
-      onClick={() => setConfirmarBorrado(false)}
-    >
-      Cancelar
-    </button>
-
-
-  </div>
-
-)}
-
-
 
 {editando && (
 
@@ -266,42 +230,89 @@ const [datosCliente, setDatosCliente] = useState({
 )}
 
 
-        <div className="panel-item">
-          <strong>
-            Teléfono
-          </strong>
+      <div className="panel-item">
 
-          <span>
-            {cliente.telefono || '-'}
-          </span>
-        </div>
-
-
-
-        <div className="panel-item">
-          <strong>
-            Email
-          </strong>
-
-          <span>
-            {cliente.email || '-'}
-          </span>
-        </div>
+  <label>Nombre</label>
+  <input
+    value={datosCliente.nombre}
+    onChange={(e) =>
+      setDatosCliente({
+        ...datosCliente,
+        nombre: e.target.value
+      })
+    }
+  />
 
 
+  <label>Teléfono</label>
+  <input
+    value={datosCliente.telefono}
+    onChange={(e) =>
+      setDatosCliente({
+        ...datosCliente,
+        telefono: e.target.value
+      })
+    }
+  />
 
-        <div className="panel-item">
-          <strong>
-            Dirección
-          </strong>
 
-          <span>
-            {cliente.direccion || '-'}
-          </span>
-        </div>
+  <label>Email</label>
+  <input
+    value={datosCliente.email}
+    onChange={(e) =>
+      setDatosCliente({
+        ...datosCliente,
+        email: e.target.value
+      })
+    }
+  />
 
 
+  <label>Dirección</label>
+  <input
+    value={datosCliente.direccion}
+    onChange={(e) =>
+      setDatosCliente({
+        ...datosCliente,
+        direccion: e.target.value
+      })
+    }
+  />
 
+</div>
+{confirmarBorrado && (
+
+  <div className="panel-item">
+
+    <strong>
+      ¿Eliminar cliente?
+    </strong>
+
+    <span>
+      Esta acción no se puede deshacer.
+    </span>
+
+    <button
+      className="btn"
+      type="button"
+      onClick={() => onDeleteClient(cliente)}
+    >
+      Sí, eliminar
+    </button>
+
+    <button
+      className="btn"
+      type="button"
+      onClick={() => setConfirmarBorrado(false)}
+    >
+      Cancelar
+    </button>
+
+  </div>
+
+)}
+     💾 Guardar cliente
+     
         <div className="section-label">
           Resumen económico
         </div>
