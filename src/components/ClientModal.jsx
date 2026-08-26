@@ -173,7 +173,26 @@ const [datosCliente, setDatosCliente] = useState({
         : c
     )
   )
+// Actualizar nombre del cliente en proyectos relacionados
+if (cliente.nombre !== datosCliente.nombre) {
 
+  const { error: errorProyectos } =
+    await supabase
+      .from('proyectos')
+      .update({
+        cliente: datosCliente.nombre
+      })
+      .eq('cliente', cliente.nombre)
+
+
+  if (errorProyectos) {
+    console.error(
+      'Error actualizando proyectos:',
+      errorProyectos
+    )
+  }
+
+}
 
   cliente.nombre = datosCliente.nombre
   cliente.telefono = datosCliente.telefono
