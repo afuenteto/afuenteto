@@ -1080,6 +1080,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
    <ProjectModal
   proyecto={editando}
   clientes={clientes}
+  usuario={usuario}
   setClientes={setClientes}
   onOpenClient={setClienteAbierto}
   onSave={guardar}
