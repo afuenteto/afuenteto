@@ -372,7 +372,10 @@ function agregarCobro() {
     type="text"
     placeholder="🔍 Buscar cliente..."
     value={busquedaCliente}
-    onFocus={() => setMostrarClientes(true)}
+    onFocus={() => {
+  setBusquedaCliente('')
+  setMostrarClientes(true)
+}}
     onChange={(e)=>{
       setBusquedaCliente(e.target.value)
       setMostrarClientes(true)
@@ -407,9 +410,9 @@ function agregarCobro() {
                 email: cliente.email || '',
                 direccion: cliente.direccion || ''
               })
-
-              setBusquedaCliente(cliente.nombre)
-              setMostrarClientes(false)
+              
+setBusquedaCliente('')
+setMostrarClientes(false)
 
             }}
           >
