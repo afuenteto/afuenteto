@@ -93,7 +93,99 @@ const [datosCliente, setDatosCliente] = useState({
           </button>
 
         </div>
+{editando && (
 
+  <div className="panel-item">
+
+    <label>Nombre</label>
+    <input
+      value={datosCliente.nombre}
+      onChange={(e) =>
+        setDatosCliente({
+          ...datosCliente,
+          nombre: e.target.value
+        })
+      }
+    />
+
+
+    <label>Teléfono</label>
+    <input
+      value={datosCliente.telefono}
+      onChange={(e) =>
+        setDatosCliente({
+          ...datosCliente,
+          telefono: e.target.value
+        })
+      }
+    />
+
+
+    <label>Email</label>
+    <input
+      value={datosCliente.email}
+      onChange={(e) =>
+        setDatosCliente({
+          ...datosCliente,
+          email: e.target.value
+        })
+      }
+    />
+
+
+    <label>Dirección</label>
+    <input
+      value={datosCliente.direccion}
+      onChange={(e) =>
+        setDatosCliente({
+          ...datosCliente,
+          direccion: e.target.value
+        })
+      }
+    />
+
+
+    <button
+      className="btn"
+      type="button"
+      onClick={async () => {
+
+        const { error } =
+          await supabase
+            .from('clientes')
+            .update(datosCliente)
+            .eq('id', cliente.id)
+
+
+        if (error) {
+          console.error(error)
+          return
+        }
+
+
+        setClientes((prev) =>
+          prev.map((c) =>
+            c.id === cliente.id
+              ? {
+                  ...c,
+                  ...datosCliente
+                }
+              : c
+          )
+        )
+
+
+        setEditando(false)
+
+      }}
+    >
+      💾 Guardar cliente
+    </button>
+
+
+  </div>
+
+)}
 
 
         <div className="panel-item">
