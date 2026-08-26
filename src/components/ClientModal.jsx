@@ -156,44 +156,92 @@ const [datosCliente, setDatosCliente] = useState({
 
 {editando && (
 
-  <button
-    className="btn"
-    type="button"
-    onClick={async () => {
+  <div className="panel-item">
 
+    <label>Nombre</label>
 
-      const { error } =
-        await supabase
-          .from('clientes')
-          .update(datosCliente)
-          .eq('id', cliente.id)
-
-
-      if (error) {
-
-        alert(error.message)
-        return
-
+    <input
+      value={datosCliente.nombre}
+      onChange={(e) =>
+        setDatosCliente({
+          ...datosCliente,
+          nombre: e.target.value
+        })
       }
+    />
 
 
-      setClientes((prev) =>
-        prev.map((c) =>
-          c.id === cliente.id
-            ? {
-                ...c,
-                ...datosCliente
-              }
-            : c
+    <label>Teléfono</label>
+
+    <input
+      value={datosCliente.telefono}
+      onChange={(e) =>
+        setDatosCliente({
+          ...datosCliente,
+          telefono: e.target.value
+        })
+      }
+    />
+
+
+    <label>Email</label>
+
+    <input
+      value={datosCliente.email}
+      onChange={(e) =>
+        setDatosCliente({
+          ...datosCliente,
+          email: e.target.value
+        })
+      }
+    />
+
+
+    <label>Dirección</label>
+
+    <input
+      value={datosCliente.direccion}
+      onChange={(e) =>
+        setDatosCliente({
+          ...datosCliente,
+          direccion: e.target.value
+        })
+      }
+    />
+
+
+    <button
+      className="btn"
+      type="button"
+      onClick={async () => {
+
+        const { error } =
+          await supabase
+            .from('clientes')
+            .update(datosCliente)
+            .eq('id', cliente.id)
+
+
+        if (error) {
+          alert(error.message)
+          return
+        }
+
+
+        setClientes((prev) =>
+          prev.map((c) =>
+            c.id === cliente.id
+              ? {
+                  ...c,
+                  ...datosCliente
+                }
+              : c
+          )
         )
-      )
 
 
-      // Actualizar nombre del cliente en proyectos relacionados
+        if (cliente.nombre !== datosCliente.nombre) {
 
-      if (cliente.nombre !== datosCliente.nombre) {
-
-        const { error: errorProyectos } =
           await supabase
             .from('proyectos')
             .update({
@@ -201,85 +249,27 @@ const [datosCliente, setDatosCliente] = useState({
             })
             .eq('cliente', cliente.nombre)
 
-
-        if (errorProyectos) {
-
-          console.error(
-            'Error actualizando proyectos:',
-            errorProyectos
-          )
-
         }
 
-      }
+
+        cliente.nombre = datosCliente.nombre
+        cliente.telefono = datosCliente.telefono
+        cliente.email = datosCliente.email
+        cliente.direccion = datosCliente.direccion
 
 
-      cliente.nombre = datosCliente.nombre
-      cliente.telefono = datosCliente.telefono
-      cliente.email = datosCliente.email
-      cliente.direccion = datosCliente.direccion
+        setEditando(false)
 
+      }}
+    >
+      💾 Guardar cliente
+    </button>
 
-      setEditando(false)
+  </div>
 
-    }}
-  >
-    💾 Guardar cliente
- </button>
-</div>
 )}
 
 
-      <div className="panel-item">
-
-  <label>Nombre</label>
-  <input
-    value={datosCliente.nombre}
-    onChange={(e) =>
-      setDatosCliente({
-        ...datosCliente,
-        nombre: e.target.value
-      })
-    }
-  />
-
-
-  <label>Teléfono</label>
-  <input
-    value={datosCliente.telefono}
-    onChange={(e) =>
-      setDatosCliente({
-        ...datosCliente,
-        telefono: e.target.value
-      })
-    }
-  />
-
-
-  <label>Email</label>
-  <input
-    value={datosCliente.email}
-    onChange={(e) =>
-      setDatosCliente({
-        ...datosCliente,
-        email: e.target.value
-      })
-    }
-  />
-
-
-  <label>Dirección</label>
-  <input
-    value={datosCliente.direccion}
-    onChange={(e) =>
-      setDatosCliente({
-        ...datosCliente,
-        direccion: e.target.value
-      })
-    }
-  />
-
-</div>
 {confirmarBorrado && (
 
   <div className="panel-item">
@@ -292,6 +282,7 @@ const [datosCliente, setDatosCliente] = useState({
       Esta acción no se puede deshacer.
     </span>
 
+
     <button
       className="btn"
       type="button"
@@ -299,6 +290,7 @@ const [datosCliente, setDatosCliente] = useState({
     >
       Sí, eliminar
     </button>
+
 
     <button
       className="btn"
@@ -310,9 +302,7 @@ const [datosCliente, setDatosCliente] = useState({
 
   </div>
 
-)}
-     💾 Guardar cliente
-     
+)}    
         <div className="section-label">
           Resumen económico
         </div>
