@@ -85,7 +85,13 @@ const [datosCliente, setDatosCliente] = useState({
 >
   ✏️ Editar
 </button>
-
+<button
+  className="btn"
+  type="button"
+  onClick={() => setConfirmarBorrado(true)}
+>
+  🗑️ Eliminar
+</button>
           <button
             className="icon-btn"
             onClick={onClose}
