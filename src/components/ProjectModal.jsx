@@ -30,7 +30,7 @@ const [nuevaTarea, setNuevaTarea] = useState('')
 const [nuevoProveedor, setNuevoProveedor] = useState('')
 const [busquedaCliente, setBusquedaCliente] = useState('')
 const [mostrarClientes, setMostrarClientes] = useState(false)
-
+const clientesRef = useRef(null)
 const [nuevoCobro, setNuevoCobro] = useState({
   fecha: '',
   concepto: '',
@@ -99,7 +99,34 @@ useEffect(() => {
   return () => clearTimeout(timer)
 
 }, [seccionInicial])  
- 
+ useEffect(() => {
+
+  function cerrarClientes(e) {
+
+    if (
+      clientesRef.current &&
+      !clientesRef.current.contains(e.target)
+    ) {
+      setMostrarClientes(false)
+    }
+
+  }
+
+
+  document.addEventListener(
+    'mousedown',
+    cerrarClientes
+  )
+
+
+  return () => {
+    document.removeEventListener(
+      'mousedown',
+      cerrarClientes
+    )
+  }
+
+}, [])
  function importarContacto(e) {
     const file = e.target.files?.[0]
 
