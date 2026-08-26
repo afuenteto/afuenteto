@@ -1,12 +1,22 @@
+import { useState } from 'react'
+import { supabase } from '../supabase.js'
 export default function ClientModal({
   cliente,
   proyectos,
+  setClientes,
   onOpenProject,
   onClose
 }) {
 
   if (!cliente) return null
-
+const [editando, setEditando] = useState(false)
+  
+const [datosCliente, setDatosCliente] = useState({
+  nombre: cliente.nombre || '',
+  telefono: cliente.telefono || '',
+  email: cliente.email || '',
+  direccion: cliente.direccion || ''
+})
 
   const proyectosCliente =
     proyectos.filter(
