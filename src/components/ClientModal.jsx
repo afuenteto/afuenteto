@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { supabase } from '../supabase.js'
 export default function ClientModal({
-  cliente,
+   cliente,
   proyectos,
   setClientes,
+  onDeleteClient,
   onOpenProject,
   onClose
 }) {
 
   if (!cliente) return null
 const [editando, setEditando] = useState(false)
-  
+const [confirmarBorrado, setConfirmarBorrado] = useState(false)
 const [datosCliente, setDatosCliente] = useState({
   nombre: cliente.nombre || '',
   telefono: cliente.telefono || '',
