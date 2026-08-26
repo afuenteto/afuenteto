@@ -366,20 +366,63 @@ function agregarCobro() {
   Cliente / contacto
 </label>
 
-<input
-  type="text"
-  placeholder="🔍 Buscar cliente..."
-  value={busquedaCliente}
-  onFocus={() => setMostrarClientes(true)}
-  onChange={(e) => {
-    setBusquedaCliente(e.target.value)
-    setMostrarClientes(true)
-  }}
-/>
+<div ref={clientesRef}>
+
+  <input
+    type="text"
+    placeholder="🔍 Buscar cliente..."
+    value={busquedaCliente}
+    onFocus={() => setMostrarClientes(true)}
+    onChange={(e)=>{
+      setBusquedaCliente(e.target.value)
+      setMostrarClientes(true)
+    }}
+  />
 
 
-{mostrarClientes && clientes.length > 0 && (
+  {mostrarClientes && clientes.length > 0 && (
 
+    <div className="client-results">
+
+      {clientes
+        .filter((cliente) =>
+          cliente.nombre
+            .toLowerCase()
+            .includes(
+              busquedaCliente.toLowerCase()
+            )
+        )
+        .map((cliente) => (
+
+          <button
+            type="button"
+            key={cliente.id}
+            className="client-result-item"
+            onClick={() => {
+
+              setDatos({
+                ...datos,
+                cliente: cliente.nombre,
+                telefono: cliente.telefono || '',
+                email: cliente.email || '',
+                direccion: cliente.direccion || ''
+              })
+
+              setBusquedaCliente(cliente.nombre)
+              setMostrarClientes(false)
+
+            }}
+          >
+            {cliente.nombre}
+          </button>
+
+        ))}
+
+    </div>
+
+  )}
+
+</div>
   <div className="client-results">
 
     {clientes
