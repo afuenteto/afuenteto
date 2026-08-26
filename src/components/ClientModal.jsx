@@ -77,7 +77,13 @@ const [datosCliente, setDatosCliente] = useState({
           <h2 className="serif">
             👤 {cliente.nombre}
           </h2>
-
+<button
+  className="btn"
+  type="button"
+  onClick={() => setEditando(!editando)}
+>
+  ✏️ Editar
+</button>
 
           <button
             className="icon-btn"
