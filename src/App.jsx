@@ -740,7 +740,51 @@ if (datos.cliente) {
       setGuardando(false)
     }
   }
+async function eliminarCliente(cliente) {
 
+  const tieneProyectos =
+    proyectos.some(
+      p => p.cliente === cliente.nombre
+    )
+
+
+  if (tieneProyectos) {
+
+    alert(
+      'No se puede eliminar este cliente porque tiene proyectos asociados.'
+    )
+
+    return
+
+  }
+
+
+  const { error } =
+    await supabase
+      .from('clientes')
+      .delete()
+      .eq('id', cliente.id)
+
+
+  if (error) {
+
+    console.error(error)
+    alert(error.message)
+    return
+
+  }
+
+
+  setClientes(prev =>
+    prev.filter(
+      c => c.id !== cliente.id
+    )
+  )
+
+
+  setClienteAbierto(null)
+
+}
   async function eliminar(id) {
     if (!usuario) return
 
@@ -1131,7 +1175,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     cliente={clienteAbierto}
     proyectos={proyectos}
     setClientes={setClientes}
-
+    onDeleteClient={eliminarCliente}
  onOpenProject={(proyecto) => {
 
   setClienteAbierto(null)
