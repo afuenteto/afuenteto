@@ -6,6 +6,7 @@ import ProjectHistory from './ProjectHistory.jsx'
 export default function ProjectModal({
   proyecto,
   clientes = [],
+  usuario,
   setClientes,
   onOpenClient,
   onSave,
