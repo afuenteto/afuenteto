@@ -157,10 +157,14 @@ const [datosCliente, setDatosCliente] = useState({
             .eq('id', cliente.id)
 
 
+      
         if (error) {
-          console.error(error)
-          return
-        }
+  console.error('ERROR GUARDANDO CLIENTE:', error)
+  alert(error.message)
+  return
+}
+
+console.log('CLIENTE ACTUALIZADO:', datosCliente)
 
 
         setClientes((prev) =>
