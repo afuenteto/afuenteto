@@ -332,7 +332,11 @@ function agregarCobro() {
   }
 
   const esNuevo = !proyecto.nombre && proyecto.tareas.length === 0 && proyecto.proveedores.length === 0
-
+const existeCliente = clientes.some(
+  (c) =>
+    c.nombre.toLowerCase().trim() ===
+    busquedaCliente.toLowerCase().trim()
+)
   return (
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <form className="modal" onSubmit={handleSubmit}>
@@ -373,9 +377,9 @@ function agregarCobro() {
     placeholder="🔍 Buscar cliente..."
     value={busquedaCliente}
     onFocus={() => {
-  setBusquedaCliente('')
-  setMostrarClientes(true)
-}}
+      setBusquedaCliente('')
+      setMostrarClientes(true)
+    }}
     onChange={(e)=>{
       setBusquedaCliente(e.target.value)
       setMostrarClientes(true)
@@ -383,7 +387,7 @@ function agregarCobro() {
   />
 
 
-  {mostrarClientes && clientes.length > 0 && (
+  {mostrarClientes && (
 
     <div className="client-results">
 
@@ -410,9 +414,9 @@ function agregarCobro() {
                 email: cliente.email || '',
                 direccion: cliente.direccion || ''
               })
-              
-setBusquedaCliente('')
-setMostrarClientes(false)
+
+              setBusquedaCliente('')
+              setMostrarClientes(false)
 
             }}
           >
@@ -420,6 +424,27 @@ setMostrarClientes(false)
           </button>
 
         ))}
+
+
+      {busquedaCliente &&
+       !clientes.some(
+        c =>
+          c.nombre.toLowerCase().trim() ===
+          busquedaCliente.toLowerCase().trim()
+       ) && (
+
+        <button
+          type="button"
+          className="client-result-item"
+          onClick={() => {
+            // aquí añadiremos crear cliente
+          }}
+        >
+          ➕ Crear cliente "{busquedaCliente}"
+        </button>
+
+      )}
+
 
     </div>
 
