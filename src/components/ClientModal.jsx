@@ -148,45 +148,42 @@ const [datosCliente, setDatosCliente] = useState({
     <button
       className="btn"
       type="button"
-      onClick={async () => {
+     onClick={async () => {
 
-        const { data, error } =
- const { error } =
-  await supabase
-    .from('clientes')
-    .update(datosCliente)
-    .eq('id', cliente.id)
-
-
-console.log('RESPUESTA CLIENTE:', data)
-console.log('ERROR CLIENTE:', error)
-
-if (error) {
-  alert(error.message)
-  return
-}
-
-console.log('CLIENTE ACTUALIZADO:', datosCliente)
+  const { error } =
+    await supabase
+      .from('clientes')
+      .update(datosCliente)
+      .eq('id', cliente.id)
 
 
-        setClientes((prev) =>
-          prev.map((c) =>
-            c.id === cliente.id
-              ? {
-                  ...c,
-                  ...datosCliente
-                }
-              : c
-          )
-        )
-cliente.nombre = datosCliente.nombre
-cliente.telefono = datosCliente.telefono
-cliente.email = datosCliente.email
-cliente.direccion = datosCliente.direccion
+  if (error) {
+    alert(error.message)
+    return
+  }
 
-        setEditando(false)
 
-      }}
+  setClientes((prev) =>
+    prev.map((c) =>
+      c.id === cliente.id
+        ? {
+            ...c,
+            ...datosCliente
+          }
+        : c
+    )
+  )
+
+
+  cliente.nombre = datosCliente.nombre
+  cliente.telefono = datosCliente.telefono
+  cliente.email = datosCliente.email
+  cliente.direccion = datosCliente.direccion
+
+
+  setEditando(false)
+
+}}
     >
       💾 Guardar cliente
     </button>
