@@ -438,6 +438,34 @@ const existeCliente = clientes.some(
           type="button"
           className="client-result-item"
           onClick={async () => {
+const nombreLimpio = busquedaCliente
+  .trim()
+  .replace(/\s+/g, ' ')
+
+
+const clienteExiste = clientes.find(
+  (c) =>
+    c.nombre.toLowerCase().trim() ===
+    nombreLimpio.toLowerCase()
+)
+
+
+if (clienteExiste) {
+
+  setDatos({
+    ...datos,
+    cliente: clienteExiste.nombre,
+    telefono: clienteExiste.telefono || '',
+    email: clienteExiste.email || '',
+    direccion: clienteExiste.direccion || ''
+  })
+
+  setBusquedaCliente('')
+  setMostrarClientes(false)
+
+  return
+}
+
 
   const { data, error } =
     await supabase
