@@ -13,6 +13,7 @@ import DeliveriesPanel from './components/DeliveriesPanel.jsx'
 import PaymentsPanel from './components/PaymentsPanel.jsx'
 import BlockedPanel from './components/BlockedPanel.jsx'
 import ClientModal from './components/ClientModal.jsx'
+import ClientsPanel from './components/ClientsPanel.jsx'
 import { supabase } from './supabase.js'
 import {
   FASES,
