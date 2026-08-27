@@ -529,19 +529,22 @@ if (clienteExiste) {
   <button
     type="button"
     className="btn"
-    onClick={() => {
+   onClick={() => {
 
-      const cliente =
-        clientes.find(
-          (c) =>
-            c.nombre === datos.cliente
-        )
+  const cliente =
+    clientes.find(
+      (c) =>
+        c.nombre.trim().toLowerCase() ===
+        datos.cliente.trim().toLowerCase()
+    )
 
-      if (cliente) {
-        onOpenClient(cliente)
-      }
+  if (cliente) {
+    onOpenClient(cliente)
+  } else {
+    alert('No se encontró el cliente')
+  }
 
-    }}
+}}
   >
     👤 Ver ficha cliente
   </button>
