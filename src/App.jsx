@@ -1003,7 +1003,14 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   >
     + Nuevo proyecto
   </button>
-
+        
+<button
+  className="btn"
+  onClick={() => setPanelAbierto('clientes')}
+>
+  👥 Clientes
+</button>
+        
   <button
     className="btn"
     onClick={cerrarSesion}
