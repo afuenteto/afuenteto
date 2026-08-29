@@ -1073,7 +1073,15 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
         ))}
       </div>
 
-      <StudioDashboard proyectos={proyectos} />
+      <StudioDashboard
+  proyectos={proyectos}
+  clientes={clientes}
+  onOpenTasks={() => setPanelAbierto('tareas')}
+  onOpenDeliveries={() => setPanelAbierto('entregas')}
+  onOpenPayments={() => setPanelAbierto('cobros')}
+  onFilterPhase={(fase) => setFiltro(fase)}
+  onShowAll={() => setFiltro('Todos')}
+/>
 
       {proyectosOrdenados.length === 0 ? (
         <div className="empty">
