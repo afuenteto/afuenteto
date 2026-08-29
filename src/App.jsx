@@ -1073,6 +1073,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
         ))}
       </div>
 
+
       <StudioDashboard
   proyectos={proyectos}
   clientes={clientes}
