@@ -17,11 +17,14 @@ function proyectoDesdeBD(row) {
     fechaInicio: row.fecha_inicio || '',
     fechaEntrega: row.fecha_entrega || '',
     fase: row.fase || FASES[0],
+    estado: row.estado || 'activo',
     presupuestoTotal: row.presupuesto_total ?? '',
     presupuestoGastado: row.presupuesto_gastado ?? '',
     notas: row.notas || '',
     tareas: Array.isArray(row.tareas) ? row.tareas : [],
     proveedores: Array.isArray(row.proveedores) ? row.proveedores : [],
+    comisiones: Array.isArray(row.comisiones) ? row.comisiones : [],
+    imagenProyecto: row.imagen_proyecto || '',
   }
 }
 
@@ -44,6 +47,8 @@ function proyectoParaBD(proyecto, userId) {
     notas: proyecto.notas || '',
     tareas: proyecto.tareas || [],
     proveedores: proyecto.proveedores || [],
+    comisiones: proyecto.comisiones || [],
+    imagen_proyecto: proyecto.imagenProyecto || null,
   }
 }
 
@@ -108,6 +113,7 @@ export function nuevoProyecto() {
     fechaInicio: '',
     fechaEntrega: '',
     fase: FASES[0],
+    estado: 'activo',
     presupuestoTotal: '',
     presupuestoGastado: '',
     notas: '',
@@ -118,6 +124,8 @@ export function nuevoProyecto() {
     honorariosGestion: '',
     otrosImportes: '',
     cobros: [],
+    comisiones: [],
+    imagenProyecto: '',
     horasEstimadas: '',
     horasReales: '',
   }

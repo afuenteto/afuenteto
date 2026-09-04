@@ -38,13 +38,18 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks }) {
   const sobrepasado = totalCobrado > valorProyecto
 
   const dias = diasHasta(proyecto.fechaEntrega)
+  const finalizado = proyecto.estado === 'finalizado'
+  const tieneImagen = Boolean(proyecto.imagenProyecto)
+
   const urgente =
+    !finalizado &&
     dias !== null &&
     dias <= 7 &&
     dias >= 0 &&
     proyecto.fase !== 'Entrega'
 
   const vencido =
+    !finalizado &&
     dias !== null &&
     dias < 0 &&
     proyecto.fase !== 'Entrega'
@@ -61,40 +66,53 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks }) {
 
   return (
     <div
-      className="card"
+      className={
+        'card' +
+        (finalizado ? ' project-finalized-card' : '') +
+        (tieneImagen ? ' has-project-image' : '')
+      }
       style={{
         borderLeft: `5px solid ${colorPrioridad}`,
       }}
     >
-      <div className="card-head">
-        <div>
-          <h3 className="serif">
-            <button
-              type="button"
-              className="project-open-btn"
-              onClick={onOpen}
-            >
-              {proyecto.nombre || 'Sin nombre'}
-            </button>
-          </h3>
-
-          <p className="card-client">
-            {proyecto.cliente || 'Sin cliente asignado'}
-          </p>
+      {tieneImagen && (
+        <div className="card-cover-strip" aria-hidden="true">
+          <img src={proyecto.imagenProyecto} alt="" />
+          <span className="card-cover-shade" />
         </div>
+      )}
 
-        {vencido && (
+      {finalizado && (
+        <div className="finalized-watermark">FINALIZADO</div>
+      )}
+
+      <div className="card-head">
+        <h3 className="serif">
+          <button
+            type="button"
+            className="project-open-btn"
+            onClick={onOpen}
+          >
+            {proyecto.nombre || 'Sin nombre'}
+          </button>
+        </h3>
+
+        {!finalizado && vencido && (
           <span className="tag-urgent">
             Entrega vencida
           </span>
         )}
 
-        {!vencido && urgente && (
+        {!finalizado && !vencido && urgente && (
           <span className="tag-urgent">
             Entrega en {dias}d
           </span>
         )}
       </div>
+
+      <p className="card-client">
+        {proyecto.cliente || 'Sin cliente asignado'}
+      </p>
 
       <PhaseRail fase={proyecto.fase} />
 

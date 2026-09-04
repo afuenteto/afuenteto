@@ -49,6 +49,30 @@ export default function StudioDashboard({
     valorTotal - cobradoTotal
 
 
+  const resumenComisiones = proyectos.reduce(
+    (acc, p) => {
+      const comisiones = Array.isArray(p.comisiones) ? p.comisiones : []
+
+      comisiones.forEach((comision) => {
+        const importe =
+          Number(comision.presupuesto || 0) *
+          Number(comision.porcentaje || 0) / 100
+
+        acc.generadas += importe
+
+        if (comision.estado === 'cobrada') {
+          acc.cobradas += importe
+        } else {
+          acc.pendientes += importe
+        }
+      })
+
+      return acc
+    },
+    { generadas: 0, cobradas: 0, pendientes: 0 }
+  )
+
+
   const tareasPendientes =
     proyectos.reduce(
       (total, p) =>
@@ -180,12 +204,36 @@ export default function StudioDashboard({
           />
         </div>
 
+        <div className="field">
+          <label>Comisiones generadas</label>
+          <input
+            readOnly
+            value={`${resumenComisiones.generadas.toLocaleString('es-ES')} €`}
+          />
+        </div>
+
+        <div className="field">
+          <label>Comisiones cobradas</label>
+          <input
+            readOnly
+            value={`${resumenComisiones.cobradas.toLocaleString('es-ES')} €`}
+          />
+        </div>
+
+        <div className="field">
+          <label>Comisiones pendientes</label>
+          <input
+            readOnly
+            value={`${resumenComisiones.pendientes.toLocaleString('es-ES')} €`}
+          />
+        </div>
+
 
       </div>
 
 
 
-      <div className="section-label">
+      <div className="section-label dashboard-section-heading">
         ⚠️ Atención
       </div>
 
@@ -252,7 +300,7 @@ export default function StudioDashboard({
 
 
 
-      <div className="section-label">
+      <div className="section-label dashboard-section-heading">
         Proyectos por fase
       </div>
 

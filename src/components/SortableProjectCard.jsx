@@ -23,6 +23,7 @@ export default function SortableProjectCard({
   return (
     <div
       ref={setNodeRef}
+      className={'sortable-project' + (proyecto.imagenProyecto ? ' has-project-image' : '')}
       style={{
         transform: CSS.Transform.toString(transform),
         transition,

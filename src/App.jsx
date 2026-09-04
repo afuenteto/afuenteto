@@ -24,6 +24,7 @@ function proyectoDesdeBD(row) {
   return {
     id: row.id,
     prioridad: row.prioridad || 'en_curso',
+    estado: row.estado || 'activo',
     orden: row.orden ?? 0,
 
     nombre: row.nombre || '',
@@ -40,6 +41,7 @@ function proyectoDesdeBD(row) {
     presupuestoTotal: row.presupuesto_total ?? '',
     presupuestoGastado: row.presupuesto_gastado ?? '',
     presupuestoPdf: row.presupuesto_pdf || '',
+    imagenProyecto: row.imagen_proyecto || '',
 
     notas: row.notas || '',
 
@@ -61,6 +63,10 @@ function proyectoDesdeBD(row) {
       ? row.cobros
       : [],
 
+    comisiones: Array.isArray(row.comisiones)
+      ? row.comisiones
+      : [],
+
     historial: Array.isArray(row.historial)
       ? row.historial
       : [],
@@ -73,6 +79,7 @@ function proyectoParaBD(proyecto, userId) {
   return {
     id: proyecto.id,
     prioridad: proyecto.prioridad || 'en_curso',
+    estado: proyecto.estado || 'activo',
     orden: proyecto.orden ?? 0,
     user_id: userId,
     nombre: proyecto.nombre || '',
@@ -118,6 +125,10 @@ otros_importes:
 
 cobros: proyecto.cobros || [],
 
+comisiones: Array.isArray(proyecto.comisiones)
+  ? proyecto.comisiones
+  : [],
+
 horas_estimadas:
   proyecto.horasEstimadas === '' ||
   proyecto.horasEstimadas === null
@@ -135,6 +146,7 @@ historial: Array.isArray(proyecto.historial)
   : [],
     
 presupuesto_pdf: proyecto.presupuestoPdf || null,
+imagen_proyecto: proyecto.imagenProyecto || null,
     notas: proyecto.notas || '',
     tareas: Array.isArray(proyecto.tareas) ? proyecto.tareas : [],
     
@@ -786,6 +798,50 @@ async function eliminarCliente(cliente) {
   setClienteAbierto(null)
 
 }
+  async function cambiarEstadoProyecto(id, estado) {
+    if (!usuario) return
+
+    const proyecto = proyectos.find((p) => p.id === id)
+    if (!proyecto) return
+
+    const accion = estado === 'finalizado' ? 'finalizar' : 'reabrir'
+    const confirmado = confirm(
+      estado === 'finalizado'
+        ? '¿Finalizar este proyecto? Podrás reabrirlo cuando quieras.'
+        : '¿Reabrir este proyecto? Volverá a los proyectos activos.'
+    )
+
+    if (!confirmado) return
+
+    setGuardando(true)
+    try {
+      const { data, error } = await supabase
+        .from('proyectos')
+        .update({ estado })
+        .eq('id', id)
+        .eq('user_id', usuario.id)
+        .select()
+        .single()
+
+      if (error) throw error
+
+      const actualizado = proyectoDesdeBD(data)
+      setProyectos((prev) =>
+        prev.map((p) => (p.id === id ? actualizado : p))
+      )
+      setEditando(actualizado)
+      setAviso(estado === 'finalizado' ? 'Proyecto finalizado.' : 'Proyecto reabierto.')
+      setTimeout(() => setAviso(''), 3000)
+    } catch (error) {
+      console.error(error)
+      alert(
+        `No se pudo ${accion} el proyecto.\n\n${error.message}`
+      )
+    } finally {
+      setGuardando(false)
+    }
+  }
+
   async function eliminar(id) {
     if (!usuario) return
 
@@ -823,10 +879,15 @@ async function eliminarCliente(cliente) {
     }
   }
 
+  const proyectosActivos = proyectos.filter((p) => p.estado !== 'finalizado')
+  const proyectosFinalizados = proyectos.filter((p) => p.estado === 'finalizado')
+
   const proyectosFiltrados =
     filtro === 'Todos'
-      ? proyectos
-      : proyectos.filter((p) => p.fase === filtro)
+      ? proyectosActivos
+      : filtro === 'Finalizados'
+        ? proyectosFinalizados
+        : proyectosActivos.filter((p) => p.fase === filtro)
 
 const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   return (a.orden ?? 0) - (b.orden ?? 0)
@@ -1055,7 +1116,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
           className={'chip' + (filtro === 'Todos' ? ' active' : '')}
           onClick={() => setFiltro('Todos')}
         >
-          Todos ({proyectos.length})
+          Todos ({proyectosActivos.length})
         </button>
 
         {FASES.map((fase) => (
@@ -1071,11 +1132,18 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
             )
           </button>
         ))}
+
+        <button
+          className={'chip' + (filtro === 'Finalizados' ? ' active' : '')}
+          onClick={() => setFiltro('Finalizados')}
+        >
+          Finalizados ({proyectosFinalizados.length})
+        </button>
       </div>
 
 
       <StudioDashboard
-  proyectos={proyectos}
+  proyectos={proyectosActivos}
   clientes={clientes}
   onOpenTasks={() => setPanelAbierto('tareas')}
   onOpenDeliveries={() => setPanelAbierto('entregas')}
@@ -1104,7 +1172,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
       <EconomicChart proyectos={proyectosOrdenados} />
 
        <StudioToday
-  proyectos={proyectos}
+  proyectos={proyectosActivos}
   onOpen={abrirExistente}
   onOpenTasks={abrirTareas}
   setPanelAbierto={setPanelAbierto}
@@ -1146,6 +1214,8 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   onOpenClient={setClienteAbierto}
   onSave={guardar}
   onDelete={eliminar}
+  onFinalize={() => cambiarEstadoProyecto(editando.id, 'finalizado')}
+  onReopen={() => cambiarEstadoProyecto(editando.id, 'activo')}
   seccionInicial={seccionInicial}
   onClose={() => {
     setEditando(null)

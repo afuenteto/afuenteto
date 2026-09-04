@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { FASES, uid } from '../storage.js'
 import { supabase } from '../supabase.js'
 import ProjectHistory from './ProjectHistory.jsx'
+import ProjectImageCropper from './ProjectImageCropper.jsx'
 
 export default function ProjectModal({
   proyecto,
@@ -11,19 +12,25 @@ export default function ProjectModal({
   onOpenClient,
   onSave,
   onDelete,
+  onFinalize,
+  onReopen,
   onClose,
   seccionInicial = null
 }) {
     console.log('CLIENTES:', clientes)
  const [datos, setDatos] = useState({
   ...proyecto,
-  cobros: proyecto.cobros || []
+  cobros: proyecto.cobros || [],
+  comisiones: proyecto.comisiones || [],
+  imagenProyecto: proyecto.imagenProyecto || ''
 })
 useEffect(() => {
 
   setDatos({
     ...proyecto,
-    cobros: proyecto.cobros || []
+    cobros: proyecto.cobros || [],
+    comisiones: proyecto.comisiones || [],
+    imagenProyecto: proyecto.imagenProyecto || ''
   })
 
 }, [proyecto])
@@ -38,6 +45,31 @@ const [nuevoCobro, setNuevoCobro] = useState({
   importe: '',
   estado: 'cobrado'
 })
+const [nuevaComision, setNuevaComision] = useState({
+  fecha: '',
+  colaborador: '',
+  concepto: '',
+  presupuesto: '',
+  porcentaje: '',
+  estado: 'pendiente'
+})
+const [subiendoComisionId, setSubiendoComisionId] = useState(null)
+const imagenInputRef = useRef(null)
+const [editorImagenSrc, setEditorImagenSrc] = useState('')
+const [imagenPendiente, setImagenPendiente] = useState(null)
+const [imagenPendientePreview, setImagenPendientePreview] = useState('')
+const [subiendoImagen, setSubiendoImagen] = useState(false)
+
+useEffect(() => {
+  return () => {
+    if (editorImagenSrc?.startsWith('blob:')) {
+      URL.revokeObjectURL(editorImagenSrc)
+    }
+    if (imagenPendientePreview?.startsWith('blob:')) {
+      URL.revokeObjectURL(imagenPendientePreview)
+    }
+  }
+}, [editorImagenSrc, imagenPendientePreview])
 
 const totalProyecto =
   Number(datos.honorariosDiseno || 0) +
@@ -63,6 +95,28 @@ const totalPrevisto =
     )
 
 const pendienteCobro = totalProyecto - totalCobrado
+
+const comisiones = Array.isArray(datos.comisiones) ? datos.comisiones : []
+
+const calcularImporteComision = (comision) =>
+  Number(comision.presupuesto || 0) * Number(comision.porcentaje || 0) / 100
+
+const totalPresupuestosColaboradores = comisiones.reduce(
+  (total, comision) => total + Number(comision.presupuesto || 0),
+  0
+)
+
+const totalComisiones = comisiones.reduce(
+  (total, comision) => total + calcularImporteComision(comision),
+  0
+)
+
+const totalComisionesCobradas = comisiones
+  .filter((comision) => comision.estado === 'cobrada')
+  .reduce((total, comision) => total + calcularImporteComision(comision), 0)
+
+const totalComisionesPendientes = totalComisiones - totalComisionesCobradas
+
  const contactoInputRef = useRef(null)
  const tareasRef = useRef(null)
  const economiaRef = useRef(null)
@@ -177,6 +231,64 @@ useEffect(() => {
     '_blank'
   )
 }
+ function seleccionarImagenProyecto(e) {
+  const file = e.target.files?.[0]
+  e.target.value = ''
+
+  if (!file) return
+
+  if (!file.type.startsWith('image/')) {
+    alert('Selecciona un archivo de imagen.')
+    return
+  }
+
+  if (file.size > 25 * 1024 * 1024) {
+    alert('La imagen original es demasiado grande. Elige una de menos de 25 MB.')
+    return
+  }
+
+  const src = URL.createObjectURL(file)
+  setEditorImagenSrc(src)
+}
+
+ function confirmarImagenRecortada(blob) {
+  const preview = URL.createObjectURL(blob)
+  setImagenPendiente(blob)
+  setImagenPendientePreview(preview)
+  setEditorImagenSrc('')
+}
+
+ function quitarImagenProyecto() {
+  setImagenPendiente(null)
+  setImagenPendientePreview('')
+  setDatos((actual) => ({
+    ...actual,
+    imagenProyecto: ''
+  }))
+}
+
+ async function subirImagenProyecto(blob) {
+  if (!blob) return datos.imagenProyecto || ''
+
+  const nombreArchivo = `${usuario.id}/${datos.id}-${Date.now()}.webp`
+
+  const { error } = await supabase.storage
+    .from('imagenes-proyectos')
+    .upload(nombreArchivo, blob, {
+      contentType: 'image/webp',
+      cacheControl: '31536000',
+      upsert: false
+    })
+
+  if (error) throw error
+
+  const { data } = supabase.storage
+    .from('imagenes-proyectos')
+    .getPublicUrl(nombreArchivo)
+
+  return data.publicUrl
+}
+
  async function subirPresupuesto(e) {
   const file = e.target.files?.[0]
 
@@ -315,6 +427,171 @@ function agregarCobro() {
   })
 }
 
+function agregarComision() {
+  const colaborador = nuevaComision.colaborador.trim()
+  const presupuesto = Number(nuevaComision.presupuesto || 0)
+  const porcentaje = Number(nuevaComision.porcentaje || 0)
+
+  if (!colaborador || presupuesto <= 0 || porcentaje <= 0) {
+    alert('Indica colaborador, presupuesto aceptado y porcentaje de comisión.')
+    return
+  }
+
+  const comision = {
+    id: uid(),
+    fecha: nuevaComision.fecha || '',
+    colaborador,
+    concepto: nuevaComision.concepto.trim() || 'Comisión',
+    presupuesto,
+    porcentaje,
+    estado: nuevaComision.estado || 'pendiente',
+    fechaCobro:
+      nuevaComision.estado === 'cobrada'
+        ? new Date().toISOString().slice(0, 10)
+        : '',
+    presupuestoPdf: '',
+    presupuestoPdfNombre: ''
+  }
+
+  const importe = calcularImporteComision(comision)
+
+  setDatos({
+    ...datos,
+    comisiones: [...comisiones, comision],
+    historial: [
+      ...(datos.historial || []),
+      {
+        id: crypto.randomUUID(),
+        fecha: new Date().toISOString(),
+        texto: `Comisión añadida: ${colaborador} · ${porcentaje}% (${importe.toLocaleString('es-ES')} €)`,
+        icono: '🤝'
+      }
+    ]
+  })
+
+  setNuevaComision({
+    fecha: '',
+    colaborador: '',
+    concepto: '',
+    presupuesto: '',
+    porcentaje: '',
+    estado: 'pendiente'
+  })
+}
+
+function actualizarComision(id, campo, valor) {
+  setDatos((actual) => ({
+    ...actual,
+    comisiones: (actual.comisiones || []).map((comision) =>
+      comision.id === id
+        ? { ...comision, [campo]: valor }
+        : comision
+    )
+  }))
+}
+
+function marcarComisionCobrada(id) {
+  const comision = comisiones.find((item) => item.id === id)
+  if (!comision) return
+
+  const importe = calcularImporteComision(comision)
+
+  setDatos((actual) => ({
+    ...actual,
+    comisiones: (actual.comisiones || []).map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            estado: 'cobrada',
+            fechaCobro: new Date().toISOString().slice(0, 10)
+          }
+        : item
+    ),
+    historial: [
+      ...(actual.historial || []),
+      {
+        id: crypto.randomUUID(),
+        fecha: new Date().toISOString(),
+        texto: `Comisión cobrada: ${comision.colaborador} (${importe.toLocaleString('es-ES')} €)`,
+        icono: '✅'
+      }
+    ]
+  }))
+}
+
+function marcarComisionPendiente(id) {
+  setDatos((actual) => ({
+    ...actual,
+    comisiones: (actual.comisiones || []).map((item) =>
+      item.id === id
+        ? { ...item, estado: 'pendiente', fechaCobro: '' }
+        : item
+    )
+  }))
+}
+
+function borrarComision(id) {
+  setDatos((actual) => ({
+    ...actual,
+    comisiones: (actual.comisiones || []).filter((item) => item.id !== id)
+  }))
+}
+
+async function subirPresupuestoComision(id, file) {
+  if (!file) return
+
+  if (file.type !== 'application/pdf') {
+    alert('Selecciona un archivo PDF')
+    return
+  }
+
+  setSubiendoComisionId(id)
+
+  try {
+    const nombreSeguro = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+    const nombreArchivo = `comision-${datos.id}-${id}-${Date.now()}-${nombreSeguro}`
+
+    const { error } = await supabase.storage
+      .from('presupuestos')
+      .upload(nombreArchivo, file)
+
+    if (error) throw error
+
+    const { data } = supabase.storage
+      .from('presupuestos')
+      .getPublicUrl(nombreArchivo)
+
+    setDatos((actual) => ({
+      ...actual,
+      comisiones: (actual.comisiones || []).map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              presupuestoPdf: data.publicUrl,
+              presupuestoPdfNombre: file.name
+            }
+          : item
+      ),
+      historial: [
+        ...(actual.historial || []),
+        {
+          id: crypto.randomUUID(),
+          fecha: new Date().toISOString(),
+          texto: `Presupuesto de colaborador adjuntado: ${file.name}`,
+          icono: '📎'
+        }
+      ]
+    }))
+  } catch (error) {
+    console.error('ERROR SUPABASE PDF COMISIÓN:', error)
+    alert(`No se pudo subir el PDF.
+
+${error.message || error}`)
+  } finally {
+    setSubiendoComisionId(null)
+  }
+}
+
   function actualizarProveedorContacto(id, contacto) {
     set(
       'proveedores',
@@ -326,10 +603,42 @@ function agregarCobro() {
     set('proveedores', datos.proveedores.filter((p) => p.id !== id))
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    if (!datos.nombre.trim()) return
-    onSave(datos)
+    if (!datos.nombre.trim() || subiendoImagen) return
+
+    setSubiendoImagen(true)
+
+    try {
+      let datosAGuardar = { ...datos }
+
+      if (imagenPendiente) {
+        const imagenProyecto = await subirImagenProyecto(imagenPendiente)
+
+        datosAGuardar = {
+          ...datosAGuardar,
+          imagenProyecto,
+          historial: [
+            ...(datosAGuardar.historial || []),
+            {
+              id: crypto.randomUUID(),
+              fecha: new Date().toISOString(),
+              texto: 'Imagen de proyecto actualizada',
+              icono: '🖼️'
+            }
+          ]
+        }
+      }
+
+      await onSave(datosAGuardar)
+    } catch (error) {
+      console.error('ERROR SUPABASE IMAGEN PROYECTO:', error)
+      alert(`No se pudo guardar la imagen del proyecto.
+
+${error.message || error}`)
+    } finally {
+      setSubiendoImagen(false)
+    }
   }
 
   const esNuevo = !proyecto.nombre && proyecto.tareas.length === 0 && proyecto.proveedores.length === 0
@@ -340,7 +649,13 @@ const existeCliente = clientes.some(
 )
   return (
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <form className="modal" onSubmit={handleSubmit}>
+      <form
+        className={"modal" + (datos.estado === 'finalizado' ? " project-finalized-modal" : "")}
+        onSubmit={handleSubmit}
+      >
+        {datos.estado === 'finalizado' && (
+          <div className="finalized-watermark finalized-watermark-modal">FINALIZADO</div>
+        )}
         <div className="modal-head">
          <p style={{color:"red", fontSize:"20px"}}>
   </p>
@@ -362,6 +677,60 @@ const existeCliente = clientes.some(
             placeholder="p. ej. Reforma ático Sardinero"
             autoFocus
             required
+          />
+        </div>
+
+        <div className="project-image-field">
+          <div className="project-image-field-head">
+            <div>
+              <strong>Imagen de la ficha</strong>
+              <span>Una imagen por proyecto · se optimiza automáticamente</span>
+            </div>
+
+            <div className="project-image-buttons">
+              <button
+                type="button"
+                className="btn btn-sm"
+                onClick={() => imagenInputRef.current?.click()}
+              >
+                {imagenPendientePreview || datos.imagenProyecto ? 'Cambiar imagen' : 'Subir imagen'}
+              </button>
+
+              {(imagenPendientePreview || datos.imagenProyecto) && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-ghost"
+                  onClick={quitarImagenProyecto}
+                >
+                  Quitar
+                </button>
+              )}
+            </div>
+          </div>
+
+          {(imagenPendientePreview || datos.imagenProyecto) ? (
+            <div className="project-image-modal-preview">
+              <img
+                src={imagenPendientePreview || datos.imagenProyecto}
+                alt="Imagen de cabecera del proyecto"
+              />
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="project-image-empty"
+              onClick={() => imagenInputRef.current?.click()}
+            >
+              + Añadir imagen de cabecera
+            </button>
+          )}
+
+          <input
+            ref={imagenInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+            style={{ display: 'none' }}
+            onChange={seleccionarImagenProyecto}
           />
         </div>
 
@@ -946,7 +1315,272 @@ if (clienteExiste) {
 </button>
 
 </div>
-        <div ref={tareasRef} className="section-label">Tareas</div>
+        <div className="section-label dashboard-section-heading">Comisiones de colaboradores</div>
+
+<div className="commission-summary">
+  <div className="field-row">
+    <div className="field">
+      <label>Presupuestos aceptados</label>
+      <input
+        type="text"
+        value={`${totalPresupuestosColaboradores.toLocaleString('es-ES')} €`}
+        readOnly
+      />
+    </div>
+    <div className="field">
+      <label>Comisiones generadas</label>
+      <input
+        type="text"
+        value={`${totalComisiones.toLocaleString('es-ES')} €`}
+        readOnly
+      />
+    </div>
+  </div>
+
+  <div className="field-row">
+    <div className="field">
+      <label>Comisiones cobradas</label>
+      <input
+        type="text"
+        value={`${totalComisionesCobradas.toLocaleString('es-ES')} €`}
+        readOnly
+      />
+    </div>
+    <div className="field">
+      <label>Pendiente de cobrar</label>
+      <input
+        type="text"
+        value={`${totalComisionesPendientes.toLocaleString('es-ES')} €`}
+        readOnly
+      />
+    </div>
+  </div>
+</div>
+
+<div className="commission-new">
+  <div className="commission-new-title">+ Añadir nueva comisión</div>
+  <div className="commission-grid">
+    <div className="field">
+      <label>Colaborador</label>
+      <input
+        type="text"
+        placeholder="Nombre del colaborador"
+        value={nuevaComision.colaborador}
+        onChange={(e) => setNuevaComision({ ...nuevaComision, colaborador: e.target.value })}
+      />
+    </div>
+
+    <div className="field">
+      <label>Concepto</label>
+      <input
+        type="text"
+        placeholder="Carpintería, iluminación…"
+        value={nuevaComision.concepto}
+        onChange={(e) => setNuevaComision({ ...nuevaComision, concepto: e.target.value })}
+      />
+    </div>
+
+    <div className="field">
+      <label>Presupuesto aceptado (€)</label>
+      <input
+        type="number"
+        min="0"
+        step="0.01"
+        placeholder="0,00"
+        value={nuevaComision.presupuesto}
+        onChange={(e) => setNuevaComision({ ...nuevaComision, presupuesto: e.target.value })}
+      />
+    </div>
+
+    <div className="field">
+      <label>Comisión acordada (%)</label>
+      <input
+        type="number"
+        min="0"
+        step="0.01"
+        placeholder="10"
+        value={nuevaComision.porcentaje}
+        onChange={(e) => setNuevaComision({ ...nuevaComision, porcentaje: e.target.value })}
+      />
+    </div>
+
+    <div className="field">
+      <label>Fecha presupuesto</label>
+      <input
+        type="date"
+        value={nuevaComision.fecha}
+        onChange={(e) => setNuevaComision({ ...nuevaComision, fecha: e.target.value })}
+      />
+    </div>
+
+    <div className="field">
+      <label>Estado inicial</label>
+      <select
+        value={nuevaComision.estado}
+        onChange={(e) => setNuevaComision({ ...nuevaComision, estado: e.target.value })}
+      >
+        <option value="pendiente">Pendiente</option>
+        <option value="cobrada">Cobrada</option>
+      </select>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    className="btn btn-sm"
+    onClick={agregarComision}
+  >
+    + Añadir comisión
+  </button>
+</div>
+
+
+{comisiones.map((comision) => {
+  const importeComision = calcularImporteComision(comision)
+
+  return (
+    <div className="commission-card" key={comision.id}>
+      <div className="commission-card-head">
+        <strong>{comision.colaborador || 'Colaborador'}</strong>
+        <span
+          className={
+            'commission-status ' +
+            (comision.estado === 'cobrada' ? 'is-paid' : 'is-pending')
+          }
+        >
+          {comision.estado === 'cobrada' ? '✓ Cobrada' : '⏳ Pendiente'}
+        </span>
+      </div>
+
+      <div className="commission-grid">
+        <div className="field">
+          <label>Colaborador</label>
+          <input
+            type="text"
+            value={comision.colaborador || ''}
+            onChange={(e) => actualizarComision(comision.id, 'colaborador', e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label>Concepto</label>
+          <input
+            type="text"
+            value={comision.concepto || ''}
+            onChange={(e) => actualizarComision(comision.id, 'concepto', e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label>Presupuesto aceptado (€)</label>
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={comision.presupuesto ?? ''}
+            onChange={(e) => actualizarComision(comision.id, 'presupuesto', e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label>Comisión acordada (%)</label>
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={comision.porcentaje ?? ''}
+            onChange={(e) => actualizarComision(comision.id, 'porcentaje', e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label>Comisión (€)</label>
+          <input
+            type="text"
+            value={`${importeComision.toLocaleString('es-ES')} €`}
+            readOnly
+          />
+        </div>
+
+        <div className="field">
+          <label>Fecha presupuesto</label>
+          <input
+            type="date"
+            value={comision.fecha || ''}
+            onChange={(e) => actualizarComision(comision.id, 'fecha', e.target.value)}
+          />
+        </div>
+      </div>
+
+      {comision.estado === 'cobrada' && comision.fechaCobro && (
+        <div className="commission-paid-date">
+          Cobrado el {comision.fechaCobro}
+        </div>
+      )}
+
+      <div className="commission-card-actions">
+        {comision.estado === 'cobrada' ? (
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={() => marcarComisionPendiente(comision.id)}
+          >
+            ↩ Marcar pendiente
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={() => marcarComisionCobrada(comision.id)}
+          >
+            ✓ Marcar cobrada
+          </button>
+        )}
+
+        <label className="btn btn-sm commission-upload-btn">
+          {subiendoComisionId === comision.id
+            ? 'Subiendo…'
+            : comision.presupuestoPdf
+              ? '📎 Cambiar PDF'
+              : '📎 Subir presupuesto PDF'}
+          <input
+            type="file"
+            accept="application/pdf"
+            disabled={subiendoComisionId === comision.id}
+            onChange={(e) => {
+              subirPresupuestoComision(comision.id, e.target.files?.[0])
+              e.target.value = ''
+            }}
+          />
+        </label>
+
+        {comision.presupuestoPdf && (
+          <a
+            href={comision.presupuestoPdf}
+            target="_blank"
+            rel="noreferrer"
+            className="btn btn-sm"
+          >
+            📄 Ver presupuesto
+          </a>
+        )}
+
+        <button
+          type="button"
+          className="icon-btn"
+          onClick={() => borrarComision(comision.id)}
+          aria-label="Eliminar comisión"
+          title="Eliminar comisión"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  )
+})}
+
+
+<div ref={tareasRef} className="section-label">Tareas</div>
         {datos.tareas.map((t) => (
           <div className="list-row" key={t.id}>
             <input type="checkbox" checked={t.hecha} onChange={() => alternarTarea(t.id)} />
@@ -1046,9 +1680,20 @@ if (clienteExiste) {
         <div className="modal-actions">
           <div>
             {!esNuevo && (
-              <button type="button" className="btn btn-ghost btn-danger" onClick={() => onDelete(datos.id)}>
-                Eliminar proyecto
-              </button>
+              <>
+                {datos.estado === 'finalizado' ? (
+                  <button type="button" className="btn btn-ghost" onClick={onReopen}>
+                    ↩ Reabrir proyecto
+                  </button>
+                ) : (
+                  <button type="button" className="btn btn-ghost" onClick={onFinalize}>
+                    ✓ Finalizar proyecto
+                  </button>
+                )}
+                <button type="button" className="btn btn-ghost btn-danger" onClick={() => onDelete(datos.id)}>
+                  Eliminar proyecto
+                </button>
+              </>
             )}
           </div>
           <div className="right">
@@ -1069,11 +1714,19 @@ if (clienteExiste) {
   style={{ display: 'none' }}
   onChange={subirPresupuesto}
 />         
-           <button type="submit" className="btn btn-primary">
-              Guardar
+           <button type="submit" className="btn btn-primary" disabled={subiendoImagen}>
+              {subiendoImagen ? 'Guardando imagen…' : 'Guardar'}
             </button>
           </div>
         </div>
+
+        {editorImagenSrc && (
+          <ProjectImageCropper
+            src={editorImagenSrc}
+            onCancel={() => setEditorImagenSrc('')}
+            onConfirm={confirmarImagenRecortada}
+          />
+        )}
      
       </form>
     </div>

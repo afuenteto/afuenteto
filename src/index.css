@@ -62,6 +62,9 @@ html,
 body,
 #root {
   min-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -923,6 +926,8 @@ a {
 }
 
 .modal {
+  position: relative;
+  isolation: isolate;
   width: 100%;
 
   max-width: 620px;
@@ -1075,6 +1080,22 @@ a {
   height: 1px;
 
   background: var(--line);
+}
+
+/* Títulos secundarios del estudio: mismo aspecto que los bloques de Hoy */
+.dashboard-section-heading {
+  display: block;
+  margin: 24px 0 10px;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.dashboard-section-heading::after {
+  display: none;
 }
 
 /* =========================================================
@@ -1376,7 +1397,8 @@ a {
 }
 
 .studio-today {
-  margin: 28px 0;
+  /* Mantiene la misma separación vertical entre los tres bloques del estudio. */
+  margin: 0 0 28px;
 }
 
 .studio-today .section-label {
@@ -1723,6 +1745,7 @@ a {
 .attention-delivery input,
 .attention-payment input {
   background: rgba(255,255,255,0.65);
+}
 
   .dashboard-grid {
   display: grid;
@@ -1809,6 +1832,7 @@ a {
 .attention-payment input {
   background: rgba(255,255,255,0.65);
 }
+}
 
 
 @media (max-width:700px) {
@@ -1866,6 +1890,7 @@ a {
 .attention-payment input {
   background: rgba(255,255,255,0.65);
 }
+}
 
 
 @media (max-width:700px){
@@ -1898,4 +1923,699 @@ a {
 .field.dashboard-action *,
 .field.dashboard-action input {
   cursor: pointer !important;
+}
+/* =========================================================
+   AJUSTES MOVIL — evitar zoom y desbordamientos en fichas
+   ========================================================= */
+@media (max-width: 700px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .overlay,
+  .panel-overlay {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 12px;
+    padding-right: 12px;
+    overflow-x: hidden;
+  }
+
+  .modal,
+  .panel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .panel-head,
+  .modal-head {
+    min-width: 0;
+  }
+
+  .panel-head {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .panel-head h2,
+  .modal-head h2 {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .panel-head .btn,
+  .panel-head .icon-btn {
+    flex-shrink: 0;
+  }
+
+  .panel-item,
+  .field,
+  .field-row,
+  .modal-actions,
+  .task-panel-row {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .field input,
+  .field select,
+  .field textarea,
+  .panel input,
+  .panel textarea {
+    font-size: 16px;
+    max-width: 100%;
+  }
+
+  .panel-item,
+  .panel-item * {
+    overflow-wrap: anywhere;
+  }
+}
+
+/* =========================================================
+   MOVIL — CONTENEDORES Y ESCALA ESTABLE
+   ========================================================= */
+@media (max-width: 700px) {
+  html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    touch-action: manipulation;
+  }
+
+  body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  #root {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .overlay,
+  .panel-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    max-width: 100vw;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal,
+  .panel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+
+  .modal * ,
+  .panel * {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .modal-head,
+  .panel-head {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .modal-head h2,
+  .panel-head h2 {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .field-row,
+  .field,
+  .modal-actions,
+  .task-edit-row,
+  .task-add-row,
+  .client-results {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .field-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .field input,
+  .field select,
+  .field textarea,
+  .panel input,
+  .panel select,
+  .panel textarea,
+  input,
+  select,
+  textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    font-size: 16px;
+  }
+
+  .modal-actions,
+  .modal-actions .right {
+    flex-wrap: wrap;
+  }
+
+  .modal-actions .right .btn,
+  .panel-head .btn {
+    max-width: 100%;
+  }
+
+  .panel-item,
+  .panel-item * {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+
+/* Marca diagonal de proyectos finalizados */
+.project-finalized-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  container-type: inline-size;
+}
+
+/* Sello de la tarjeta cerrada */
+.finalized-watermark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: 92%;
+  text-align: center;
+  transform: translate(-50%, -50%) rotate(-22deg);
+  color: rgba(255, 0, 0, 0.50);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(30px, 12cqw, 44px);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* La tarjeta queda siempre por debajo del modal cuando se abre */
+.project-finalized-card {
+  z-index: 0;
+}
+
+/* Sello propio de la ficha abierta: mayor y centrado en la ventana visible */
+.project-finalized-modal {
+  position: relative;
+  isolation: isolate;
+}
+
+.finalized-watermark-modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  width: min(82vw, 520px);
+  font-size: clamp(44px, 7vw, 76px);
+  letter-spacing: 0.05em;
+  transform: translate(-50%, -50%) rotate(-22deg);
+}
+
+.project-finalized-modal > :not(.finalized-watermark) {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 700px) {
+  .finalized-watermark {
+    width: 90%;
+    font-size: clamp(28px, 12cqw, 40px);
+  }
+
+  .finalized-watermark-modal {
+    width: 78vw;
+    font-size: clamp(36px, 10vw, 54px);
+  }
+}
+
+
+
+/* =========================================================
+   COMISIONES DE COLABORADORES
+   ========================================================= */
+.commission-summary {
+  margin-bottom: 6px;
+}
+
+.commission-card,
+.commission-new {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: var(--surface-soft);
+}
+
+.commission-new {
+  border-style: dashed;
+}
+
+.commission-new-title {
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.commission-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.commission-status {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.commission-status.is-paid {
+  opacity: 0.85;
+}
+
+.commission-status.is-pending {
+  opacity: 0.7;
+}
+
+.commission-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px 12px;
+}
+
+.commission-grid .field {
+  margin-bottom: 0;
+}
+
+.commission-card-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.commission-upload-btn {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.commission-upload-btn input[type='file'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.commission-paid-date {
+  margin-top: 9px;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 700px) {
+  .commission-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .commission-card-head {
+    align-items: flex-start;
+  }
+
+  .commission-card-actions .btn,
+  .commission-card-actions .commission-upload-btn {
+    flex: 1 1 auto;
+  }
+
+  .commission-new > .btn {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+
+/* =========================================================
+   FECHAS EN MOVIL — evitar que el control nativo sobresalga
+   ========================================================= */
+input[type='date'] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-inline-size: 0;
+  inline-size: 100%;
+  box-sizing: border-box;
+}
+
+.cobro-form,
+.cobro-form > * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.cobro-form input,
+.cobro-form select,
+.cobro-form button {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.economy-commissions-title {
+  margin-top: 18px;
+}
+
+.economy-commissions-grid .field {
+  min-width: 0;
+}
+
+@media (max-width: 700px) {
+  input[type='date'] {
+    overflow: hidden;
+  }
+
+  .field input[type='date'],
+  .cobro-form input[type='date'],
+  .commission-grid input[type='date'] {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* =========================================================
+   IMAGEN DE CABECERA DEL PROYECTO
+   ========================================================= */
+.card-cover-strip {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 64px;
+  overflow: hidden;
+  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.card-cover-strip img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.card-cover-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.48) 0%,
+    rgba(0, 0, 0, 0.25) 58%,
+    rgba(0, 0, 0, 0.38) 100%
+  );
+}
+
+.card > :not(.card-cover-strip):not(.finalized-watermark) {
+  position: relative;
+  z-index: 1;
+}
+
+.card-head {
+  padding-right: 66px;
+}
+
+.card:not(.has-project-image) .card-head {
+  margin-bottom: -10px;
+}
+
+.card.has-project-image .card-head h3 {
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+.card.has-project-image .project-open-btn,
+.card.has-project-image .project-open-btn:hover {
+  color: #fff;
+  border-bottom-color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+.sortable-project.has-project-image .drag-dots span {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.project-image-field {
+  margin: 0 0 18px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: var(--surface-soft);
+}
+
+.project-image-field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.project-image-field-head > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.project-image-field-head strong {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.project-image-field-head span {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}
+
+.project-image-buttons {
+  display: flex;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.project-image-modal-preview {
+  width: 100%;
+  aspect-ratio: 5 / 1;
+  overflow: hidden;
+  border-radius: 7px;
+  background: #ddd;
+}
+
+.project-image-modal-preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-image-empty {
+  width: 100%;
+  min-height: 58px;
+  border: 1px dashed #bdbdb6;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.58);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.project-image-empty:hover {
+  border-color: #99998f;
+  color: var(--ink);
+}
+
+.project-image-crop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(18, 18, 18, 0.72);
+  backdrop-filter: blur(5px);
+}
+
+.project-image-crop-dialog {
+  width: min(760px, 100%);
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+}
+
+.project-image-crop-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.project-image-crop-head h3 {
+  margin: 0 0 5px;
+  font-size: 19px;
+}
+
+.project-image-crop-head p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.project-image-crop-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 1;
+  overflow: hidden;
+  border-radius: 9px;
+  background: #d8d8d3;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.project-image-crop-frame:active {
+  cursor: grabbing;
+}
+
+.project-image-crop-frame img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+.project-image-crop-guide {
+  position: absolute;
+  left: 50%;
+  bottom: 9px;
+  transform: translateX(-50%);
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.56);
+  color: #fff;
+  font-size: 10.5px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.project-image-crop-info {
+  margin-top: 9px;
+  color: var(--ink-soft);
+  font-size: 10.5px;
+}
+
+.project-image-crop-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+@media (max-width: 700px) {
+  .card-cover-strip {
+    height: 62px;
+  }
+
+  .card-head {
+    padding-right: 54px;
+  }
+
+  .project-image-field-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .project-image-buttons {
+    width: 100%;
+  }
+
+  .project-image-buttons .btn {
+    flex: 1;
+  }
+
+  .project-image-crop-overlay {
+    padding: 12px;
+  }
+
+  .project-image-crop-dialog {
+    padding: 16px;
+  }
+
+  .project-image-crop-frame {
+    aspect-ratio: 5 / 1;
+  }
 }
