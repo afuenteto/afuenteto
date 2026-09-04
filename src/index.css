@@ -683,6 +683,7 @@ a {
     box-sizing: border-box;
   }
 }
+
 /* =========================================================
    FASES
    ========================================================= */
@@ -964,11 +965,8 @@ a {
 
 .field-row {
   display: grid;
-
   grid-template-columns: 1fr 1fr;
-
   gap: 12px;
-
   margin-bottom: 12px;
 }
 
@@ -997,29 +995,41 @@ a {
 .field input,
 .field select,
 .field textarea {
+
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 
   border: 1px solid var(--line);
-
   border-radius: var(--radius-small);
-
   padding: 10px 11px;
-
   font-size: 14px;
-
   font-family: inherit;
-
   background: var(--surface-soft);
-
   color: var(--ink);
-
   outline: none;
 
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease;
 }
-
+.field input[type="date"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+}
+.cobro-form input[type="date"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+}
 .field input:focus,
 .field select:focus,
 .field textarea:focus {

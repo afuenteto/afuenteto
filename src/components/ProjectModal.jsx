@@ -20,6 +20,8 @@ export default function ProjectModal({
     console.log('CLIENTES:', clientes)
  const [datos, setDatos] = useState({
   ...proyecto,
+  fechaInicio: proyecto.fechaInicio || '',
+  fechaEntrega: proyecto.fechaEntrega || '',
   cobros: proyecto.cobros || [],
   comisiones: proyecto.comisiones || [],
   imagenProyecto: proyecto.imagenProyecto || ''
@@ -27,11 +29,13 @@ export default function ProjectModal({
 useEffect(() => {
 
   setDatos({
-    ...proyecto,
-    cobros: proyecto.cobros || [],
-    comisiones: proyecto.comisiones || [],
-    imagenProyecto: proyecto.imagenProyecto || ''
-  })
+  ...proyecto,
+  fechaInicio: proyecto.fechaInicio || '',
+  fechaEntrega: proyecto.fechaEntrega || '',
+  cobros: proyecto.cobros || [],
+  comisiones: proyecto.comisiones || [],
+  imagenProyecto: proyecto.imagenProyecto || ''
+})
 
 }, [proyecto])
 const [nuevaTarea, setNuevaTarea] = useState('')
@@ -955,7 +959,12 @@ if (clienteExiste) {
         <div className="field-row">
           <div className="field">
             <label htmlFor="fechaInicio">Fecha de inicio</label>
-            <input id="fechaInicio" type="date" value={datos.fechaInicio} onChange={(e) => set('fechaInicio', e.target.value)} />
+            <input
+  id="fechaInicio"
+  type="date"
+  value={datos.fechaInicio || ''}
+  onChange={(e) => set('fechaInicio', e.target.value)}
+/>
           </div>
           <div className="field">
   <label htmlFor="fechaEntrega">
