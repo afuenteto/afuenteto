@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
+import { fechaLocal } from '../projectUtils.js'
 import { FASES, uid } from '../storage.js'
 import { supabase } from '../supabase.js'
+import { urlFirmada } from '../storageFiles.js'
 import ProjectHistory from './ProjectHistory.jsx'
 import ProjectImageCropper from './ProjectImageCropper.jsx'
 
@@ -11,13 +13,13 @@ export default function ProjectModal({
   setClientes,
   onOpenClient,
   onSave,
+  guardando = false,
   onDelete,
   onFinalize,
   onReopen,
   onClose,
   seccionInicial = null
 }) {
-    console.log('CLIENTES:', clientes)
  const [datos, setDatos] = useState({
   ...proyecto,
   fechaInicio: proyecto.fechaInicio || '',
@@ -57,6 +59,7 @@ const [nuevaComision, setNuevaComision] = useState({
   porcentaje: '',
   estado: 'pendiente'
 })
+const [subiendoPdf, setSubiendoPdf] = useState(false)
 const [subiendoComisionId, setSubiendoComisionId] = useState(null)
 const imagenInputRef = useRef(null)
 const [editorImagenSrc, setEditorImagenSrc] = useState('')
@@ -64,16 +67,12 @@ const [imagenPendiente, setImagenPendiente] = useState(null)
 const [imagenPendientePreview, setImagenPendientePreview] = useState('')
 const [subiendoImagen, setSubiendoImagen] = useState(false)
 
-useEffect(() => {
-  return () => {
-    if (editorImagenSrc?.startsWith('blob:')) {
-      URL.revokeObjectURL(editorImagenSrc)
-    }
-    if (imagenPendientePreview?.startsWith('blob:')) {
-      URL.revokeObjectURL(imagenPendientePreview)
-    }
-  }
-}, [editorImagenSrc, imagenPendientePreview])
+useEffect(() => () => {
+  if (editorImagenSrc?.startsWith('blob:')) URL.revokeObjectURL(editorImagenSrc)
+}, [editorImagenSrc])
+useEffect(() => () => {
+  if (imagenPendientePreview?.startsWith('blob:')) URL.revokeObjectURL(imagenPendientePreview)
+}, [imagenPendientePreview])
 
 const totalProyecto =
   Number(datos.honorariosDiseno || 0) +
@@ -274,7 +273,7 @@ useEffect(() => {
  async function subirImagenProyecto(blob) {
   if (!blob) return datos.imagenProyecto || ''
 
-  const nombreArchivo = `${usuario.id}/${datos.id}-${Date.now()}.webp`
+  const nombreArchivo = `${usuario.id}/${datos.id}/${Date.now()}.webp`
 
   const { error } = await supabase.storage
     .from('imagenes-proyectos')
@@ -286,42 +285,36 @@ useEffect(() => {
 
   if (error) throw error
 
-  const { data } = supabase.storage
-    .from('imagenes-proyectos')
-    .getPublicUrl(nombreArchivo)
-
-  return data.publicUrl
+  return {
+    path: nombreArchivo,
+    url: await urlFirmada('imagenes-proyectos', nombreArchivo)
+  }
 }
 
  async function subirPresupuesto(e) {
   const file = e.target.files?.[0]
-
-  if (!file) return
-  if (file.type !== 'application/pdf') {
-    alert('Selecciona un archivo PDF')
-    return
+  e.target.value = ''
+  if (!file || subiendoPdf) return
+  if (file.type !== 'application/pdf') { alert('Selecciona un archivo PDF'); return }
+  setSubiendoPdf(true)
+  try {
+    const nombreSeguro = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+    const nombreArchivo = `${usuario.id}/${datos.id}/${Date.now()}-${nombreSeguro}`
+    const { error } = await supabase.storage
+      .from('presupuestos')
+      .upload(nombreArchivo, file, {
+        contentType: file.type,
+        cacheControl: '3600',
+        upsert: false
+      })
+    if (error) throw error
+    const url = await urlFirmada('presupuestos', nombreArchivo)
+    setDatos(d => ({ ...d, presupuestoPdf: url, presupuestoPdfPath: nombreArchivo }))
+  } catch (error) {
+    console.error('ERROR SUPABASE PDF PROYECTO:', error)
+    alert(`No se pudo subir el PDF.\n\n${error.message || error}`)
   }
-
-  const nombreArchivo = `${datos.id}-${Date.now()}-${file.name}`
-
-  const { error } = await supabase.storage
-    .from('presupuestos')
-    .upload(nombreArchivo, file)
-
-if (error) {
-  console.log('ERROR SUPABASE PDF:', error)
-  alert(JSON.stringify(error))
-  return
-}
-
-  const { data } = supabase.storage
-    .from('presupuestos')
-    .getPublicUrl(nombreArchivo)
-
-  setDatos((d) => ({
-    ...d,
-    presupuestoPdf: data.publicUrl,
-  }))
+  finally { setSubiendoPdf(false) }
 }
 
   function set(campo, valor) {
@@ -338,7 +331,7 @@ if (error) {
   function alternarTarea(id) {
     set(
       'tareas',
-      datos.tareas.map((t) => (t.id === id ? { ...t, hecha: !t.hecha } : t))
+      datos.tareas.map((t) => (t.id === id ? { ...t, hecha: !t.hecha, fechaCompletada: !t.hecha ? fechaLocal() : '' } : t))
     )
   }
 
@@ -553,7 +546,7 @@ async function subirPresupuestoComision(id, file) {
 
   try {
     const nombreSeguro = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
-    const nombreArchivo = `comision-${datos.id}-${id}-${Date.now()}-${nombreSeguro}`
+    const nombreArchivo = `${usuario.id}/${datos.id}/comision-${id}-${Date.now()}-${nombreSeguro}`
 
     const { error } = await supabase.storage
       .from('presupuestos')
@@ -561,9 +554,7 @@ async function subirPresupuestoComision(id, file) {
 
     if (error) throw error
 
-    const { data } = supabase.storage
-      .from('presupuestos')
-      .getPublicUrl(nombreArchivo)
+    const url = await urlFirmada('presupuestos', nombreArchivo)
 
     setDatos((actual) => ({
       ...actual,
@@ -571,7 +562,8 @@ async function subirPresupuestoComision(id, file) {
         item.id === id
           ? {
               ...item,
-              presupuestoPdf: data.publicUrl,
+              presupuestoPdf: url,
+              presupuestoPdfPath: nombreArchivo,
               presupuestoPdfNombre: file.name
             }
           : item
@@ -609,7 +601,7 @@ ${error.message || error}`)
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!datos.nombre.trim() || subiendoImagen) return
+    if (!datos.nombre.trim() || subiendoImagen || guardando || subiendoComisionId || subiendoPdf) return
 
     setSubiendoImagen(true)
 
@@ -617,11 +609,12 @@ ${error.message || error}`)
       let datosAGuardar = { ...datos }
 
       if (imagenPendiente) {
-        const imagenProyecto = await subirImagenProyecto(imagenPendiente)
+        const imagenSubida = await subirImagenProyecto(imagenPendiente)
 
         datosAGuardar = {
           ...datosAGuardar,
-          imagenProyecto,
+          imagenProyecto: imagenSubida.url,
+          imagenProyectoPath: imagenSubida.path,
           historial: [
             ...(datosAGuardar.historial || []),
             {
@@ -652,11 +645,12 @@ const existeCliente = clientes.some(
     busquedaCliente.toLowerCase().trim()
 )
   return (
-    <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && !guardando && !subiendoImagen && !subiendoComisionId && !subiendoPdf && onClose()}>
       <form
         className={"modal" + (datos.estado === 'finalizado' ? " project-finalized-modal" : "")}
         onSubmit={handleSubmit}
       >
+        <fieldset className="modal-fields" disabled={guardando || subiendoImagen || Boolean(subiendoComisionId) || subiendoPdf}>
         {datos.estado === 'finalizado' && (
           <div className="finalized-watermark finalized-watermark-modal">FINALIZADO</div>
         )}
@@ -816,6 +810,8 @@ const nombreLimpio = busquedaCliente
   .replace(/\s+/g, ' ')
 
 
+if (!nombreLimpio) return
+
 const clienteExiste = clientes.find(
   (c) =>
     c.nombre.toLowerCase().trim() ===
@@ -845,7 +841,7 @@ if (clienteExiste) {
       .from('clientes')
       .insert({
         user_id: usuario.id,
-        nombre: busquedaCliente,
+        nombre: nombreLimpio,
         telefono: datos.telefono || '',
         email: datos.email || '',
         direccion: datos.direccion || ''
@@ -1062,6 +1058,18 @@ if (clienteExiste) {
     <option value="bloqueado">🔵 Bloqueado</option>
   </select>
 </div>
+<div className="field">
+  <label htmlFor="importancia">Importancia (1-10)</label>
+  <input
+    id="importancia"
+    type="number"
+    min="1"
+    max="10"
+    step="1"
+    value={datos.importancia ?? 5}
+    onChange={(e) => set('importancia', e.target.value)}
+  />
+</div>
         <div className="field-row">
           <div className="field">
             <label htmlFor="presupuestoTotal">Presupuesto total (€)</label>
@@ -1089,13 +1097,53 @@ if (clienteExiste) {
       value={datos.tipoProyecto}
       onChange={(e) => set('tipoProyecto', e.target.value)}
     >
-      <option>Vivienda</option>
-      <option>Restaurante</option>
-      <option>Hotel</option>
-      <option>Oficina</option>
-      <option>Comercio</option>
-      <option>Mobiliario</option>
-      <option>Otro</option>
+      <optgroup label="🏠 Residencial">
+        <option>Vivienda unifamiliar</option>
+        <option>Piso / apartamento</option>
+        <option>Reforma parcial</option>
+        <option>Reforma integral</option>
+        <option>Cocina / baño</option>
+        <option>Segunda residencia</option>
+      </optgroup>
+
+      <optgroup label="🏢 Contract / Hospitality">
+        <option>Oficina</option>
+        <option>Hotel</option>
+        <option>Restaurante</option>
+        <option>Cafetería / bar</option>
+        <option>Comercio / retail</option>
+        <option>Clínica / centro profesional</option>
+        <option>Local comercial</option>
+      </optgroup>
+
+      <optgroup label="🪑 Diseño y producto">
+        <option>Diseño de mobiliario</option>
+        <option>Diseño de piezas a medida</option>
+        <option>Ebanistería</option>
+        <option>Diseño de iluminación</option>
+        <option>Diseño de elementos especiales</option>
+      </optgroup>
+
+      <optgroup label="🏗️ Arquitectura e intervención">
+        <option>Obra nueva</option>
+        <option>Rehabilitación</option>
+        <option>Exterior / terrazas / jardines</option>
+        <option>Fachada</option>
+      </optgroup>
+
+      <optgroup label="🎨 Identidad y marca">
+        <option>Branding</option>
+        <option>Diseño gráfico</option>
+        <option>Imagen corporativa</option>
+        <option>Señalética</option>
+      </optgroup>
+
+      <optgroup label="Opciones anteriores">
+        <option>Vivienda</option>
+        <option>Comercio</option>
+        <option>Mobiliario</option>
+        <option>Otro</option>
+      </optgroup>
     </select>
   </div>
 </div>
@@ -1168,8 +1216,14 @@ if (clienteExiste) {
       document.getElementById('pdfPresupuesto').click()
     }
   >
-    📎 Subir presupuesto PDF
+    {subiendoPdf ? 'Subiendo PDF…' : '📎 Subir presupuesto PDF'}
   </button>
+
+  {subiendoPdf && (
+    <small className="mono" style={{ marginTop: '8px' }}>
+      Guardando archivo en el almacenamiento seguro…
+    </small>
+  )}
 
   {datos.presupuestoPdf && (
     <a
@@ -1691,15 +1745,15 @@ if (clienteExiste) {
             {!esNuevo && (
               <>
                 {datos.estado === 'finalizado' ? (
-                  <button type="button" className="btn btn-ghost" onClick={onReopen}>
+                  <button type="button" className="btn btn-ghost" disabled={guardando || subiendoImagen} onClick={onReopen}>
                     ↩ Reabrir proyecto
                   </button>
                 ) : (
-                  <button type="button" className="btn btn-ghost" onClick={onFinalize}>
+                  <button type="button" className="btn btn-ghost" disabled={guardando || subiendoImagen} onClick={onFinalize}>
                     ✓ Finalizar proyecto
                   </button>
                 )}
-                <button type="button" className="btn btn-ghost btn-danger" onClick={() => onDelete(datos.id)}>
+                <button type="button" className="btn btn-ghost btn-danger" disabled={guardando || subiendoImagen} onClick={() => onDelete(datos.id)}>
                   Eliminar proyecto
                 </button>
               </>
@@ -1723,8 +1777,8 @@ if (clienteExiste) {
   style={{ display: 'none' }}
   onChange={subirPresupuesto}
 />         
-           <button type="submit" className="btn btn-primary" disabled={subiendoImagen}>
-              {subiendoImagen ? 'Guardando imagen…' : 'Guardar'}
+           <button type="submit" className="btn btn-primary" disabled={guardando || subiendoImagen || Boolean(subiendoComisionId) || subiendoPdf}>
+              {guardando || subiendoImagen ? 'Guardando…' : 'Guardar'}
             </button>
           </div>
         </div>
@@ -1737,6 +1791,7 @@ if (clienteExiste) {
           />
         )}
      
+        </fieldset>
       </form>
     </div>
   )

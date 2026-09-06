@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import ProjectCard from './ProjectCard'
@@ -6,9 +5,9 @@ import ProjectCard from './ProjectCard'
 export default function SortableProjectCard({
   proyecto,
   onOpen,
-  onOpenTasks
+  onOpenTasks,
+  onOpenDelivery
 }) {
-  const [moviendo, setMoviendo] = useState(false)
 
   const {
     attributes,
@@ -34,6 +33,7 @@ export default function SortableProjectCard({
         proyecto={proyecto}
         onOpen={onOpen}
         onOpenTasks={onOpenTasks}
+        onOpenDelivery={onOpenDelivery}
       />
 
   <button

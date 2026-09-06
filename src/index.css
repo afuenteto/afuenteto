@@ -151,7 +151,6 @@ a {
 
   background: var(--bg);
 
-  animation: splashFade 1.5s ease forwards;
 }
 
 .splash-inner {
@@ -175,10 +174,12 @@ a {
   box-shadow:
     0 12px 35px rgba(0, 0, 0, 0.16);
 
+  will-change: opacity, transform;
+
   animation:
-    splashLogo 1.5s
+    splashLogo 2.4s
     cubic-bezier(.2, .8, .2, 1)
-    forwards;
+    infinite;
 }
 
 /* Ocultar cualquier texto que pudiera existir */
@@ -213,22 +214,6 @@ a {
 }
 
 /* ---------- Desaparición pantalla ---------- */
-
-@keyframes splashFade {
-  0% {
-    opacity: 1;
-  }
-
-  75% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-}
 
 /* =========================================================
    APLICACIÓN
@@ -393,6 +378,18 @@ a {
   border-color: #2c2c2c;
 }
 
+.btn-logout {
+  background: #7a1f1f;
+  border-color: #7a1f1f;
+  color: #fff;
+}
+
+.btn-logout:hover {
+  background: #5f1717;
+  border-color: #5f1717;
+  color: #fff;
+}
+
 .btn-ghost {
   border-color: transparent;
 
@@ -422,47 +419,55 @@ a {
    ========================================================= */
 
 .filters {
-  display: flex;
-
-  gap: 7px;
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 8px;
 
   margin-bottom: 22px;
+}
 
+.filter-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
   flex-wrap: wrap;
 }
 
 .chip {
-  border: 1px solid var(--line);
-
+  border: 0;
+  border-radius: 0;
   background: transparent;
-
-  padding: 7px 13px;
-
-  border-radius: 100px;
+  padding: 2px 14px;
 
   font-size: 12px;
   font-weight: 500;
 
-  color: var(--ink-soft);
+  color: #b1b1ad;
 
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .chip:hover {
-  border-color: #c9c9c3;
-
-  color: var(--ink);
+  color: #6f6f6a;
 }
 
 .chip.active {
-  background: var(--ink);
+  background: transparent;
+  color: #111;
+  font-weight: 600;
+}
 
-  border-color: var(--ink);
+.filter-row .chip + .chip {
+  border-left: 1px solid var(--line);
+}
 
-  color: #fff;
+@media (max-width: 700px) {
+  .chip {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 /* =========================================================
@@ -566,13 +571,72 @@ a {
 
 /* Ventana independiente de tareas */
 .tasks-modal {
-  max-width: 620px;
+  flex: 0 1 620px;
+  width: 620px;
+  max-width: calc(100vw - 32px);
+  min-width: 0;
+  margin-inline: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.tasks-modal,
+.tasks-modal * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .tasks-modal-summary {
   margin: -6px 0 18px;
   font-size: 12.5px;
   color: var(--ink-soft);
+}
+
+.delivery-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.delivery-modal .modal-head {
+  margin-bottom: 0;
+}
+
+.delivery-modal-project {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.delivery-modal-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.delivery-modal-details div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+}
+
+.delivery-modal-details span {
+  color: var(--ink-soft);
+  font-size: 10.5px;
+}
+
+.delivery-modal-details strong {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .delivery-modal-details {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .tasks-modal-list {
@@ -582,15 +646,33 @@ a {
 }
 
 .task-edit-row {
+
   display: grid;
-  grid-template-columns: auto 1fr auto;
+
+  grid-template-columns: auto minmax(0, 1fr);
+
   align-items: center;
+
   gap: 9px;
+
   padding: 9px 10px;
+
   background: var(--surface-soft);
+
   border: 1px solid var(--line);
+
   border-radius: var(--radius-small);
+
   transition: opacity 0.15s ease, background 0.15s ease;
+
+}
+
+.task-edit-row > button {
+
+  grid-column: 2;
+
+  justify-self: start;
+
 }
 
 .task-edit-row input[type='checkbox'] {
@@ -835,6 +917,17 @@ a {
   font-weight: 600;
 }
 
+.card-finance-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.card-finance-section .section-label {
+  margin-bottom: 0;
+}
+
 .budget-bar {
   height: 4px;
 
@@ -904,41 +997,46 @@ a {
 
 .overlay {
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-  inset: 0;
-
-  background: rgba(20, 20, 20, 0.52);
+  width: 100%;
+  height: 100vh;
 
   display: flex;
-
+  justify-content: center;
   align-items: flex-start;
 
-  justify-content: center;
-
   padding: 40px 16px;
-
   overflow-y: auto;
+  overflow-x: hidden;
 
+  box-sizing: border-box;
+
+  background: rgba(20, 20, 20, 0.52);
   z-index: 20;
-
   backdrop-filter: blur(4px);
 }
 
 .modal {
+
   position: relative;
   isolation: isolate;
-  width: 100%;
 
-  max-width: 620px;
+  width: 620px;
+
+  max-width: calc(100vw - 32px);
 
   padding: 28px;
+  box-sizing: border-box;
 
   background: var(--surface);
-
   border-radius: 14px;
-
   box-shadow:
     0 20px 70px rgba(0, 0, 0, 0.22);
+
 }
 
 .modal-head {
@@ -1111,13 +1209,42 @@ a {
    ========================================================= */
 
 .list-row {
-  display: flex;
-
-  align-items: center;
-
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
   gap: 8px;
-
   margin-bottom: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.list-row > div {
+  min-width: 0;
+  width: 100%;
+}
+
+.list-row input[type="text"] {
+  width: 100%;
+  min-width: 0;
+}
+
+.tasks-modal .list-row {
+  grid-template-columns: 17px minmax(0, 1fr) auto;
+}
+
+.task-options {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  width: 100%;
+}
+
+.task-options input,
+.task-options select {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  width: 0;
 }
 
 .list-row input[type='text'] {
@@ -1141,6 +1268,7 @@ a {
 
 .add-row input {
   flex: 1;
+  min-width: 0;
 
   border: 1px solid var(--line);
 
@@ -1272,8 +1400,7 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .splash,
-  .splash-inner,
-  .splash-logo {
+  .splash-inner {
     animation: none;
   }
 }
@@ -2054,13 +2181,14 @@ a {
   }
 
   .modal,
-  .panel {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    margin: 0 auto;
-  }
+.panel {
+
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0 auto;
+
+}
 
   .modal * ,
   .panel * {
@@ -2230,6 +2358,24 @@ a {
   font-size: 12px;
   font-weight: 700;
   color: var(--ink);
+}
+
+@media (max-width: 700px) {
+  .tasks-modal {
+    flex-basis: 100%;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .tasks-modal .task-options {
+    flex-wrap: wrap;
+  }
+
+  .tasks-modal .task-options input,
+  .tasks-modal .task-options select {
+    flex: 1 1 130px;
+    width: auto;
+  }
 }
 
 .commission-card-head {
@@ -2631,4 +2777,106 @@ input[type='date'] {
   margin: 8px 0 0;
   font-size: 12.5px;
   color: var(--ink-soft);
+}
+.app-footer {
+  margin-top: 45px;
+  padding: 20px 0 28px;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 10.5px;
+}
+
+.app-footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.app-footer-links button {
+  border: 0;
+  background: none;
+  padding: 0 18px;
+  font: inherit;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.app-footer-links button:first-child {
+  padding-left: 0;
+}
+
+.app-footer-links button:last-child {
+  padding-right: 0;
+}
+
+.app-footer-links button + button {
+  border-left: 1px solid var(--line);
+}
+
+.app-footer-links button:hover {
+  color: var(--ink);
+}
+
+.app-footer-copy {
+  font-size: 10px;
+}
+
+.footer-info-modal {
+  max-width: 620px;
+}
+
+.footer-info-content {
+  display: grid;
+  gap: 12px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.footer-info-content p {
+  margin: 0;
+}
+
+.footer-contact-form {
+  display: grid;
+  gap: 8px;
+}
+
+.footer-contact-intro {
+  margin: 0 0 8px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.footer-contact-form label {
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.footer-contact-form input,
+.footer-contact-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.footer-contact-submit {
+  justify-self: start;
+  margin-top: 8px;
+}
+
+.app-footer-logout {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+.modal-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { fechaLocal } from '../projectUtils.js'
 import { uid } from '../storage.js'
 
 export default function TasksModal({
@@ -28,7 +29,7 @@ function cambiarEstado(id) {
         ...t,
         hecha: nuevaEstado,
         fechaCompletada: nuevaEstado
-          ? new Date().toISOString().split('T')[0]
+          ? fechaLocal()
           : ''
       }
 
@@ -87,11 +88,12 @@ function cambiarEstado(id) {
     <div
       className="overlay"
       onMouseDown={(e) =>
-        e.target === e.currentTarget && onClose()
+        e.target === e.currentTarget && !guardando && onClose()
       }
     >
 
-      <div className="modal">
+      <div className="modal tasks-modal">
+        <fieldset className="modal-fields" disabled={guardando}>
 
 
         <div className="modal-head">
@@ -331,6 +333,7 @@ function cambiarEstado(id) {
         </div>
 
 
+        </fieldset>
       </div>
 
     </div>

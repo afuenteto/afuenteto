@@ -34,7 +34,7 @@ export default function StudioToday({
   const tareasUrgentes = tareasPendientes.filter((item) => {
 
     const dias = diasHasta(
-      item.proyecto.fechaEntrega
+      item.fecha || item.proyecto.fechaEntrega
     )
 
     return dias !== null && dias <= 7

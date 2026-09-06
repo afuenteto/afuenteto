@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { diasHasta } from '../storage.js'
 
 export default function TasksPanel({
   proyectos,
@@ -7,7 +8,7 @@ export default function TasksPanel({
 }) {
 
   const [confirmando, setConfirmando] = useState(null)
-  const [completadas, setCompletadas] = useState([])
+  const [guardando, setGuardando] = useState(false)
 
 
   const tareas = []
@@ -31,77 +32,19 @@ export default function TasksPanel({
   })
 
 
-  // Ordenar por fecha de entrega más cercana
-  tareas.sort((a, b) => {
+  tareas.sort((a, b) =>
+    (diasHasta(a.fecha || a.proyecto.fechaEntrega) ?? Infinity) -
+    (diasHasta(b.fecha || b.proyecto.fechaEntrega) ?? Infinity))
 
-    const diasA = a.proyecto.fechaEntrega
-      ? Math.ceil(
-          (
-            new Date(a.proyecto.fechaEntrega) -
-            new Date()
-          ) /
-          (1000 * 60 * 60 * 24)
-        )
-      : 9999
-
-
-    const diasB = b.proyecto.fechaEntrega
-      ? Math.ceil(
-          (
-            new Date(b.proyecto.fechaEntrega) -
-            new Date()
-          ) /
-          (1000 * 60 * 60 * 24)
-        )
-      : 9999
-
-
-    return diasA - diasB
-
-  })
-
-
-
-  function completar(tarea) {
-
-    setCompletadas([
-      ...completadas,
-      tarea.id
-    ])
-
-
-    setTimeout(() => {
-
-      onCompleteTask(
-        tarea.proyecto.id,
-        tarea.id
-      )
-
-      setConfirmando(null)
-
-    }, 700)
-
+  async function completar(tarea) {
+    if (guardando) return
+    setGuardando(true)
+    try {
+      if (await onCompleteTask(tarea.proyecto.id, tarea.id)) setConfirmando(null)
+    } finally { setGuardando(false) }
   }
 
-
-
-  function diasEntrega(fecha) {
-
-    if (!fecha) return null
-
-    const dias = Math.ceil(
-      (
-        new Date(fecha) -
-        new Date()
-      ) /
-      (1000 * 60 * 60 * 24)
-    )
-
-    return dias
-
-  }
-
-
+  const diasEntrega = diasHasta
 
   return (
 
@@ -150,15 +93,8 @@ export default function TasksPanel({
         {tareas.map((tarea) => (
 
           <div
-            key={tarea.id}
-            className={
-              'panel-item ' +
-              (
-                completadas.includes(tarea.id)
-                  ? 'task-completed'
-                  : ''
-              )
-            }
+            key={tarea.proyecto.id + ":" + tarea.id}
+            className="panel-item"
           >
 
 
@@ -166,7 +102,7 @@ export default function TasksPanel({
               className="task-button"
               onClick={() =>
                 setConfirmando(
-                  confirmando?.id === tarea.id
+                  confirmando?.id === tarea.id && confirmando?.proyecto.id === tarea.proyecto.id
                     ? null
                     : tarea
                 )
@@ -200,7 +136,7 @@ export default function TasksPanel({
 
 
 
-            {confirmando?.id === tarea.id && (
+            {confirmando?.id === tarea.id && confirmando?.proyecto.id === tarea.proyecto.id && (
 
               <div className="task-confirm-inline">
 
@@ -225,6 +161,7 @@ export default function TasksPanel({
 
                   <button
                     className="btn btn-primary"
+                    disabled={guardando}
                     onClick={() =>
                       completar(tarea)
                     }

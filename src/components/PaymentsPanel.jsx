@@ -78,7 +78,7 @@ export default function PaymentsPanel({
             key={item.id}
             className="panel-item"
             onClick={() =>
-              onOpen(item.proyecto)
+              onOpen(item.proyecto, 'economia')
             }
           >
 

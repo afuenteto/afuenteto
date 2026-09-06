@@ -4,6 +4,9 @@ import { supabase } from '../supabase.js'
 
 export default function ClientModal({
   cliente,
+  usuario,
+  clientes = [],
+  onClientUpdated,
   proyectos,
   setClientes,
   onDeleteClient,
@@ -12,6 +15,7 @@ export default function ClientModal({
 }) {
 
 
+  const [guardando, setGuardando] = useState(false)
   const [editando, setEditando] = useState(false)
   const [confirmarBorrado, setConfirmarBorrado] = useState(false)
 
@@ -71,65 +75,41 @@ export default function ClientModal({
 
 
   async function guardarCliente() {
-
-    const { error } =
-      await supabase
-        .from('clientes')
-        .update(datosCliente)
-        .eq('id', cliente.id)
-
-
-    if (error) {
-
-      alert(error.message)
-      return
-
+    if (!usuario || guardando) return
+    const nombre = datosCliente.nombre.trim().replace(/\s+/g, ' ')
+    if (!nombre) { alert('El nombre del cliente es obligatorio.'); return }
+    if (clientes.some(c => c.id !== cliente.id && c.nombre.trim().toLowerCase() === nombre.toLowerCase())) {
+      alert('Ya existe un cliente con ese nombre.'); return
     }
-
-
-    setClientes((prev) =>
-      prev.map((c) =>
-        c.id === cliente.id
-          ? {
-              ...c,
-              ...datosCliente
-            }
-          : c
-      )
-    )
-
-
-    if (cliente.nombre !== datosCliente.nombre) {
-
-      const { error: errorProyectos } =
-        await supabase
-          .from('proyectos')
-          .update({
-            cliente: datosCliente.nombre
-          })
-          .eq('cliente', cliente.nombre)
-
-
-      if (errorProyectos) {
-
-        console.error(
-          'Error actualizando proyectos:',
-          errorProyectos
-        )
-
+    setGuardando(true)
+    const actualizado = { ...cliente, ...datosCliente, nombre }
+    try {
+      // Renombrar proyectos primero; si falla la ficha, restaurar su asociación.
+      const renombrar = async (anterior, siguiente) => {
+        const { error } = await supabase.from('proyectos').update({ cliente: siguiente })
+          .eq('cliente', anterior).eq('user_id', usuario.id)
+        if (error) throw error
       }
-
-    }
-
-
-    cliente.nombre = datosCliente.nombre
-    cliente.telefono = datosCliente.telefono
-    cliente.email = datosCliente.email
-    cliente.direccion = datosCliente.direccion
-
-
-    setEditando(false)
-
+      const cambiaNombre = cliente.nombre !== nombre
+      if (cambiaNombre) await renombrar(cliente.nombre, nombre)
+      try {
+        const { error } = await supabase.from('clientes')
+          .update({ ...datosCliente, nombre }).eq('id', cliente.id)
+          .eq('user_id', usuario.id).select('id').single()
+        if (error) throw error
+      } catch (error) {
+        if (cambiaNombre) {
+          try { await renombrar(nombre, cliente.nombre) }
+          catch { throw new Error('No se pudo guardar ni restaurar la asociación de proyectos. Recarga y revisa el cliente.') }
+        }
+        throw error
+      }
+      setClientes(prev => prev.map(c => c.id === cliente.id ? actualizado : c))
+      onClientUpdated(actualizado, cliente.nombre)
+      setDatosCliente({ ...datosCliente, nombre })
+      setEditando(false)
+    } catch (error) { alert('No se pudo guardar el cliente: ' + error.message) }
+    finally { setGuardando(false) }
   }
      return (
 
@@ -266,6 +246,7 @@ export default function ClientModal({
   <button
     className="btn"
     type="button"
+    disabled={guardando}
     onClick={guardarCliente}
   >
     💾 Guardar cliente

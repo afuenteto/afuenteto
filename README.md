@@ -1,63 +1,35 @@
-# Panel de proyectos de interiorismo
+# Afuenteto · Panel de proyectos
 
-App personal para ver de un vistazo qué proyectos tienes activos, en qué fase están, su presupuesto, tareas pendientes y proveedores.
+Aplicación React y Vite para gestionar proyectos de interiorismo, clientes, tareas, cobros, comisiones y archivos adjuntos.
 
-## ⚠️ Importante: dónde se guardan los datos
+Los datos se guardan en **Supabase**, asociados al usuario autenticado. Las imágenes se suben al bucket imagenes-proyectos y los PDF a presupuestos. La aplicación utiliza sus URL públicas. No incluye exportación/importación de copias locales.
 
-Esta app guarda todo en el **`localStorage` del navegador**, tal y como se pidió (sin cuentas, sin servidor). Esto tiene una consecuencia real que conviene tener clara antes de usarla en serio:
+## Desarrollo
 
-- Los datos **solo existen en el navegador y dispositivo donde los introduces**. Si abres la app en el móvil, no verás los proyectos que creaste en el ordenador.
-- Si borras el historial/datos de navegación de ese navegador, **se pierden los proyectos**.
-- No hay copia en la nube ni en GitHub: subir el código a GitHub no sube tus datos (y así debe ser, por privacidad).
+Utiliza Node.js 24, la misma versión configurada en el workflow de publicación.
 
-Por eso la app incluye botones de **"Exportar copia"** (descarga un `.json` con todos tus proyectos) e **"Importar"** (para restaurar esa copia, o pasar los datos a otro dispositivo/navegador). Recomiendo exportar una copia de vez en cuando, especialmente antes de cambiar de navegador u ordenador.
+1. Instala las dependencias con npm ci.
+2. Arranca el entorno con npm run dev.
+3. Abre la dirección que muestra Vite.
 
-Si en el futuro quieres que los datos se sincronicen solos entre dispositivos, se puede añadir una base de datos gratuita (p. ej. Supabase); no está incluido ahora porque se pidió explícitamente la opción sencilla sin cuentas.
+La configuración del cliente Supabase está en src/supabase.js.
 
-## Qué incluye
+## Comprobaciones
 
-- **Panel principal**: tarjetas con nombre, cliente, fase (Diseño → Presupuesto → Ejecución → Entrega), barra de presupuesto gastado/total, tareas pendientes y aviso si la entrega está próxima o vencida.
-- **Ficha de proyecto**: nombre, cliente, teléfono, email, dirección, fecha de inicio, fecha de entrega estimada, presupuesto, notas.
-- **Tareas** por proyecto, con checkbox de hecho/pendiente.
-- **Proveedores** por proyecto, con contacto.
-- Filtro rápido por fase.
-- Exportar/importar copia de seguridad en `.json`.
+- npm test: conservación de campos, validación numérica, ordenación con filtros, fechas locales y renderizado de 15 componentes con proyectos vacíos y con datos.
+- npm run build: compilación de producción.
+- npm run preview: sirve la compilación para comprobarla en el navegador.
 
-## Desarrollo local
+Las pruebas no sustituyen la comprobación de sesión, permisos y guardado contra una instancia real de Supabase.
 
-Necesitas [Node.js](https://nodejs.org) instalado (versión 18 o superior).
+## Base de datos y publicación
 
-```bash
-npm install
-npm run dev
-```
+La aplicación utiliza las tablas proyectos, clientes y perfil_estudio. El repositorio contiene migraciones parciales para comisiones y proyectos finalizados; no incluye el esquema completo ni las políticas de acceso para crear una instalación desde cero. Los filtros de usuario del frontend complementan las políticas de Supabase, pero no las sustituyen.
 
-Abre la URL que te indique la terminal (normalmente `http://localhost:5173`).
+El workflow .github/workflows/deploy.yml genera y publica dist en GitHub Pages. Las rutas relativas permiten desplegar en una subcarpeta. El manifiesto y los iconos se sirven desde public.
 
-## Subir a GitHub y publicar en GitHub Pages
+La recuperación de contraseña requiere que la URL de la aplicación esté autorizada entre las redirecciones de Supabase Authentication. Al volver desde el correo, la aplicación permite introducir una nueva contraseña.
 
-1. Crea un repositorio nuevo en GitHub (puede ser privado o público).
-2. Desde esta carpeta:
+Las operaciones que cambian el nombre de un cliente y sus proyectos utilizan varias consultas con restauración en caso de fallo. Para garantizar atomicidad ante interrupciones de red, sería necesario trasladarlas a una transacción en la base de datos. La ordenación también se guarda mediante varias consultas; ante un fallo parcial, la aplicación vuelve a cargar el orden persistido.
 
-   ```bash
-   git init
-   git add .
-   git commit -m "Primera versión del panel de proyectos"
-   git branch -M main
-   git remote add origin https://github.com/TU-USUARIO/TU-REPO.git
-   git push -u origin main
-   ```
-
-3. En GitHub, ve a **Settings → Pages** de tu repositorio y en "Build and deployment" selecciona **Source: GitHub Actions**.
-4. El workflow incluido (`.github/workflows/deploy.yml`) se ejecutará automáticamente en cada `push` a `main` y publicará la app. Al cabo de 1-2 minutos, tu app estará en:
-
-   ```
-   https://TU-USUARIO.github.io/TU-REPO/
-   ```
-
-No hace falta tocar ningún archivo de configuración: `vite.config.js` ya usa rutas relativas para que funcione en esa URL con subcarpeta.
-
-## Notas
-
-- No he podido probarlo en un navegador real (Safari/Chrome/Firefox) dentro de este entorno; sí he verificado que el proyecto compila sin errores (`npm run build`). Conviene que hagas una prueba rápida en local antes de darlo por bueno para uso diario.
-- Si un proyecto lleva mucho tiempo sin actividad y quieres marcarlo como cerrado sin borrarlo, puedes simplemente dejarlo en fase "Entrega".
+Los botones legales y de contacto del pie todavía no tienen contenido asociado.

@@ -1,7 +1,7 @@
 import PhaseRail from './PhaseRail.jsx'
 import { diasHasta, formatearFecha } from '../storage.js'
 
-export default function ProjectCard({ proyecto, onOpen, onOpenTasks }) {
+export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDelivery }) {
   const tareas = Array.isArray(proyecto.tareas) ? proyecto.tareas : []
   const tareasPendientes = tareas.filter((t) => !t.hecha).length
 
@@ -29,6 +29,30 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks }) {
       )
 
   const pendienteCobro = valorProyecto - totalCobrado
+
+  const comisiones = Array.isArray(proyecto.comisiones)
+    ? proyecto.comisiones
+    : []
+
+  const importeComision = (comision) =>
+    Number(comision.presupuesto || 0) * Number(comision.porcentaje || 0) / 100
+
+  const totalComisiones = comisiones.reduce(
+    (total, comision) => total + importeComision(comision),
+    0
+  )
+
+  const comisionesCobradas = comisiones
+    .filter((comision) => comision.estado === 'cobrada')
+    .reduce((total, comision) => total + importeComision(comision), 0)
+
+  const comisionesPrevistas = comisiones
+    .filter((comision) => comision.estado === 'previsto')
+    .reduce((total, comision) => total + importeComision(comision), 0)
+
+  const comisionesPendientes = comisiones
+    .filter((comision) => !['cobrada', 'previsto'].includes(comision.estado))
+    .reduce((total, comision) => total + importeComision(comision), 0)
 
   const pct =
     valorProyecto > 0
@@ -103,11 +127,17 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks }) {
           </span>
         )}
 
-        {!finalizado && !vencido && urgente && (
-          <span className="tag-urgent">
-            Entrega en {dias}d
-          </span>
-        )}
+{!finalizado && !vencido && urgente && (
+  <button
+    className="tag-urgent"
+    onClick={(e) => {
+      e.stopPropagation()
+        onOpenDelivery(proyecto)
+    }}
+  >
+    Entrega en {dias}d
+  </button>
+)}
       </div>
 
       <p className={tieneImagen ? "card-client card-client-image" : "card-client"}>
@@ -159,23 +189,51 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks }) {
         </div>
       )}
 
+      {comisiones.length > 0 && (
+        <div className="card-finance-section">
+          <div className="section-label">Comisiones</div>
+
+          <div className="card-stats">
+            <span>
+              Total:{' '}
+              <strong>{totalComisiones.toLocaleString('es-ES')} €</strong>
+            </span>
+            <span>
+              Cobradas: {comisionesCobradas.toLocaleString('es-ES')} €
+            </span>
+          </div>
+
+          <div className="card-stats">
+            <span>
+              Pendiente: {comisionesPendientes.toLocaleString('es-ES')} €
+            </span>
+            <span>
+              Previsto: {comisionesPrevistas.toLocaleString('es-ES')} €
+            </span>
+          </div>
+        </div>
+      )}
+
       <div className="card-footer">
         <span>
           Inicio: {formatearFecha(proyecto.fechaInicio)}
         </span>
 
-        {tareas.length > 0 && (
-          <button
-            type="button"
-            className="tasks-open-btn"
-            onClick={onOpenTasks}
-          >
-            Tareas
-            {tareasPendientes > 0
-              ? ` · ${tareasPendientes} pendiente${tareasPendientes !== 1 ? 's' : ''}`
-              : ' · completadas'}
-          </button>
-        )}
+      {tareas.length > 0 && (
+  <button
+    type="button"
+    className="tasks-open-btn"
+    onClick={(e) => {
+      e.stopPropagation()
+      onOpenTasks(proyecto)
+    }}
+  >
+    Tareas
+    {tareasPendientes > 0
+      ? ` · ${tareasPendientes} pendiente${tareasPendientes !== 1 ? 's' : ''}`
+      : ' · completadas'}
+  </button>
+)}
       </div>
     </div>
   )
