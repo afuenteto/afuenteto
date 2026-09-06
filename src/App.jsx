@@ -1336,7 +1336,15 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   </div>
 
   <div className="app-footer-copy">
-    © 2026 Fuente Studio · Gestión de proyectos · Beusual v1.0
+    © 2026 Fuente Studio · Gestión de proyectos ·{' '}
+    <a
+      href="https://www.beusual.com/"
+      target="_blank"
+      rel="noreferrer"
+    >
+      Beusual
+    </a>{' '}
+    v1.0
   </div>
 
   <div className="app-footer-logout">
