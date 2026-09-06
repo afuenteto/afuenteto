@@ -80,6 +80,7 @@ body {
     'Helvetica Neue',
     Arial,
     sans-serif;
+  font-weight: 400;
 
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -101,7 +102,7 @@ h6,
     sans-serif;
 
   font-weight: 600;
-  letter-spacing: -0.025em;
+  letter-spacing: 0;
 }
 
 .mono {
@@ -109,6 +110,14 @@ h6,
     'IBM Plex Mono',
     ui-monospace,
     monospace;
+}
+
+strong,
+.card-stats strong,
+.today-item strong,
+.delivery-modal-details strong,
+.panel-item b {
+  font-weight: 500;
 }
 
 button,
@@ -586,6 +595,8 @@ a {
   margin-inline: auto;
   overflow-x: hidden;
   box-sizing: border-box;
+  background: #f1f1ef;
+  color: #3f3f3b;
 }
 
 .tasks-modal,
@@ -605,6 +616,8 @@ a {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  background: #f1f1ef;
+  color: #3f3f3b;
 }
 
 .delivery-modal .modal-head {
@@ -613,7 +626,7 @@ a {
 
 .delivery-modal-project {
   margin: 0;
-  color: var(--ink-soft);
+  color: #666660;
 }
 
 .delivery-modal-details {
@@ -922,7 +935,7 @@ a {
 .card-stats strong {
   color: var(--ink);
 
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .card-finance-section {
@@ -1642,7 +1655,7 @@ a {
   padding: 0;
   cursor: pointer;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .today-counter:hover {
@@ -1720,7 +1733,8 @@ a {
 }
 
 .panel {
-  background: white;
+  background: #f1f1ef;
+  color: #3f3f3b;
   width: min(600px, 90vw);
   max-height: 80vh;
   overflow-y: auto;
@@ -1737,7 +1751,7 @@ a {
 
 .panel-item {
   width: 100%;
-  background: #fff3a6;
+  background: #e7e7e3;
   border: none;
   border-radius: 8px;
   padding: 14px 16px;
@@ -2835,14 +2849,17 @@ input[type='date'] {
 
 .footer-info-modal {
   max-width: 620px;
+  background: #f1f1ef;
+  color: #3f3f3b;
 }
 
 .footer-info-content {
   display: grid;
   gap: 12px;
-  color: var(--ink-soft);
+  color: #4f4f4a;
   font-size: 13px;
   line-height: 1.6;
+  text-align: justify;
 }
 
 .footer-info-content p {
@@ -2851,14 +2868,15 @@ input[type='date'] {
 
 .footer-contact-form {
   display: grid;
-  gap: 8px;
+  gap: 16px;
 }
 
 .footer-contact-intro {
   margin: 0 0 8px;
-  color: var(--ink-soft);
+  color: #4f4f4a;
   font-size: 13px;
   line-height: 1.5;
+  text-align: justify;
 }
 
 .footer-contact-form label {
@@ -2870,11 +2888,34 @@ input[type='date'] {
 .footer-contact-form textarea {
   width: 100%;
   box-sizing: border-box;
+  border: 0;
+  border-bottom: 1px dotted #555550;
+  border-radius: 0;
+  margin-top: -8px;
+  padding: 3px 2px 5px;
+  background: #f1f1ef;
+  color: #111;
+  outline: none;
+}
+
+.footer-contact-form input:focus,
+.footer-contact-form textarea:focus {
+  border-bottom-color: #111;
+  box-shadow: 0 1px 0 #111;
 }
 
 .footer-contact-submit {
   justify-self: start;
   margin-top: 8px;
+  background: #5f1717;
+  border-color: #5f1717;
+  color: #fff;
+}
+
+.footer-contact-submit:hover {
+  background: #481111;
+  border-color: #481111;
+  color: #fff;
 }
 
 .app-footer-logout {
