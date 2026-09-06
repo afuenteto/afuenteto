@@ -1,3 +1,4 @@
+import { t as translateUI } from '../i18n.js'
 import { FASES } from '../storage.js'
 
 export default function PhaseRail({ fase }) {
@@ -18,7 +19,7 @@ export default function PhaseRail({ fase }) {
                 (i < idx ? ' done' : '') +
                 (i === idx ? ' current' : '')
               }
-              title={f}
+              title={translateUI(f)}
             />
           ))}
         </div>
@@ -26,7 +27,7 @@ export default function PhaseRail({ fase }) {
       <div className="phase-labels">
         {FASES.map((f, i) => (
           <span key={f} className={i === idx ? 'active' : ''}>
-            {f}
+            {translateUI(f)}
           </span>
         ))}
       </div>

@@ -1,3 +1,4 @@
+import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 import { diasHasta } from '../storage.js'
 
@@ -125,11 +126,7 @@ export default function StudioDashboard({
           setMostrarResumen(!mostrarResumen)
         }
         style={{cursor:'pointer'}}
-      >
-
-        Resumen del estudio
-
-        <span style={{float:'right'}}>
+      >{translateUI("Resumen del estudio")}<span style={{float:'right'}}>
           {mostrarResumen ? '−' : '+'}
         </span>
 
@@ -146,45 +143,37 @@ export default function StudioDashboard({
 
 
         <div className="field">
-          <label>
-            Valor contratado
-          </label>
+          <label>{translateUI("Valor contratado")}</label>
 
           <input
             readOnly
-            value={`${valorTotal.toLocaleString('es-ES')} €`}
+            value={`${valorTotal.toLocaleString(getLocale())} €`}
           />
         </div>
 
 
         <div className="field">
-          <label>
-            Total cobrado
-          </label>
+          <label>{translateUI("Total cobrado")}</label>
 
           <input
             readOnly
-            value={`${cobradoTotal.toLocaleString('es-ES')} €`}
+            value={`${cobradoTotal.toLocaleString(getLocale())} €`}
           />
         </div>
 
 
         <div className="field">
-          <label>
-            Pendiente de cobro
-          </label>
+          <label>{translateUI("Pendiente de cobro")}</label>
 
           <input
             readOnly
-            value={`${pendienteTotal.toLocaleString('es-ES')} €`}
+            value={`${pendienteTotal.toLocaleString(getLocale())} €`}
           />
         </div>
 
 
         <div className="field">
-          <label>
-            Proyectos activos
-          </label>
+          <label>{translateUI("Proyectos activos")}</label>
 
           <input
             readOnly
@@ -194,9 +183,7 @@ export default function StudioDashboard({
 
 
         <div className="field">
-          <label>
-            Clientes registrados
-          </label>
+          <label>{translateUI("Clientes registrados")}</label>
 
           <input
             readOnly
@@ -205,26 +192,26 @@ export default function StudioDashboard({
         </div>
 
         <div className="field">
-          <label>Comisiones generadas</label>
+          <label>{translateUI("Comisiones generadas")}</label>
           <input
             readOnly
-            value={`${resumenComisiones.generadas.toLocaleString('es-ES')} €`}
+            value={`${resumenComisiones.generadas.toLocaleString(getLocale())} €`}
           />
         </div>
 
         <div className="field">
-          <label>Comisiones cobradas</label>
+          <label>{translateUI("Comisiones cobradas")}</label>
           <input
             readOnly
-            value={`${resumenComisiones.cobradas.toLocaleString('es-ES')} €`}
+            value={`${resumenComisiones.cobradas.toLocaleString(getLocale())} €`}
           />
         </div>
 
         <div className="field">
-          <label>Comisiones pendientes</label>
+          <label>{translateUI("Comisiones pendientes")}</label>
           <input
             readOnly
-            value={`${resumenComisiones.pendientes.toLocaleString('es-ES')} €`}
+            value={`${resumenComisiones.pendientes.toLocaleString(getLocale())} €`}
           />
         </div>
 
@@ -233,9 +220,7 @@ export default function StudioDashboard({
 
 
 
-      <div className="section-label dashboard-section-heading">
-        ⚠️ Atención
-      </div>
+      <div className="section-label dashboard-section-heading">{translateUI("⚠️ Atención")}</div>
 
 
 
@@ -247,9 +232,7 @@ export default function StudioDashboard({
           onClick={onOpenTasks}
         >
 
-          <label>
-            🔴 Tareas pendientes
-          </label>
+          <label>{translateUI("🔴 Tareas pendientes")}</label>
 
           <input
             readOnly
@@ -265,9 +248,7 @@ export default function StudioDashboard({
           onClick={onOpenDeliveries}
         >
 
-          <label>
-            📅 Entregas previstas
-          </label>
+          <label>{translateUI("📅 Entregas previstas")}</label>
 
           <input
             readOnly
@@ -283,9 +264,7 @@ export default function StudioDashboard({
           onClick={onOpenPayments}
         >
 
-          <label>
-            💰 Cobros pendientes
-          </label>
+          <label>{translateUI("💰 Cobros pendientes")}</label>
 
           <input
             readOnly
@@ -300,9 +279,7 @@ export default function StudioDashboard({
 
 
 
-      <div className="section-label dashboard-section-heading">
-        Proyectos por fase
-      </div>
+      <div className="section-label dashboard-section-heading">{translateUI("Proyectos por fase")}</div>
 
 
 
@@ -321,7 +298,7 @@ export default function StudioDashboard({
             >
 
               <label>
-                {fase}
+                {translateUI(fase)}
               </label>
 
               <input
@@ -344,13 +321,11 @@ export default function StudioDashboard({
         onClick={onShowAll}
       >
 
-        <label>
-          Ver todos los proyectos
-        </label>
+        <label>{translateUI("Ver todos los proyectos")}</label>
 
         <input
           readOnly
-          value="Todos"
+          value={translateUI("Todos")}
         />
 
       </div>

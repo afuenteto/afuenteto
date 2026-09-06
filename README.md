@@ -14,6 +14,14 @@ Utiliza Node.js 24, la misma versión configurada en el workflow de publicación
 
 La configuración del cliente Supabase está en src/supabase.js.
 
+## Idiomas
+
+El selector **Idioma / Language**, situado al final de la aplicación a la izquierda, permite cambiar entre 20 idiomas. Con una sesión iniciada, el botón **Salir** aparece a su derecha en la misma fila. El selector también está disponible antes de iniciar sesión. La selección se conserva en este navegador y se sincroniza entre sus pestañas. Español sigue siendo el idioma inicial. Árabe y urdu utilizan escritura de derecha a izquierda; fechas y números se adaptan al idioma. Los importes siguen expresados en euros.
+
+Los diccionarios de `src/locales` se incluyen en la compilación: no se envían proyectos, nombres ni documentos a servicios de traducción. Los datos escritos por el usuario y los textos del historial ya guardados conservan su contenido original. No requiere ninguna migración de Supabase.
+
+Las traducciones parten de una traducción automática, con revisión de terminología del catálogo inglés; conviene una revisión nativa antes de una publicación comercial. Para actualizar los catálogos, añade las mismas claves a `es.json` y `en.json` y ejecuta `node scripts/translate-locales.mjs` (requiere conexión y envía solo los textos de interfaz del catálogo inglés a Google). Es posible limitarlo a idiomas concretos, por ejemplo `node scripts/translate-locales.mjs fr de`. Revisa los resultados y ejecuta `npm test`.
+
 ## Comprobaciones
 
 - npm test: conservación de campos, validación numérica, ordenación con filtros, fechas locales y renderizado de 15 componentes con proyectos vacíos y con datos.

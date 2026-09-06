@@ -1,4 +1,5 @@
-import { diasHasta } from '../storage.js'
+import { t as translateUI, formatRelativeDays } from '../i18n.js'
+import { diasHasta, formatearFecha } from '../storage.js'
 
 export default function DeliveriesPanel({
   proyectos,
@@ -41,9 +42,7 @@ export default function DeliveriesPanel({
 
         <div className="panel-head">
 
-          <h2 className="serif">
-            📅 Entregas próximas
-          </h2>
+          <h2 className="serif">{translateUI("📅 Entregas próximas")}</h2>
 
           <button
             className="icon-btn"
@@ -58,9 +57,7 @@ export default function DeliveriesPanel({
 
         {entregas.length === 0 && (
 
-          <p className="mono">
-            No hay entregas previstas.
-          </p>
+          <p className="mono">{translateUI("No hay entregas previstas.")}</p>
 
         )}
 
@@ -81,23 +78,18 @@ export default function DeliveriesPanel({
             </strong>
 
 
-            <span>
-              Cliente: {proyecto.cliente || 'Sin cliente'}
+            <span>{translateUI("Cliente: ")}{proyecto.cliente || translateUI("Sin cliente")}
             </span>
 
 
-            <span>
-              📅 Entrega:
-              {' '}
-              {proyecto.fechaEntrega}
+            <span>{translateUI("📅 Entrega:")}{' '}
+              {formatearFecha(proyecto.fechaEntrega)}
             </span>
 
 
-            <b>
-              ⏳ Quedan {diasHasta(
+            <b>⏳ {formatRelativeDays(diasHasta(
                 proyecto.fechaEntrega
-              )} días
-            </b>
+              ))}</b>
 
 
           </button>

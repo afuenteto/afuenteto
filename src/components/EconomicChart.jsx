@@ -1,3 +1,4 @@
+import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 
 import {
@@ -78,34 +79,34 @@ export default function EconomicChart({ proyectos }) {
 
   const datos = [
     {
-      nombre: 'Cobrado',
+      nombre: "Cobrado",
       importe: cobrado
     },
     {
-      nombre: 'Previsto',
+      nombre: "Previsto",
       importe: previsto
     },
     {
-      nombre: 'Pendiente',
+      nombre: "Pendiente",
       importe: total - cobrado
     },
     {
-      nombre: 'Total',
+      nombre: "Total",
       importe: total
     }
   ]
 
   const datosComisiones = [
     {
-      nombre: 'Generadas',
+      nombre: "Generadas",
       importe: comisiones.total
     },
     {
-      nombre: 'Cobradas',
+      nombre: "Cobradas",
       importe: comisiones.cobradas
     },
     {
-      nombre: 'Pendientes',
+      nombre: "Pendientes",
       importe: comisiones.pendientes
     }
   ]
@@ -118,10 +119,7 @@ export default function EconomicChart({ proyectos }) {
         className="serif dashboard-toggle"
         onClick={() => setMostrarGrafico(!mostrarGrafico)}
         style={{ cursor: 'pointer' }}
-      >
-        Economía general
-
-        <span style={{ float: 'right' }}>
+      >{translateUI("Economía general")}<span style={{ float: 'right' }}>
           {mostrarGrafico ? '−' : '+'}
         </span>
 
@@ -135,18 +133,18 @@ export default function EconomicChart({ proyectos }) {
 
             <BarChart data={datos}>
 
-              <XAxis dataKey="nombre" />
+              <XAxis dataKey="nombre" tickFormatter={translateUI} />
 
               <YAxis />
 
-              <Tooltip
+              <Tooltip labelFormatter={translateUI}
                 formatter={(valor) =>
-                  `${valor.toLocaleString('es-ES')} €`
+                  `${valor.toLocaleString(getLocale())} €`
                 }
               />
 
 
-              <Bar dataKey="importe">
+              <Bar dataKey="importe" name={translateUI("Importe")}>
 
                 {datos.map((entrada, index) => (
 
@@ -171,49 +169,47 @@ export default function EconomicChart({ proyectos }) {
 
           </ResponsiveContainer>
 
-          <div className="section-label dashboard-section-heading economy-commissions-title">
-            Comisiones de colaboradores
-          </div>
+          <div className="section-label dashboard-section-heading economy-commissions-title">{translateUI("Comisiones de colaboradores")}</div>
 
           <div className="dashboard-grid economy-commissions-grid">
             <div className="field">
-              <label>Generadas</label>
+              <label>{translateUI("Generadas")}</label>
               <input
                 readOnly
-                value={`${comisiones.total.toLocaleString('es-ES')} €`}
+                value={`${comisiones.total.toLocaleString(getLocale())} €`}
               />
             </div>
 
             <div className="field">
-              <label>Cobradas</label>
+              <label>{translateUI("Cobradas")}</label>
               <input
                 readOnly
-                value={`${comisiones.cobradas.toLocaleString('es-ES')} €`}
+                value={`${comisiones.cobradas.toLocaleString(getLocale())} €`}
               />
             </div>
 
             <div className="field">
-              <label>Pendientes</label>
+              <label>{translateUI("Pendientes")}</label>
               <input
                 readOnly
-                value={`${comisiones.pendientes.toLocaleString('es-ES')} €`}
+                value={`${comisiones.pendientes.toLocaleString(getLocale())} €`}
               />
             </div>
           </div>
 
           <ResponsiveContainer width="100%" height={230}>
             <BarChart data={datosComisiones}>
-              <XAxis dataKey="nombre" />
+              <XAxis dataKey="nombre" tickFormatter={translateUI} />
 
               <YAxis />
 
-              <Tooltip
+              <Tooltip labelFormatter={translateUI}
                 formatter={(valor) =>
-                  `${valor.toLocaleString('es-ES')} €`
+                  `${valor.toLocaleString(getLocale())} €`
                 }
               />
 
-              <Bar dataKey="importe">
+              <Bar dataKey="importe" name={translateUI("Importe")}>
                 {datosComisiones.map((entrada, index) => (
                   <Cell
                     key={`comision-cell-${index}`}

@@ -1,3 +1,4 @@
+import { t as translateUI } from '../i18n.js'
 export default function ClientsPanel({
   clientes,
   onOpenClient,
@@ -22,9 +23,7 @@ export default function ClientsPanel({
 
         <div className="panel-head">
 
-          <h2 className="serif">
-            👥 Clientes
-          </h2>
+          <h2 className="serif">{translateUI("👥 Clientes")}</h2>
 
 
           <button

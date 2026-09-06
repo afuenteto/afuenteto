@@ -1,3 +1,4 @@
+import { t as translateUI } from '../i18n.js'
 export default function BlockedPanel({
   proyectos,
   onClose,
@@ -28,9 +29,7 @@ export default function BlockedPanel({
 
         <div className="panel-head">
 
-          <h2 className="serif">
-            🔵 Proyectos bloqueados
-          </h2>
+          <h2 className="serif">{translateUI("🔵 Proyectos bloqueados")}</h2>
 
           <button
             className="icon-btn"
@@ -45,9 +44,7 @@ export default function BlockedPanel({
 
         {bloqueados.length === 0 && (
 
-          <p className="mono">
-            No hay proyectos bloqueados.
-          </p>
+          <p className="mono">{translateUI("No hay proyectos bloqueados.")}</p>
 
         )}
 
@@ -68,14 +65,11 @@ export default function BlockedPanel({
             </strong>
 
 
-            <span>
-              Cliente: {proyecto.cliente || 'Sin cliente'}
+            <span>{translateUI("Cliente: ")}{proyecto.cliente || translateUI("Sin cliente")}
             </span>
 
 
-            <span>
-              🔵 Proyecto bloqueado
-            </span>
+            <span>{translateUI("🔵 Proyecto bloqueado")}</span>
 
 
             {proyecto.notas && (

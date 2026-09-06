@@ -1,3 +1,4 @@
+import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 import { fechaLocal } from '../projectUtils.js'
 import { uid } from '../storage.js'
@@ -98,9 +99,7 @@ function cambiarEstado(id) {
 
         <div className="modal-head">
 
-          <h2 className="serif">
-            Tareas
-          </h2>
+          <h2 className="serif">{translateUI("Tareas")}</h2>
 
           <button
             className="icon-btn"
@@ -117,9 +116,7 @@ function cambiarEstado(id) {
         </p>
 
 
-        <div className="section-label">
-          Pendientes
-        </div>
+        <div className="section-label">{translateUI("Pendientes")}</div>
 
 
         {pendientes.map((t) => (
@@ -193,17 +190,11 @@ function cambiarEstado(id) {
         )
       }
     >
-      <option value="alta">
-        🔴 Alta
-      </option>
+      <option value="alta">{translateUI("🔴 Alta")}</option>
 
-      <option value="normal">
-        🟡 Normal
-      </option>
+      <option value="normal">{translateUI("🟡 Normal")}</option>
 
-      <option value="baja">
-        ⚪ Baja
-      </option>
+      <option value="baja">{translateUI("⚪ Baja")}</option>
 
      </select>
 
@@ -231,7 +222,7 @@ function cambiarEstado(id) {
 
   <input
     value={nuevaTarea}
-    placeholder="Nueva tarea..."
+    placeholder={translateUI("Nueva tarea...")}
     onChange={(e) =>
       setNuevaTarea(e.target.value)
     }
@@ -246,9 +237,7 @@ function cambiarEstado(id) {
   <button
     className="btn btn-sm"
     onClick={añadirTarea}
-  >
-    Añadir
-  </button>
+  >{translateUI("Añadir")}</button>
 
 </div>
 
@@ -258,9 +247,7 @@ function cambiarEstado(id) {
 
           <>
 
-            <div className="section-label">
-              Terminadas
-            </div>
+            <div className="section-label">{translateUI("Terminadas")}</div>
 
 
          {terminadas.map((t) => (
@@ -285,11 +272,10 @@ function cambiarEstado(id) {
         {t.texto}
       </span>
 
-     <small>
-  Completada {t.fechaCompletada && (
+     <small>{translateUI("Completada ")}{t.fechaCompletada && (
     <>
       {new Date(t.fechaCompletada)
-        .toLocaleDateString('es-ES')}
+        .toLocaleDateString(getLocale())}
     </>
   )}
 </small>
@@ -326,9 +312,7 @@ function cambiarEstado(id) {
                 tareas
               )
             }
-          >
-            Guardar
-          </button>
+          >{translateUI("Guardar")}</button>
 
         </div>
 

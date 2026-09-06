@@ -1,3 +1,4 @@
+import { t as translateUI } from '../i18n.js'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import ProjectCard from './ProjectCard'
@@ -41,7 +42,7 @@ export default function SortableProjectCard({
   {...attributes}
   {...listeners}
   type="button"
-  aria-label="Mover proyecto"
+  aria-label={translateUI("Mover proyecto")}
 >
   <span className="drag-dots">
   {Array.from({ length: 10 }).map((_, i) => (

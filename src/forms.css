@@ -1,0 +1,135 @@
+/* Estilo compartido de los formularios, basado en el formulario de contacto. */
+:root {
+  --form-surface: #f1f1ef;
+  --form-heading: #3f3f3b;
+  --form-label: #4f4f4a;
+  --form-line: #555550;
+  --form-text: #171717;
+  --form-control-size: 14px;
+}
+
+.app :is(.modal, .panel, .profile-panel, .project-image-crop-dialog) {
+  background: var(--form-surface);
+  color: var(--form-heading);
+}
+
+.app :is(.modal, .panel, .profile-panel, .project-image-crop-dialog) :is(h2, h3, .section-label),
+.app .commission-new-title {
+  color: var(--form-heading);
+}
+
+.app :is(label, .field label, .footer-contact-form label),
+.app .delivery-modal-details span {
+  color: var(--form-label);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* Incluye inputs sin type. Los controles especiales conservan su aspecto nativo. */
+.app :is(
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"],
+    [type="file"], [type="hidden"], [type="button"], [type="submit"], [type="reset"], [type="image"]):not([readonly]),
+  select,
+  textarea:not([readonly])
+) {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 36px;
+  box-sizing: border-box;
+  border: 0;
+  border-bottom: 1px dotted var(--form-line);
+  border-radius: 0;
+  padding: 5px 2px 7px;
+  background: transparent;
+  color: var(--form-text);
+  font-family: inherit;
+  font-size: var(--form-control-size);
+  line-height: 1.4;
+  outline: none;
+  box-shadow: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.app :is(
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"],
+    [type="file"], [type="hidden"], [type="button"], [type="submit"], [type="reset"], [type="image"]):not([readonly]),
+  select,
+  textarea:not([readonly])
+):focus {
+  border-bottom-color: var(--form-text);
+  box-shadow: 0 1px 0 var(--form-text);
+}
+
+.app :is(input, textarea)::placeholder {
+  color: var(--ink-soft);
+  opacity: 1;
+}
+
+.app :is(input, select, textarea):disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.app select :is(option, optgroup) {
+  background: var(--form-surface);
+  color: var(--form-text);
+}
+
+.app textarea {
+  resize: vertical;
+}
+
+.app .delivery-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 16px;
+}
+
+.app .delivery-modal-details {
+  gap: 16px;
+}
+
+.app .delivery-modal-details > div {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.app :is(.commission-card, .commission-new, .project-image-field, .task-edit-row) {
+  background: transparent;
+}
+
+.app .panel-item {
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 1px dotted var(--line);
+}
+
+.app .client-results {
+  border-radius: 0;
+}
+
+.app .client-result-item {
+  background: var(--form-surface);
+  color: var(--form-text);
+  border-bottom: 1px dotted var(--form-line);
+}
+
+.app .client-result-item:is(:hover, :focus-visible) {
+  background: #e7e7e3;
+}
+
+.app .language-settings select {
+  min-height: 40px;
+}
+
+@media (max-width: 700px) {
+  /* Evita el zoom automático del navegador al editar en el móvil. */
+  :root {
+    --form-control-size: 16px;
+  }
+}

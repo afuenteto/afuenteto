@@ -1,3 +1,5 @@
+import { t as translateUI, getLocale } from '../i18n.js'
+import { formatearFecha } from '../storage.js'
 export default function PaymentsPanel({
   proyectos,
   onClose,
@@ -47,9 +49,7 @@ export default function PaymentsPanel({
 
         <div className="panel-head">
 
-          <h2 className="serif">
-            💰 Cobros pendientes
-          </h2>
+          <h2 className="serif">{translateUI("💰 Cobros pendientes")}</h2>
 
           <button
             className="icon-btn"
@@ -64,9 +64,7 @@ export default function PaymentsPanel({
 
         {cobros.length === 0 && (
 
-          <p className="mono">
-            No hay cobros pendientes.
-          </p>
+          <p className="mono">{translateUI("No hay cobros pendientes.")}</p>
 
         )}
 
@@ -87,8 +85,7 @@ export default function PaymentsPanel({
             </strong>
 
 
-            <span>
-              Cliente: {item.proyecto.cliente || 'Sin cliente'}
+            <span>{translateUI("Cliente: ")}{item.proyecto.cliente || translateUI("Sin cliente")}
             </span>
 
 
@@ -98,13 +95,13 @@ export default function PaymentsPanel({
 
 
             <span>
-              📅 {item.fecha}
+              📅 {formatearFecha(item.fecha)}
             </span>
 
 
             <b>
               💰 {Number(item.importe)
-                .toLocaleString('es-ES')} €
+                .toLocaleString(getLocale())} €
             </b>
 
 

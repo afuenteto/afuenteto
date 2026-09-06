@@ -30,5 +30,22 @@ test('renderiza los componentes con proyectos nuevos y con datos', async () => {
         assert.ok(!html.includes('NaN'), nombre + ' no debe mostrar cantidades inválidas')
       }
     }
+    const { setLanguage, languages, t } = await server.ssrLoadModule('/src/i18n.js')
+    const { default: ProjectModal } = await server.ssrLoadModule('/src/components/ProjectModal.jsx')
+    const { default: LanguageSelector } = await server.ssrLoadModule('/src/components/LanguageSelector.jsx')
+    const proyecto = { ...ejemplos[1], nombre: 'Guardar', cliente: 'Entrega', tipoProyecto: 'Vivienda unifamiliar' }
+    try {
+      for (const { code } of languages) {
+        setLanguage(code, false)
+        const html = renderToString(React.createElement(ProjectModal, { proyecto, clientes: [], usuario: { id: 'u1' } }))
+        // Labels change; editable data and persisted select values must not.
+        assert.ok(html.includes('value="Guardar"'), code + ': nombre intacto')
+        assert.ok(html.includes('value="Vivienda unifamiliar" selected=""'), code + ': tipo estable')
+        assert.ok(html.includes('value="Diseño"'), code + ': fase estable')
+        assert.ok(html.includes(t('Nombre del proyecto')), code + ': formulario traducido')
+        const selector = renderToString(React.createElement(LanguageSelector))
+        assert.equal((selector.match(/<option /g) || []).length, languages.length)
+      }
+    } finally { setLanguage('es', false) }
   } finally { await server.close() }
 })

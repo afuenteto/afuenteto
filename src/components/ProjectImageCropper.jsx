@@ -1,3 +1,4 @@
+import { t as translateUI } from '../i18n.js'
 import { useEffect, useRef, useState } from 'react'
 
 const TARGET_WIDTH = 1200
@@ -123,7 +124,7 @@ export default function ProjectImageCropper({ src, onCancel, onConfirm }) {
       onConfirm(blob)
     } catch (error) {
       console.error(error)
-      alert(error.message || 'No se pudo preparar la imagen.')
+      alert(error.message || translateUI("No se pudo preparar la imagen."))
     } finally {
       setProcesando(false)
     }
@@ -134,10 +135,10 @@ export default function ProjectImageCropper({ src, onCancel, onConfirm }) {
       <div className="project-image-crop-dialog">
         <div className="project-image-crop-head">
           <div>
-            <h3 className="serif">Colocar imagen del proyecto</h3>
-            <p>Arrastra la imagen hasta dejar encuadrada la zona que quieres ver en la ficha.</p>
+            <h3 className="serif">{translateUI("Colocar imagen del proyecto")}</h3>
+            <p>{translateUI("Arrastra la imagen hasta dejar encuadrada la zona que quieres ver en la ficha.")}</p>
           </div>
-          <button type="button" className="icon-btn" onClick={onCancel} aria-label="Cerrar">
+          <button type="button" className="icon-btn" onClick={onCancel} aria-label={translateUI("Cerrar")}>
             ✕
           </button>
         </div>
@@ -152,23 +153,19 @@ export default function ProjectImageCropper({ src, onCancel, onConfirm }) {
         >
           <img
             src={src}
-            alt="Vista previa del proyecto"
+            alt={translateUI("Vista previa del proyecto")}
             draggable="false"
             style={{ objectPosition: `${posicion.x}% ${posicion.y}%` }}
           />
-          <div className="project-image-crop-guide">Arrastra para recolocar</div>
+          <div className="project-image-crop-guide">{translateUI("Arrastra para recolocar")}</div>
         </div>
 
-        <div className="project-image-crop-info">
-          La app guardará una versión optimizada de 1200 × 240 px en WebP, sin deformar la imagen.
-        </div>
+        <div className="project-image-crop-info">{translateUI("La app guardará una versión optimizada de 1200 × 240 px en WebP, sin deformar la imagen.")}</div>
 
         <div className="project-image-crop-actions">
-          <button type="button" className="btn btn-ghost" onClick={onCancel} disabled={procesando}>
-            Cancelar
-          </button>
+          <button type="button" className="btn btn-ghost" onClick={onCancel} disabled={procesando}>{translateUI("Cancelar")}</button>
           <button type="button" className="btn btn-primary" onClick={confirmar} disabled={procesando}>
-            {procesando ? 'Preparando…' : 'Usar esta imagen'}
+            {procesando ? translateUI("Preparando…") : translateUI("Usar esta imagen")}
           </button>
         </div>
       </div>

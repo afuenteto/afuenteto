@@ -1,3 +1,4 @@
+import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { useState } from 'react'
 import { diasHasta } from '../storage.js'
 
@@ -64,9 +65,7 @@ export default function TasksPanel({
 
         <div className="panel-head">
 
-          <h2 className="serif">
-            🔴 Tareas pendientes
-          </h2>
+          <h2 className="serif">{translateUI("🔴 Tareas pendientes")}</h2>
 
 
           <button
@@ -82,9 +81,7 @@ export default function TasksPanel({
 
         {tareas.length === 0 && (
 
-          <p className="mono">
-            No hay tareas pendientes.
-          </p>
+          <p className="mono">{translateUI("No hay tareas pendientes.")}</p>
 
         )}
 
@@ -123,11 +120,9 @@ export default function TasksPanel({
                 tarea.proyecto.fechaEntrega
               ) !== null && (
 
-                <small>
-                  📅 Entrega en {diasEntrega(
+                <small>📅 {translateUI("Entrega")}: {formatRelativeDays(diasEntrega(
                     tarea.proyecto.fechaEntrega
-                  )} días
-                </small>
+                  ))}</small>
 
               )}
 
@@ -141,9 +136,7 @@ export default function TasksPanel({
               <div className="task-confirm-inline">
 
 
-                <p>
-                  ¿Dar por finalizada esta tarea?
-                </p>
+                <p>{translateUI("¿Dar por finalizada esta tarea?")}</p>
 
 
                 <div className="task-confirm-actions">
@@ -154,9 +147,7 @@ export default function TasksPanel({
                     onClick={() =>
                       setConfirmando(null)
                     }
-                  >
-                    Cancelar
-                  </button>
+                  >{translateUI("Cancelar")}</button>
 
 
                   <button
@@ -165,9 +156,7 @@ export default function TasksPanel({
                     onClick={() =>
                       completar(tarea)
                     }
-                  >
-                    ✓ Completar
-                  </button>
+                  >{translateUI("✓ Completar")}</button>
 
 
                 </div>

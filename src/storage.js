@@ -1,3 +1,4 @@
+import { getLocale } from './i18n.js'
 import { supabase } from './supabase.js'
 
 import { FASES, proyectoDesdeBD, proyectoParaBD } from './projectModel.js'
@@ -111,7 +112,7 @@ export function formatearFecha(fechaISO) {
   const d = new Date(fechaISO + 'T00:00:00')
   if (Number.isNaN(d.getTime())) return '—'
 
-  return d.toLocaleDateString('es-ES', {
+  return d.toLocaleDateString(getLocale(), {
     day: '2-digit',
     month: 'short',
     year: 'numeric',

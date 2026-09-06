@@ -1,3 +1,4 @@
+import { t as translateUI, getLocale } from '../i18n.js'
 export default function ProjectHistory({
   proyecto,
   onDeleteHistory
@@ -9,16 +10,12 @@ export default function ProjectHistory({
 
     <div>
 
-      <div className="section-label">
-        Historial
-      </div>
+      <div className="section-label">{translateUI("Historial")}</div>
 
 
       {historial.length === 0 && (
 
-        <p className="mono">
-          Todavía no hay actividad registrada.
-        </p>
+        <p className="mono">{translateUI("Todavía no hay actividad registrada.")}</p>
 
       )}
 
@@ -44,7 +41,7 @@ export default function ProjectHistory({
 
               <small>
                 {new Date(evento.fecha)
-                  .toLocaleDateString('es-ES')}
+                  .toLocaleDateString(getLocale())}
               </small>
             </div>
 

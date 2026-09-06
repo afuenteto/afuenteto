@@ -1,5 +1,6 @@
+import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
-import { diasHasta } from '../storage.js'
+import { diasHasta, formatearFecha } from '../storage.js'
 
 export default function StudioToday({
   proyectos,
@@ -90,9 +91,7 @@ export default function StudioToday({
         onClick={() => setAbierto(!abierto)}
       >
 
-        <span>
-          Hoy en el estudio
-        </span>
+        <span>{translateUI("Hoy en el estudio")}</span>
 
 
         <div className="today-counters">
@@ -187,9 +186,7 @@ export default function StudioToday({
 
             <div className="today-block">
 
-              <h3>
-                🔴 Tareas próximas
-              </h3>
+              <h3>{translateUI("🔴 Tareas próximas")}</h3>
 
 
               {tareasUrgentes.map((item) => (
@@ -231,9 +228,7 @@ export default function StudioToday({
 
             <div className="today-block">
 
-              <h3>
-                📅 Entregas próximas
-              </h3>
+              <h3>{translateUI("📅 Entregas próximas")}</h3>
 
 
               {entregas.map((proyecto) => (
@@ -252,12 +247,11 @@ export default function StudioToday({
 
 
                   <span>
-                    {proyecto.fechaEntrega}
+                    {formatearFecha(proyecto.fechaEntrega)}
                     {' · '}
                     {diasHasta(
                       proyecto.fechaEntrega
-                    )} días
-                  </span>
+                    )}{translateUI(" días")}</span>
 
 
                 </button>
@@ -277,9 +271,7 @@ export default function StudioToday({
 
             <div className="today-block">
 
-              <h3>
-                💰 Cobros previstos
-              </h3>
+              <h3>{translateUI("💰 Cobros previstos")}</h3>
 
 
               {cobrosPendientes.map((item) => (
@@ -300,7 +292,7 @@ export default function StudioToday({
                   <span>
                     {Number(
                       item.importe
-                    ).toLocaleString('es-ES')} €
+                    ).toLocaleString(getLocale())} €
                   </span>
 
 
@@ -322,9 +314,7 @@ export default function StudioToday({
 
             <div className="today-block">
 
-              <h3>
-                🔵 Proyectos bloqueados
-              </h3>
+              <h3>{translateUI("🔵 Proyectos bloqueados")}</h3>
 
 
               {proyectosBloqueados.map((proyecto) => (
@@ -342,9 +332,7 @@ export default function StudioToday({
                   </strong>
 
 
-                  <span>
-                    Proyecto bloqueado
-                  </span>
+                  <span>{translateUI("Proyecto bloqueado")}</span>
 
 
                 </button>

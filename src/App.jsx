@@ -1,9 +1,10 @@
+import { t as translateUI, getLanguage, subscribeLanguage } from './i18n.js'
 import { proyectoDesdeBD, proyectoParaBD } from './projectModel.js'
 import { reordenarProyectos, fechaLocal } from './projectUtils.js'
 import StudioDashboard from './components/StudioDashboard.jsx'
 import StudioToday from './components/StudioToday.jsx'
 import EconomicChart from './components/EconomicChart.jsx'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import SortableProjectCard from './components/SortableProjectCard'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable'
@@ -11,6 +12,7 @@ import ProjectModal from './components/ProjectModal.jsx'
 import TasksModal from './components/TasksModal.jsx'
 import DeliveryModal from './components/DeliveryModal.jsx'
 import StudioProfile from './components/StudioProfile.jsx'
+import FooterActions from './components/FooterActions.jsx'
 import TasksPanel from './components/TasksPanel.jsx'
 import DeliveriesPanel from './components/DeliveriesPanel.jsx'
 import PaymentsPanel from './components/PaymentsPanel.jsx'
@@ -25,6 +27,7 @@ import {
 } from './storage.js'
 
 export default function App() {
+  useSyncExternalStore(subscribeLanguage, getLanguage, () => 'es')
   const [usuario, setUsuario] = useState(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -78,7 +81,7 @@ export default function App() {
       }
       setProyectos(ordenados)
     } catch (error) {
-      setAviso('No se pudo guardar todo el orden: ' + error.message)
+      setAviso(translateUI("No se pudo guardar todo el orden: ") + error.message)
       setIntentoCarga(n => n + 1)
     } finally {
       operacionRef.current = false
@@ -188,13 +191,13 @@ useEffect(() => {
       if (error) throw error
       setRecuperando(false)
       setNuevaPassword('')
-      setAviso('Contraseña actualizada.')
+      setAviso(translateUI("Contraseña actualizada."))
     } catch (error) { setErrorLogin(error.message) }
     finally { setGuardando(false) }
   }
   async function recuperarPassword() {
   if (!email.trim()) {
-    alert('Escribe primero tu email para recuperar la contraseña.')
+    alert(translateUI("Escribe primero tu email para recuperar la contraseña."))
     return
   }
 
@@ -210,14 +213,14 @@ useEffect(() => {
     console.error(error)
 
     alert(
-      `No se pudo enviar el correo.\n\n${error.message}`
+      translateUI("No se pudo enviar el correo.\n\n{0}", { 0: error.message })
     )
 
     return
   }
 
   alert(
-    'Se ha enviado un correo para recuperar la contraseña.'
+    translateUI("Se ha enviado un correo para recuperar la contraseña.")
   )
 }
   async function iniciarSesion(e) {
@@ -240,7 +243,7 @@ useEffect(() => {
 
       setErrorLogin(
         error.message ||
-          'No se ha podido iniciar sesión. Comprueba el email y la contraseña.'
+          translateUI("No se ha podido iniciar sesión. Comprueba el email y la contraseña.")
       )
       setCargando(false)
     }
@@ -248,7 +251,7 @@ useEffect(() => {
 
   async function cerrarSesion() {
     const { error } = await supabase.auth.signOut()
-    if (error) { setAviso('No se pudo cerrar la sesión: ' + error.message); return }
+    if (error) { setAviso(translateUI("No se pudo cerrar la sesión: ") + error.message); return }
     setUsuario(null)
     setProyectos([])
     setEditando(null)
@@ -352,7 +355,7 @@ async function guardarTareas(proyectoId, tareas) {
 
     setTareasAbiertas(null)
 
-    setAviso('Tareas guardadas correctamente.')
+    setAviso(translateUI("Tareas guardadas correctamente."))
 
     setTimeout(() => setAviso(''), 3000)
 
@@ -362,7 +365,7 @@ async function guardarTareas(proyectoId, tareas) {
     console.error(error)
 
     alert(
-      `No se pudieron guardar las tareas.\n\n${error.message}`
+      translateUI("No se pudieron guardar las tareas.\n\n{0}", { 0: error.message })
     )
 
   } finally {
@@ -392,7 +395,7 @@ async function guardarTareas(proyectoId, tareas) {
       setProyectos(prev => prev.map(p => p.id === proyectoId ? { ...p, tareas, historial } : p))
       return true
     } catch (error) {
-      alert('No se pudo completar la tarea: ' + error.message)
+      alert(translateUI("No se pudo completar la tarea: ") + error.message)
       return false
     } finally {
       operacionRef.current = false
@@ -470,7 +473,7 @@ if (datos.cliente) {
 
       const actualizar =
         window.confirm(
-          `Los datos de ${clienteActual.nombre} han cambiado.\n\n¿Actualizar ficha del cliente?`
+          translateUI("Los datos de {0} han cambiado.\n\n¿Actualizar ficha del cliente?", { 0: clienteActual.nombre })
         )
 
 
@@ -559,14 +562,14 @@ if (datos.cliente) {
       setEditando(null)
       setSeccionInicial(null)
 
-      setAviso('Proyecto guardado correctamente.')
+      setAviso(translateUI("Proyecto guardado correctamente."))
       setTimeout(() => setAviso(''), 3000)
       return true
     } catch (error) {
       console.error(error)
 
       alert(
-        `No se pudo guardar el proyecto.\n\n${error.message}`
+        translateUI("No se pudo guardar el proyecto.\n\n{0}", { 0: error.message })
       )
       return false
     } finally {
@@ -586,7 +589,7 @@ async function eliminarCliente(cliente) {
   if (tieneProyectos) {
 
     alert(
-      'No se puede eliminar este cliente porque tiene proyectos asociados.'
+      translateUI("No se puede eliminar este cliente porque tiene proyectos asociados.")
     )
 
     return
@@ -627,11 +630,10 @@ async function eliminarCliente(cliente) {
     const proyecto = proyectos.find((p) => p.id === id)
     if (!proyecto) return
 
-    const accion = estado === 'finalizado' ? 'finalizar' : 'reabrir'
     const confirmado = confirm(
       estado === 'finalizado'
-        ? '¿Finalizar este proyecto? Podrás reabrirlo cuando quieras.'
-        : '¿Reabrir este proyecto? Volverá a los proyectos activos.'
+        ? translateUI("¿Finalizar este proyecto? Podrás reabrirlo cuando quieras.")
+        : translateUI("¿Reabrir este proyecto? Volverá a los proyectos activos.")
     )
 
     if (!confirmado) return
@@ -654,12 +656,12 @@ async function eliminarCliente(cliente) {
         prev.map((p) => (p.id === id ? actualizado : p))
       )
       setEditando(actualizado)
-      setAviso(estado === 'finalizado' ? 'Proyecto finalizado.' : 'Proyecto reabierto.')
+      setAviso(estado === 'finalizado' ? translateUI("Proyecto finalizado.") : translateUI("Proyecto reabierto."))
       setTimeout(() => setAviso(''), 3000)
     } catch (error) {
       console.error(error)
       alert(
-        `No se pudo ${accion} el proyecto.\n\n${error.message}`
+        translateUI("No se pudo actualizar el estado del proyecto.\n\n{0}", { 0: error.message })
       )
     } finally {
       operacionRef.current = false
@@ -671,7 +673,7 @@ async function eliminarCliente(cliente) {
     if (!usuario || operacionRef.current) return
 
     const confirmado = confirm(
-      '¿Eliminar este proyecto? Esta acción no se puede deshacer.'
+      translateUI("¿Eliminar este proyecto? Esta acción no se puede deshacer.")
     )
 
     if (!confirmado) return
@@ -692,13 +694,13 @@ async function eliminarCliente(cliente) {
       setEditando(null)
       setSeccionInicial(null)
 
-      setAviso('Proyecto eliminado.')
+      setAviso(translateUI("Proyecto eliminado."))
       setTimeout(() => setAviso(''), 3000)
     } catch (error) {
       console.error(error)
 
       alert(
-        `No se pudo eliminar el proyecto.\n\n${error.message}`
+        translateUI("No se pudo eliminar el proyecto.\n\n{0}", { 0: error.message })
       )
     } finally {
       operacionRef.current = false
@@ -750,20 +752,20 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 
   if (recuperando && usuario) {
     return <div className="app"><form onSubmit={actualizarPassword}>
-      <h1 className="serif">Nueva contraseña</h1>
-      <label htmlFor="nueva-password">Contraseña (mínimo 6 caracteres)</label>
+      <h1 className="serif">{translateUI("Nueva contraseña")}</h1>
+      <label htmlFor="nueva-password">{translateUI("Contraseña (mínimo 6 caracteres)")}</label>
       <input id="nueva-password" type="password" autoComplete="new-password" minLength={6} required
         value={nuevaPassword} onChange={e => setNuevaPassword(e.target.value)} />
       {errorLogin && <p role="alert">{errorLogin}</p>}
-      <button className="btn btn-primary" disabled={guardando}>Guardar contraseña</button>
-    </form></div>
+      <button className="btn btn-primary" disabled={guardando}>{translateUI("Guardar contraseña")}</button>
+    </form><FooterActions onLogout={cerrarSesion} disabled={guardando} /></div>
   }
   if (usuario && errorCarga) {
     return <div className="app">
-      <h1 className="serif">No se pudieron cargar los datos</h1>
+      <h1 className="serif">{translateUI("No se pudieron cargar los datos")}</h1>
       <p role="alert">{errorCarga}</p>
-      <button className="btn" onClick={() => setIntentoCarga(n => n + 1)}>Reintentar</button>
-      <button className="btn" onClick={cerrarSesion}>Salir</button>
+      <button className="btn" onClick={() => setIntentoCarga(n => n + 1)}>{translateUI("Reintentar")}</button>
+      <FooterActions onLogout={cerrarSesion} disabled={guardando} />
     </div>
   }
   if (!usuario) {
@@ -784,11 +786,9 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   />
 
   <div>
-    <p className="eyebrow">Antonio Fuente</p>
+    <p className="eyebrow">{translateUI("Antonio Fuente")}</p>
 
-    <h1 className="serif">
-      Proyectos
-    </h1>
+    <h1 className="serif">{translateUI("Proyectos")}</h1>
   </div>
 
 </div>
@@ -800,11 +800,8 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
               style={{
                 display: 'block',
                 marginBottom: '8px',
-                fontSize: '13px',
               }}
-            >
-              Email
-            </label>
+            >{translateUI("Email")}</label>
 
             <input
               type="email"
@@ -815,11 +812,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
               style={{
                 width: '100%',
                 boxSizing: 'border-box',
-                padding: '12px 14px',
                 marginBottom: '18px',
-                border: '1px solid #ccc',
-                borderRadius: '6px',
-                fontSize: '15px',
               }}
             />
 
@@ -827,11 +820,8 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
               style={{
                 display: 'block',
                 marginBottom: '8px',
-                fontSize: '13px',
               }}
-            >
-              Contraseña
-            </label>
+            >{translateUI("Contraseña")}</label>
 
             <input
               type="password"
@@ -842,11 +832,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
               style={{
                 width: '100%',
                 boxSizing: 'border-box',
-                padding: '12px 14px',
                 marginBottom: '18px',
-                border: '1px solid #ccc',
-                borderRadius: '6px',
-                fontSize: '15px',
               }}
             />
 
@@ -867,9 +853,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
               className="btn btn-primary"
               disabled={cargando}
               style={{ width: '100%' }}
-            >
-              Entrar
-            </button>
+            >{translateUI("Entrar")}</button>
             <button
   type="button"
   className="btn btn-ghost"
@@ -878,11 +862,10 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     marginTop: '12px',
   }}
   onClick={recuperarPassword}
->
-  ¿Has olvidado la contraseña?
-</button>
+>{translateUI("¿Has olvidado la contraseña?")}</button>
           </form>
         </div>
+        <FooterActions />
       </div>
     )
   }
@@ -900,11 +883,9 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 </StudioProfile>
 
     <div>
-      <p className="eyebrow">Panel de estudio</p>
+      <p className="eyebrow">{translateUI("Panel de estudio")}</p>
 
-      <h1 className="serif">
-        Proyectos
-      </h1>
+      <h1 className="serif">{translateUI("Proyectos")}</h1>
     </div>
   </div>
 
@@ -914,16 +895,12 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     className="btn btn-primary"
     onClick={abrirNuevo}
     disabled={guardando}
-  >
-    + Nuevo proyecto
-  </button>
+  >{translateUI("+ Nuevo proyecto")}</button>
         
 <button
   className="btn"
   onClick={() => setPanelAbierto('clientes')}
->
-  👥 Clientes
-</button>
+>{translateUI("👥 Clientes")}</button>
         
 </div>
 </div>
@@ -948,10 +925,29 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
             color: 'var(--accent)',
             margin: '8px 0 0',
           }}
-        >
-          Guardando...
-        </p>
+        >{translateUI("Guardando...")}</p>
       )}
+
+      <div className="study-overview-stack">
+        <StudioToday
+          proyectos={proyectosActivos}
+          onOpen={abrirExistente}
+          onOpenTasks={abrirTareas}
+          setPanelAbierto={setPanelAbierto}
+        />
+
+        <EconomicChart proyectos={proyectosOrdenados} />
+
+        <StudioDashboard
+          proyectos={proyectosActivos}
+          clientes={clientes}
+          onOpenTasks={() => setPanelAbierto('tareas')}
+          onOpenDeliveries={() => setPanelAbierto('entregas')}
+          onOpenPayments={() => setPanelAbierto('cobros')}
+          onFilterPhase={(fase) => setFiltro(fase)}
+          onShowAll={() => setFiltro('Todos')}
+        />
+      </div>
 
       <hr className="rule" />
 
@@ -960,8 +956,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
         <button
           className={'chip' + (filtro === 'Todos' ? ' active' : '')}
           onClick={() => setFiltro('Todos')}
-        >
-          Todos ({proyectosActivos.length})
+        >{translateUI("Todos (")}{proyectosActivos.length})
         </button>
 
         {FASES.map((fase) => (
@@ -972,7 +967,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
             }
             onClick={() => setFiltro(fase)}
           >
-            {fase} (
+            {translateUI(fase)} (
             {proyectosActivos.filter((p) => p.fase === fase).length}
             )
           </button>
@@ -981,8 +976,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
         <button
           className={'chip' + (filtro === 'Finalizados' ? ' active' : '')}
           onClick={() => setFiltro('Finalizados')}
-        >
-          Finalizados ({proyectosFinalizados.length})
+        >{translateUI("Finalizados (")}{proyectosFinalizados.length})
         </button>
 
         </div>
@@ -991,57 +985,33 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
         <button
           className={'chip' + (ordenProyectos === 'fecha' ? ' active' : '')}
           onClick={() => setOrdenProyectos('fecha')}
-        >
-          Fecha
-        </button>
+        >{translateUI("Fecha")}</button>
 
         <button
           className={'chip' + (ordenProyectos === 'importancia' ? ' active' : '')}
           onClick={() => setOrdenProyectos('importancia')}
-        >
-          Importancia
-        </button>
+        >{translateUI("Importancia")}</button>
         </div>
       </div>
 
-
-      <StudioDashboard
-  proyectos={proyectosActivos}
-  clientes={clientes}
-  onOpenTasks={() => setPanelAbierto('tareas')}
-  onOpenDeliveries={() => setPanelAbierto('entregas')}
-  onOpenPayments={() => setPanelAbierto('cobros')}
-  onFilterPhase={(fase) => setFiltro(fase)}
-  onShowAll={() => setFiltro('Todos')}
-/>
 
       {proyectosOrdenados.length === 0 ? (
         <div className="empty">
           <h3 className="serif">
             {proyectos.length === 0
-              ? 'Todavía no hay proyectos'
-              : 'Ningún proyecto en esta fase'}
+              ? translateUI("Todavía no hay proyectos")
+              : translateUI("Ningún proyecto en esta fase")}
           </h3>
 
           <p>
             {proyectos.length === 0
-              ? 'Crea el primero para empezar a ver el estado de tu estudio de un vistazo.'
-              : 'Prueba con otro filtro o crea un proyecto nuevo.'}
+              ? translateUI("Crea el primero para empezar a ver el estado de tu estudio de un vistazo.")
+              : translateUI("Prueba con otro filtro o crea un proyecto nuevo.")}
           </p>
         </div>
 
        ) : (
     <div>
-      <EconomicChart proyectos={proyectosOrdenados} />
-
-       <StudioToday
-  proyectos={proyectosActivos}
-  onOpen={abrirExistente}
-  onOpenTasks={abrirTareas}
-  setPanelAbierto={setPanelAbierto}
-/>
-
-
      <DndContext
   collisionDetection={closestCenter}
   onDragEnd={handleDragEnd}
@@ -1204,16 +1174,16 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     <section className="modal footer-info-modal" aria-labelledby="footer-info-title">
       <div className="modal-head">
         <h2 id="footer-info-title" className="serif">
-          {informacionAbierta === 'legal' && 'Aviso legal'}
-          {informacionAbierta === 'privacidad' && 'Privacidad'}
-          {informacionAbierta === 'condiciones' && 'Condiciones de uso'}
-          {informacionAbierta === 'contacto' && 'Contacto'}
+          {informacionAbierta === 'legal' && translateUI("Aviso legal")}
+          {informacionAbierta === 'privacidad' && translateUI("Privacidad")}
+          {informacionAbierta === 'condiciones' && translateUI("Condiciones de uso")}
+          {informacionAbierta === 'contacto' && translateUI("Contacto")}
         </h2>
         <button
           type="button"
           className="icon-btn"
           onClick={() => setInformacionAbierta(null)}
-          aria-label="Cerrar"
+          aria-label={translateUI("Cerrar")}
         >
           ✕
         </button>
@@ -1221,25 +1191,25 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 
       {informacionAbierta === 'legal' && (
         <div className="footer-info-content">
-          <p>Fuente Studio utiliza esta aplicación para gestionar proyectos, clientes, tareas y documentación de trabajo.</p>
-          <p>La información mostrada pertenece al usuario autenticado y debe utilizarse únicamente para la gestión profesional de su actividad.</p>
-          <p>Los datos identificativos y fiscales del titular deberán completarse antes de publicar esta información como texto legal definitivo.</p>
+          <p>{translateUI("Fuente Studio utiliza esta aplicación para gestionar proyectos, clientes, tareas y documentación de trabajo.")}</p>
+          <p>{translateUI("La información mostrada pertenece al usuario autenticado y debe utilizarse únicamente para la gestión profesional de su actividad.")}</p>
+          <p>{translateUI("Los datos identificativos y fiscales del titular deberán completarse antes de publicar esta información como texto legal definitivo.")}</p>
         </div>
       )}
 
       {informacionAbierta === 'privacidad' && (
         <div className="footer-info-content">
-          <p>Los datos se almacenan en Supabase y se asocian a la cuenta autenticada del usuario.</p>
-          <p>La aplicación utiliza los datos introducidos para organizar proyectos, clientes, cobros, tareas y documentos.</p>
-          <p>No introduzcas información que no sea necesaria para la gestión profesional del proyecto. El titular deberá completar la información legal y los plazos de conservación conforme a su actividad y jurisdicción.</p>
+          <p>{translateUI("Los datos se almacenan en Supabase y se asocian a la cuenta autenticada del usuario.")}</p>
+          <p>{translateUI("La aplicación utiliza los datos introducidos para organizar proyectos, clientes, cobros, tareas y documentos.")}</p>
+          <p>{translateUI("No introduzcas información que no sea necesaria para la gestión profesional del proyecto. El titular deberá completar la información legal y los plazos de conservación conforme a su actividad y jurisdicción.")}</p>
         </div>
       )}
 
       {informacionAbierta === 'condiciones' && (
         <div className="footer-info-content">
-          <p>El acceso a la aplicación es personal y debe protegerse con credenciales seguras.</p>
-          <p>El usuario es responsable de la exactitud de los datos introducidos y de conservar copias de seguridad adecuadas.</p>
-          <p>La aplicación es una herramienta de gestión y no sustituye asesoramiento legal, fiscal o profesional.</p>
+          <p>{translateUI("El acceso a la aplicación es personal y debe protegerse con credenciales seguras.")}</p>
+          <p>{translateUI("El usuario es responsable de la exactitud de los datos introducidos y de conservar copias de seguridad adecuadas.")}</p>
+          <p>{translateUI("La aplicación es una herramienta de gestión y no sustituye asesoramiento legal, fiscal o profesional.")}</p>
         </div>
       )}
 
@@ -1279,33 +1249,33 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
               if (emailError) throw emailError
 
               formulario.reset()
-              setAviso('Mensaje enviado correctamente.')
+              setAviso(translateUI("Mensaje enviado correctamente."))
               setInformacionAbierta(null)
               setTimeout(() => setAviso(''), 3000)
             } catch (error) {
               console.error('ERROR MENSAJE CONTACTO:', error)
-              alert(`No se pudo enviar el mensaje.\n\n${error.message}`)
+              alert(translateUI("No se pudo enviar el mensaje.\n\n{0}", { 0: error.message }))
             } finally {
               setEnviandoContacto(false)
             }
           }}
         >
-          <p className="footer-contact-intro">Envíanos tu consulta y la guardaremos de forma segura para poder atenderla.</p>
+          <p className="footer-contact-intro">{translateUI("Envíanos tu consulta y la guardaremos de forma segura para poder atenderla.")}</p>
 
-          <label htmlFor="contact-name">Nombre</label>
+          <label htmlFor="contact-name">{translateUI("Nombre")}</label>
           <input id="contact-name" name="nombre" required />
 
-          <label htmlFor="contact-email">Tu email</label>
+          <label htmlFor="contact-email">{translateUI("Tu email")}</label>
           <input id="contact-email" name="email" type="email" required />
 
-          <label htmlFor="contact-subject">Asunto</label>
+          <label htmlFor="contact-subject">{translateUI("Asunto")}</label>
           <input id="contact-subject" name="asunto" required />
 
-          <label htmlFor="contact-message">Mensaje</label>
+          <label htmlFor="contact-message">{translateUI("Mensaje")}</label>
           <textarea id="contact-message" name="mensaje" rows="5" required />
 
           <button type="submit" className="btn btn-primary footer-contact-submit" disabled={enviandoContacto}>
-            {enviandoContacto ? 'Enviando…' : 'Enviar'}
+            {enviandoContacto ? translateUI("Enviando…") : translateUI("Enviar")}
           </button>
         </form>
       )}
@@ -1316,44 +1286,23 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 <footer className="app-footer">
 
   <div className="app-footer-links">
-    <button type="button" onClick={() => setInformacionAbierta('legal')}>
-      Aviso legal
-    </button>
+    <button type="button" onClick={() => setInformacionAbierta('legal')}>{translateUI("Aviso legal")}</button>
 
-    <button type="button" onClick={() => setInformacionAbierta('privacidad')}>
-      Privacidad
-    </button>
+    <button type="button" onClick={() => setInformacionAbierta('privacidad')}>{translateUI("Privacidad")}</button>
 
-    <button type="button" onClick={() => setInformacionAbierta('condiciones')}>
-      Condiciones de uso
-    </button>
+    <button type="button" onClick={() => setInformacionAbierta('condiciones')}>{translateUI("Condiciones de uso")}</button>
 
-    <button type="button" onClick={() => setInformacionAbierta('contacto')}>
-      Contacto
-    </button>
+    <button type="button" onClick={() => setInformacionAbierta('contacto')}>{translateUI("Contacto")}</button>
   </div>
 
-  <div className="app-footer-copy">
-    © 2026 Fuente Studio · Gestión de proyectos ·{' '}
+  <div className="app-footer-copy">{translateUI("© 2026 Fuente Studio · Gestión de proyectos ·")}{' '}
     <a
       href="https://www.beusual.com/"
       target="_blank"
       rel="noreferrer"
-    >
-      Beusual
-    </a>{' '}
-    v1.0
-  </div>
+    >{translateUI("Beusual")}</a>{' '}{translateUI("v1.0")}</div>
 
-  <div className="app-footer-logout">
-    <button
-      className="btn btn-logout"
-      onClick={cerrarSesion}
-      disabled={guardando}
-    >
-      Salir
-    </button>
-  </div>
+  <FooterActions onLogout={cerrarSesion} disabled={guardando} />
 
 </footer>
 

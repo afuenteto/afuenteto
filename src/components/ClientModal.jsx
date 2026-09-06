@@ -1,3 +1,4 @@
+import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 import { supabase } from '../supabase.js'
 
@@ -77,9 +78,9 @@ export default function ClientModal({
   async function guardarCliente() {
     if (!usuario || guardando) return
     const nombre = datosCliente.nombre.trim().replace(/\s+/g, ' ')
-    if (!nombre) { alert('El nombre del cliente es obligatorio.'); return }
+    if (!nombre) { alert(translateUI("El nombre del cliente es obligatorio.")); return }
     if (clientes.some(c => c.id !== cliente.id && c.nombre.trim().toLowerCase() === nombre.toLowerCase())) {
-      alert('Ya existe un cliente con ese nombre.'); return
+      alert(translateUI("Ya existe un cliente con ese nombre.")); return
     }
     setGuardando(true)
     const actualizado = { ...cliente, ...datosCliente, nombre }
@@ -108,7 +109,7 @@ export default function ClientModal({
       onClientUpdated(actualizado, cliente.nombre)
       setDatosCliente({ ...datosCliente, nombre })
       setEditando(false)
-    } catch (error) { alert('No se pudo guardar el cliente: ' + error.message) }
+    } catch (error) { alert(translateUI("No se pudo guardar el cliente: ") + error.message) }
     finally { setGuardando(false) }
   }
      return (
@@ -139,18 +140,14 @@ export default function ClientModal({
             className="btn"
             type="button"
             onClick={() => setEditando(!editando)}
-          >
-            ✏️ Editar
-          </button>
+          >{translateUI("✏️ Editar")}</button>
 
 
           <button
             className="btn"
             type="button"
             onClick={() => setConfirmarBorrado(true)}
-          >
-            🗑️ Eliminar
-          </button>
+          >{translateUI("🗑️ Eliminar")}</button>
 
 
           <button
@@ -168,9 +165,7 @@ export default function ClientModal({
 
           <div className="panel-item">
 
-            <label>
-              Nombre
-            </label>
+            <label>{translateUI("Nombre")}</label>
 
             <input
               value={datosCliente.nombre}
@@ -183,9 +178,7 @@ export default function ClientModal({
             />
 
 
-            <label>
-              Teléfono
-            </label>
+            <label>{translateUI("Teléfono")}</label>
 
             <input
               value={datosCliente.telefono}
@@ -198,9 +191,7 @@ export default function ClientModal({
             />
 
 
-            <label>
-              Email
-            </label>
+            <label>{translateUI("Email")}</label>
 
             <input
               value={datosCliente.email}
@@ -213,9 +204,7 @@ export default function ClientModal({
             />
 
 
-            <label>
-              Dirección
-            </label>
+            <label>{translateUI("Dirección")}</label>
 
             <input
               value={datosCliente.direccion}
@@ -228,9 +217,7 @@ export default function ClientModal({
               />
 
 
-  <label>
-    Notas
-  </label>
+  <label>{translateUI("Notas")}</label>
 
   <textarea
     value={datosCliente.notas}
@@ -248,9 +235,7 @@ export default function ClientModal({
     type="button"
     disabled={guardando}
     onClick={guardarCliente}
-  >
-    💾 Guardar cliente
-  </button>
+  >{translateUI("💾 Guardar cliente")}</button>
 
           </div>
 
@@ -262,32 +247,24 @@ export default function ClientModal({
 
           <div className="panel-item">
 
-            <strong>
-              ¿Eliminar cliente?
-            </strong>
+            <strong>{translateUI("¿Eliminar cliente?")}</strong>
 
 
-            <span>
-              Esta acción no se puede deshacer.
-            </span>
+            <span>{translateUI("Esta acción no se puede deshacer.")}</span>
 
 
             <button
               className="btn"
               type="button"
               onClick={() => onDeleteClient(cliente)}
-            >
-              Sí, eliminar
-            </button>
+            >{translateUI("Sí, eliminar")}</button>
 
 
             <button
               className="btn"
               type="button"
               onClick={() => setConfirmarBorrado(false)}
-            >
-              Cancelar
-            </button>
+            >{translateUI("Cancelar")}</button>
 
 
           </div>
@@ -295,9 +272,7 @@ export default function ClientModal({
         )}
                 <div className="panel-item">
 
-          <strong>
-            Teléfono
-          </strong>
+          <strong>{translateUI("Teléfono")}</strong>
 
           <span>
             {cliente.telefono || '-'}
@@ -309,9 +284,7 @@ export default function ClientModal({
 
         <div className="panel-item">
 
-          <strong>
-            Email
-          </strong>
+          <strong>{translateUI("Email")}</strong>
 
           <span>
             {cliente.email || '-'}
@@ -323,9 +296,7 @@ export default function ClientModal({
 
         <div className="panel-item">
 
-          <strong>
-            Dirección
-          </strong>
+          <strong>{translateUI("Dirección")}</strong>
 
           <span>
             {cliente.direccion || '-'}
@@ -335,9 +306,7 @@ export default function ClientModal({
         
 <div className="panel-item">
 
-  <strong>
-    Notas
-  </strong>
+  <strong>{translateUI("Notas")}</strong>
 
   <span>
     {cliente.notas || '-'}
@@ -346,17 +315,13 @@ export default function ClientModal({
 </div>
 
 
-        <div className="section-label">
-          Resumen económico
-        </div>
+        <div className="section-label">{translateUI("Resumen económico")}</div>
 
 
 
         <div className="panel-item">
 
-          <strong>
-            Proyectos
-          </strong>
+          <strong>{translateUI("Proyectos")}</strong>
 
           <span>
             {proyectosCliente.length}
@@ -368,12 +333,10 @@ export default function ClientModal({
 
         <div className="panel-item">
 
-          <strong>
-            Contratado
-          </strong>
+          <strong>{translateUI("Contratado")}</strong>
 
           <span>
-            {totalContratado.toLocaleString('es-ES')} €
+            {totalContratado.toLocaleString(getLocale())} €
           </span>
 
         </div>
@@ -382,12 +345,10 @@ export default function ClientModal({
 
         <div className="panel-item">
 
-          <strong>
-            Cobrado
-          </strong>
+          <strong>{translateUI("Cobrado")}</strong>
 
           <span>
-            {totalCobrado.toLocaleString('es-ES')} €
+            {totalCobrado.toLocaleString(getLocale())} €
           </span>
 
         </div>
@@ -396,21 +357,17 @@ export default function ClientModal({
 
         <div className="panel-item">
 
-          <strong>
-            Pendiente
-          </strong>
+          <strong>{translateUI("Pendiente")}</strong>
 
           <span>
-            {pendiente.toLocaleString('es-ES')} €
+            {pendiente.toLocaleString(getLocale())} €
           </span>
 
         </div>
 
 
 
-        <div className="section-label">
-          Proyectos del cliente
-        </div>
+        <div className="section-label">{translateUI("Proyectos del cliente")}</div>
 
 
 
@@ -429,7 +386,7 @@ export default function ClientModal({
             </strong>
 
             <span>
-              {p.fase}
+              {translateUI(p.fase)}
             </span>
 
           </button>

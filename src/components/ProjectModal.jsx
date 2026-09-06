@@ -1,6 +1,7 @@
+import { t as translateUI, getLocale } from '../i18n.js'
 import { useEffect, useState, useRef } from 'react'
 import { fechaLocal } from '../projectUtils.js'
-import { FASES, uid } from '../storage.js'
+import { FASES, uid, formatearFecha } from '../storage.js'
 import { supabase } from '../supabase.js'
 import { urlFirmada } from '../storageFiles.js'
 import ProjectHistory from './ProjectHistory.jsx'
@@ -241,12 +242,12 @@ useEffect(() => {
   if (!file) return
 
   if (!file.type.startsWith('image/')) {
-    alert('Selecciona un archivo de imagen.')
+    alert(translateUI("Selecciona un archivo de imagen."))
     return
   }
 
   if (file.size > 25 * 1024 * 1024) {
-    alert('La imagen original es demasiado grande. Elige una de menos de 25 MB.')
+    alert(translateUI("La imagen original es demasiado grande. Elige una de menos de 25 MB."))
     return
   }
 
@@ -295,7 +296,7 @@ useEffect(() => {
   const file = e.target.files?.[0]
   e.target.value = ''
   if (!file || subiendoPdf) return
-  if (file.type !== 'application/pdf') { alert('Selecciona un archivo PDF'); return }
+  if (file.type !== 'application/pdf') { alert(translateUI("Selecciona un archivo PDF")); return }
   setSubiendoPdf(true)
   try {
     const nombreSeguro = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
@@ -312,7 +313,7 @@ useEffect(() => {
     setDatos(d => ({ ...d, presupuestoPdf: url, presupuestoPdfPath: nombreArchivo }))
   } catch (error) {
     console.error('ERROR SUPABASE PDF PROYECTO:', error)
-    alert(`No se pudo subir el PDF.\n\n${error.message || error}`)
+    alert(translateUI("No se pudo subir el PDF.\n\n{0}", { 0: error.message || error }))
   }
   finally { setSubiendoPdf(false) }
 }
@@ -430,7 +431,7 @@ function agregarComision() {
   const porcentaje = Number(nuevaComision.porcentaje || 0)
 
   if (!colaborador || presupuesto <= 0 || porcentaje <= 0) {
-    alert('Indica colaborador, presupuesto aceptado y porcentaje de comisión.')
+    alert(translateUI("Indica colaborador, presupuesto aceptado y porcentaje de comisión."))
     return
   }
 
@@ -460,7 +461,7 @@ function agregarComision() {
       {
         id: crypto.randomUUID(),
         fecha: new Date().toISOString(),
-        texto: `Comisión añadida: ${colaborador} · ${porcentaje}% (${importe.toLocaleString('es-ES')} €)`,
+        texto: `Comisión añadida: ${colaborador} · ${porcentaje}% (${importe.toLocaleString(getLocale())} €)`,
         icono: '🤝'
       }
     ]
@@ -509,7 +510,7 @@ function marcarComisionCobrada(id) {
       {
         id: crypto.randomUUID(),
         fecha: new Date().toISOString(),
-        texto: `Comisión cobrada: ${comision.colaborador} (${importe.toLocaleString('es-ES')} €)`,
+        texto: `Comisión cobrada: ${comision.colaborador} (${importe.toLocaleString(getLocale())} €)`,
         icono: '✅'
       }
     ]
@@ -538,7 +539,7 @@ async function subirPresupuestoComision(id, file) {
   if (!file) return
 
   if (file.type !== 'application/pdf') {
-    alert('Selecciona un archivo PDF')
+    alert(translateUI("Selecciona un archivo PDF"))
     return
   }
 
@@ -580,9 +581,7 @@ async function subirPresupuestoComision(id, file) {
     }))
   } catch (error) {
     console.error('ERROR SUPABASE PDF COMISIÓN:', error)
-    alert(`No se pudo subir el PDF.
-
-${error.message || error}`)
+    alert(translateUI("No se pudo subir el PDF.\n\n{0}", { 0: error.message || error }))
   } finally {
     setSubiendoComisionId(null)
   }
@@ -630,9 +629,7 @@ ${error.message || error}`)
       await onSave(datosAGuardar)
     } catch (error) {
       console.error('ERROR SUPABASE IMAGEN PROYECTO:', error)
-      alert(`No se pudo guardar la imagen del proyecto.
-
-${error.message || error}`)
+      alert(translateUI("No se pudo guardar la imagen del proyecto.\n\n{0}", { 0: error.message || error }))
     } finally {
       setSubiendoImagen(false)
     }
@@ -652,27 +649,27 @@ const existeCliente = clientes.some(
       >
         <fieldset className="modal-fields" disabled={guardando || subiendoImagen || Boolean(subiendoComisionId) || subiendoPdf}>
         {datos.estado === 'finalizado' && (
-          <div className="finalized-watermark finalized-watermark-modal">FINALIZADO</div>
+          <div className="finalized-watermark finalized-watermark-modal">{translateUI("FINALIZADO")}</div>
         )}
         <div className="modal-head">
          <p style={{color:"red", fontSize:"20px"}}>
   </p>
         <h2 className="serif">
-  {esNuevo ? 'Nuevo proyecto' : datos.nombre || 'Editar proyecto'}
+  {esNuevo ? translateUI("Nuevo proyecto") : datos.nombre || translateUI("Editar proyecto")}
 </h2>
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="Cerrar">
+          <button type="button" className="icon-btn" onClick={onClose} aria-label={translateUI("Cerrar")}>
             ✕
           </button>
         </div>
 
         <div className="field">
-          <label htmlFor="nombre">Nombre del proyecto</label>
+          <label htmlFor="nombre">{translateUI("Nombre del proyecto")}</label>
           <input
             id="nombre"
             type="text"
             value={datos.nombre}
             onChange={(e) => set('nombre', e.target.value)}
-            placeholder="p. ej. Reforma ático Sardinero"
+            placeholder={translateUI("p. ej. Reforma ático Sardinero")}
             autoFocus
             required
           />
@@ -681,8 +678,8 @@ const existeCliente = clientes.some(
         <div className="project-image-field">
           <div className="project-image-field-head">
             <div>
-              <strong>Imagen de la ficha</strong>
-              <span>Una imagen por proyecto · se optimiza automáticamente</span>
+              <strong>{translateUI("Imagen de la ficha")}</strong>
+              <span>{translateUI("Una imagen por proyecto · se optimiza automáticamente")}</span>
             </div>
 
             <div className="project-image-buttons">
@@ -691,7 +688,7 @@ const existeCliente = clientes.some(
                 className="btn btn-sm"
                 onClick={() => imagenInputRef.current?.click()}
               >
-                {imagenPendientePreview || datos.imagenProyecto ? 'Cambiar imagen' : 'Subir imagen'}
+                {imagenPendientePreview || datos.imagenProyecto ? translateUI("Cambiar imagen") : translateUI("Subir imagen")}
               </button>
 
               {(imagenPendientePreview || datos.imagenProyecto) && (
@@ -699,9 +696,7 @@ const existeCliente = clientes.some(
                   type="button"
                   className="btn btn-sm btn-ghost"
                   onClick={quitarImagenProyecto}
-                >
-                  Quitar
-                </button>
+                >{translateUI("Quitar")}</button>
               )}
             </div>
           </div>
@@ -710,7 +705,7 @@ const existeCliente = clientes.some(
             <div className="project-image-modal-preview">
               <img
                 src={imagenPendientePreview || datos.imagenProyecto}
-                alt="Imagen de cabecera del proyecto"
+                alt={translateUI("Imagen de cabecera del proyecto")}
               />
             </div>
           ) : (
@@ -718,9 +713,7 @@ const existeCliente = clientes.some(
               type="button"
               className="project-image-empty"
               onClick={() => imagenInputRef.current?.click()}
-            >
-              + Añadir imagen de cabecera
-            </button>
+            >{translateUI("+ Añadir imagen de cabecera")}</button>
           )}
 
           <input
@@ -734,15 +727,13 @@ const existeCliente = clientes.some(
 
         <div className="field-row">
           <div className="field">
-         <label htmlFor="cliente">
-  Cliente / contacto
-</label>
+         <label htmlFor="cliente">{translateUI("Cliente / contacto")}</label>
 
 <div ref={clientesRef}>
 
   <input
     type="text"
-    placeholder="🔍 Buscar cliente..."
+    placeholder={translateUI("🔍 Buscar cliente...")}
     value={busquedaCliente}
     onFocus={() => {
       setBusquedaCliente('')
@@ -872,8 +863,7 @@ if (clienteExiste) {
   setMostrarClientes(false)
 
           }}
-        >
-          ➕ Crear cliente "{busquedaCliente}"
+        >{translateUI("➕ Crear cliente \"")}{busquedaCliente}"
         </button>
 
       )}
@@ -910,51 +900,45 @@ if (clienteExiste) {
   if (cliente) {
     onOpenClient(cliente)
   } else {
-    alert('No se encontró el cliente')
+    alert(translateUI("No se encontró el cliente"))
   }
 
 }}
-  >
-    👤 Ver ficha cliente
-  </button>
+  >{translateUI("👤 Ver ficha cliente")}</button>
 
 )}
              <button
   type="button"
   className="btn"
   onClick={() => contactoInputRef.current?.click()}
->
-  👤 Importar contacto
-</button>
+>{translateUI("👤 Importar contacto")}</button>
           </div>
           <div className="field">
-            <label htmlFor="telefono">Teléfono</label>
+            <label htmlFor="telefono">{translateUI("Teléfono")}</label>
             <input id="telefono" type="text" value={datos.telefono} onChange={(e) => set('telefono', e.target.value)} />
           </div>
         </div>
 
         <div className="field-row">
           <div className="field">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{translateUI("Email")}</label>
             <input id="email" type="email" value={datos.email} onChange={(e) => set('email', e.target.value)} />
           </div>
           <div className="field">
-            <label htmlFor="direccion">Dirección / ubicación</label>
+            <label htmlFor="direccion">{translateUI("Dirección / ubicación")}</label>
             <input id="direccion" type="text" value={datos.direccion} onChange={(e) => set('direccion', e.target.value)} />
            <button
   type="button"
   className="btn"
   onClick={abrirMaps}
   disabled={!datos.direccion}
->
-  📍 Abrir en Maps
-</button>
+>{translateUI("📍 Abrir en Maps")}</button>
           </div>
         </div>
 
         <div className="field-row">
           <div className="field">
-            <label htmlFor="fechaInicio">Fecha de inicio</label>
+            <label htmlFor="fechaInicio">{translateUI("Fecha de inicio")}</label>
             <input
   id="fechaInicio"
   type="date"
@@ -963,9 +947,7 @@ if (clienteExiste) {
 />
           </div>
           <div className="field">
-  <label htmlFor="fechaEntrega">
-    Fecha de entrega estimada
-  </label>
+  <label htmlFor="fechaEntrega">{translateUI("Fecha de entrega estimada")}</label>
 
   <input
     id="fechaEntrega"
@@ -1003,7 +985,7 @@ if (clienteExiste) {
 
         <div className="field-row">
           <div className="field">
-            <label htmlFor="fase">Fase actual</label>
+            <label htmlFor="fase">{translateUI("Fase actual")}</label>
           <select
   id="fase"
   value={datos.fase}
@@ -1033,7 +1015,7 @@ if (clienteExiste) {
 >
   {FASES.map((f) => (
     <option key={f} value={f}>
-      {f}
+      {translateUI(f)}
     </option>
   ))}
 </select>
@@ -1041,7 +1023,7 @@ if (clienteExiste) {
           <div />
         </div>
 <div className="field">
-  <label>Prioridad</label>
+  <label>{translateUI("Prioridad")}</label>
 
   <select
     value={datos.prioridad || 'en_curso'}
@@ -1052,14 +1034,14 @@ if (clienteExiste) {
       })
     }
   >
-    <option value="urgente">🔴 Urgente</option>
-    <option value="en_curso">🟡 En curso</option>
-    <option value="estable">🟢 Estable</option>
-    <option value="bloqueado">🔵 Bloqueado</option>
+    <option value="urgente">{translateUI("🔴 Urgente")}</option>
+    <option value="en_curso">{translateUI("🟡 En curso")}</option>
+    <option value="estable">{translateUI("🟢 Estable")}</option>
+    <option value="bloqueado">{translateUI("🔵 Bloqueado")}</option>
   </select>
 </div>
 <div className="field">
-  <label htmlFor="importancia">Importancia (1-10)</label>
+  <label htmlFor="importancia">{translateUI("Importancia (1-10)")}</label>
   <input
     id="importancia"
     type="number"
@@ -1072,7 +1054,7 @@ if (clienteExiste) {
 </div>
         <div className="field-row">
           <div className="field">
-            <label htmlFor="presupuestoTotal">Presupuesto total (€)</label>
+            <label htmlFor="presupuestoTotal">{translateUI("Presupuesto total (€)")}</label>
             <input
               id="presupuestoTotal"
               type="number"
@@ -1086,63 +1068,61 @@ if (clienteExiste) {
         <div
   ref={economiaRef}
   className="section-label"
->
-  Economía del proyecto
-</div>
+>{translateUI("Economía del proyecto")}</div>
 
 <div className="field-row">
   <div className="field">
-    <label>Tipo de proyecto</label>
+    <label>{translateUI("Tipo de proyecto")}</label>
     <select
       value={datos.tipoProyecto}
       onChange={(e) => set('tipoProyecto', e.target.value)}
     >
-      <optgroup label="🏠 Residencial">
-        <option>Vivienda unifamiliar</option>
-        <option>Piso / apartamento</option>
-        <option>Reforma parcial</option>
-        <option>Reforma integral</option>
-        <option>Cocina / baño</option>
-        <option>Segunda residencia</option>
+      <optgroup label={translateUI("🏠 Residencial")}>
+        <option value="Vivienda unifamiliar">{translateUI("Vivienda unifamiliar")}</option>
+        <option value="Piso / apartamento">{translateUI("Piso / apartamento")}</option>
+        <option value="Reforma parcial">{translateUI("Reforma parcial")}</option>
+        <option value="Reforma integral">{translateUI("Reforma integral")}</option>
+        <option value="Cocina / baño">{translateUI("Cocina / baño")}</option>
+        <option value="Segunda residencia">{translateUI("Segunda residencia")}</option>
       </optgroup>
 
-      <optgroup label="🏢 Contract / Hospitality">
-        <option>Oficina</option>
-        <option>Hotel</option>
-        <option>Restaurante</option>
-        <option>Cafetería / bar</option>
-        <option>Comercio / retail</option>
-        <option>Clínica / centro profesional</option>
-        <option>Local comercial</option>
+      <optgroup label={translateUI("🏢 Contract / Hospitality")}>
+        <option value="Oficina">{translateUI("Oficina")}</option>
+        <option value="Hotel">{translateUI("Hotel")}</option>
+        <option value="Restaurante">{translateUI("Restaurante")}</option>
+        <option value="Cafetería / bar">{translateUI("Cafetería / bar")}</option>
+        <option value="Comercio / retail">{translateUI("Comercio / retail")}</option>
+        <option value="Clínica / centro profesional">{translateUI("Clínica / centro profesional")}</option>
+        <option value="Local comercial">{translateUI("Local comercial")}</option>
       </optgroup>
 
-      <optgroup label="🪑 Diseño y producto">
-        <option>Diseño de mobiliario</option>
-        <option>Diseño de piezas a medida</option>
-        <option>Ebanistería</option>
-        <option>Diseño de iluminación</option>
-        <option>Diseño de elementos especiales</option>
+      <optgroup label={translateUI("🪑 Diseño y producto")}>
+        <option value="Diseño de mobiliario">{translateUI("Diseño de mobiliario")}</option>
+        <option value="Diseño de piezas a medida">{translateUI("Diseño de piezas a medida")}</option>
+        <option value="Ebanistería">{translateUI("Ebanistería")}</option>
+        <option value="Diseño de iluminación">{translateUI("Diseño de iluminación")}</option>
+        <option value="Diseño de elementos especiales">{translateUI("Diseño de elementos especiales")}</option>
       </optgroup>
 
-      <optgroup label="🏗️ Arquitectura e intervención">
-        <option>Obra nueva</option>
-        <option>Rehabilitación</option>
-        <option>Exterior / terrazas / jardines</option>
-        <option>Fachada</option>
+      <optgroup label={translateUI("🏗️ Arquitectura e intervención")}>
+        <option value="Obra nueva">{translateUI("Obra nueva")}</option>
+        <option value="Rehabilitación">{translateUI("Rehabilitación")}</option>
+        <option value="Exterior / terrazas / jardines">{translateUI("Exterior / terrazas / jardines")}</option>
+        <option value="Fachada">{translateUI("Fachada")}</option>
       </optgroup>
 
-      <optgroup label="🎨 Identidad y marca">
-        <option>Branding</option>
-        <option>Diseño gráfico</option>
-        <option>Imagen corporativa</option>
-        <option>Señalética</option>
+      <optgroup label={translateUI("🎨 Identidad y marca")}>
+        <option value="Branding">{translateUI("Branding")}</option>
+        <option value="Diseño gráfico">{translateUI("Diseño gráfico")}</option>
+        <option value="Imagen corporativa">{translateUI("Imagen corporativa")}</option>
+        <option value="Señalética">{translateUI("Señalética")}</option>
       </optgroup>
 
-      <optgroup label="Opciones anteriores">
-        <option>Vivienda</option>
-        <option>Comercio</option>
-        <option>Mobiliario</option>
-        <option>Otro</option>
+      <optgroup label={translateUI("Opciones anteriores")}>
+        <option value="Vivienda">{translateUI("Vivienda")}</option>
+        <option value="Comercio">{translateUI("Comercio")}</option>
+        <option value="Mobiliario">{translateUI("Mobiliario")}</option>
+        <option value="Otro">{translateUI("Otro")}</option>
       </optgroup>
     </select>
   </div>
@@ -1150,7 +1130,7 @@ if (clienteExiste) {
 
 <div className="field-row">
   <div className="field">
-    <label>Honorarios diseño (€)</label>
+    <label>{translateUI("Honorarios diseño (€)")}</label>
     <input
       type="number"
       value={datos.honorariosDiseno}
@@ -1159,7 +1139,7 @@ if (clienteExiste) {
   </div>
 
   <div className="field">
-    <label>Gestión / seguimiento (€)</label>
+    <label>{translateUI("Gestión / seguimiento (€)")}</label>
     <input
       type="number"
       value={datos.honorariosGestion}
@@ -1170,7 +1150,7 @@ if (clienteExiste) {
 
 <div className="field-row">
   <div className="field">
-    <label>Otros servicios (€)</label>
+    <label>{translateUI("Otros servicios (€)")}</label>
     <input
       type="number"
       value={datos.otrosImportes}
@@ -1179,7 +1159,7 @@ if (clienteExiste) {
   </div>
 
   <div className="field">
-    <label>Horas estimadas</label>
+    <label>{translateUI("Horas estimadas")}</label>
     <input
       type="number"
       value={datos.horasEstimadas}
@@ -1196,7 +1176,7 @@ if (clienteExiste) {
          
          
           <div className="field">
-            <label htmlFor="presupuestoGastado">Gastado hasta ahora (€)</label>
+            <label htmlFor="presupuestoGastado">{translateUI("Gastado hasta ahora (€)")}</label>
             <input
               id="presupuestoGastado"
               type="number"
@@ -1208,7 +1188,7 @@ if (clienteExiste) {
           </div>
         </div>
 <div className="field">
-  <label>Presupuesto</label>
+  <label>{translateUI("Presupuesto")}</label>
   <button
     type="button"
     className="btn"
@@ -1216,13 +1196,11 @@ if (clienteExiste) {
       document.getElementById('pdfPresupuesto').click()
     }
   >
-    {subiendoPdf ? 'Subiendo PDF…' : '📎 Subir presupuesto PDF'}
+    {subiendoPdf ? translateUI("Subiendo PDF…") : translateUI("📎 Subir presupuesto PDF")}
   </button>
 
   {subiendoPdf && (
-    <small className="mono" style={{ marginTop: '8px' }}>
-      Guardando archivo en el almacenamiento seguro…
-    </small>
+    <small className="mono" style={{ marginTop: '8px' }}>{translateUI("Guardando archivo en el almacenamiento seguro…")}</small>
   )}
 
   {datos.presupuestoPdf && (
@@ -1232,29 +1210,27 @@ if (clienteExiste) {
       rel="noreferrer"
       className="btn"
       style={{ marginTop: '8px' }}
-    >
-      📄 Ver presupuesto
-    </a>
+    >{translateUI("📄 Ver presupuesto")}</a>
   )}
 </div>
-<div className="section-label">Resumen económico</div>
+<div className="section-label">{translateUI("Resumen económico")}</div>
 
 <div className="field-row">
 
   <div className="field">
-    <label>Valor del proyecto</label>
+    <label>{translateUI("Valor del proyecto")}</label>
     <input
       type="text"
-      value={`${totalProyecto.toLocaleString('es-ES')} €`}
+      value={`${totalProyecto.toLocaleString(getLocale())} €`}
       readOnly
     />
   </div>
 
   <div className="field">
-    <label>Total cobrado</label>
+    <label>{translateUI("Total cobrado")}</label>
     <input
       type="text"
-      value={`${totalCobrado.toLocaleString('es-ES')} €`}
+      value={`${totalCobrado.toLocaleString(getLocale())} €`}
       readOnly
     />
   </div>
@@ -1262,32 +1238,32 @@ if (clienteExiste) {
 </div>
 
 <div className="field">
-  <label>Pendiente de cobro</label>
+  <label>{translateUI("Pendiente de cobro")}</label>
   <input
     type="text"
-    value={`${pendienteCobro.toLocaleString('es-ES')} €`}
+    value={`${pendienteCobro.toLocaleString(getLocale())} €`}
     readOnly
   />
 </div>
 {totalPrevisto > 0 && (
   <div className="field">
-    <label>Cobros previstos</label>
+    <label>{translateUI("Cobros previstos")}</label>
     <input
       type="text"
-      value={`${totalPrevisto.toLocaleString('es-ES')} €`}
+      value={`${totalPrevisto.toLocaleString(getLocale())} €`}
       readOnly
     />
   </div>
 )}
 
-<div className="section-label">Cobros</div>
+<div className="section-label">{translateUI("Cobros")}</div>
 {(datos.cobros || []).map((c) => (
   <div className="list-row" key={c.id}>
-    <span>{c.fecha}</span>
+    <span>{formatearFecha(c.fecha)}</span>
     <span>{c.concepto}</span>
 <strong>
-  {Number(c.importe).toLocaleString('es-ES')} € 
-  {c.estado === 'previsto' ? ' ⏳ Previsto' : ' ✓ Cobrado'}
+  {Number(c.importe).toLocaleString(getLocale())} €
+  {c.estado === 'previsto' ? translateUI(" ⏳ Previsto") : translateUI(" ✓ Cobrado")}
 </strong>
    
    {c.estado === 'previsto' && (
@@ -1295,9 +1271,7 @@ if (clienteExiste) {
     type="button"
     className="btn btn-sm"
     onClick={() => marcarCobrado(c.id)}
-  >
-    ✓ Cobrar
-  </button>
+  >{translateUI("✓ Cobrar")}</button>
 )}
 
     <button
@@ -1309,7 +1283,7 @@ if (clienteExiste) {
           datos.cobros.filter((x) => x.id !== c.id)
         )
       }
-      aria-label="Eliminar cobro"
+      aria-label={translateUI("Eliminar cobro")}
     >
       ✕
     </button>
@@ -1331,7 +1305,7 @@ if (clienteExiste) {
 
 <input
   type="text"
-  placeholder="Concepto"
+  placeholder={translateUI("Concepto")}
   value={nuevoCobro.concepto}
   onChange={(e) =>
     setNuevoCobro({
@@ -1343,7 +1317,7 @@ if (clienteExiste) {
 
 <input
   type="number"
-  placeholder="Importe"
+  placeholder={translateUI("Importe")}
   value={nuevoCobro.importe}
   onChange={(e) =>
     setNuevoCobro({
@@ -1361,40 +1335,34 @@ if (clienteExiste) {
     })
   }
 >
-  <option value="cobrado">
-    Cobrado
-  </option>
+  <option value="cobrado">{translateUI("Cobrado")}</option>
 
-  <option value="previsto">
-    Previsto
-  </option>
+  <option value="previsto">{translateUI("Previsto")}</option>
 </select>
 <button
  type="button"
  className="btn btn-sm"
  onClick={agregarCobro}
->
- Añadir
-</button>
+>{translateUI("Añadir")}</button>
 
 </div>
-        <div className="section-label dashboard-section-heading">Comisiones de colaboradores</div>
+        <div className="section-label dashboard-section-heading">{translateUI("Comisiones de colaboradores")}</div>
 
 <div className="commission-summary">
   <div className="field-row">
     <div className="field">
-      <label>Presupuestos aceptados</label>
+      <label>{translateUI("Presupuestos aceptados")}</label>
       <input
         type="text"
-        value={`${totalPresupuestosColaboradores.toLocaleString('es-ES')} €`}
+        value={`${totalPresupuestosColaboradores.toLocaleString(getLocale())} €`}
         readOnly
       />
     </div>
     <div className="field">
-      <label>Comisiones generadas</label>
+      <label>{translateUI("Comisiones generadas")}</label>
       <input
         type="text"
-        value={`${totalComisiones.toLocaleString('es-ES')} €`}
+        value={`${totalComisiones.toLocaleString(getLocale())} €`}
         readOnly
       />
     </div>
@@ -1402,18 +1370,18 @@ if (clienteExiste) {
 
   <div className="field-row">
     <div className="field">
-      <label>Comisiones cobradas</label>
+      <label>{translateUI("Comisiones cobradas")}</label>
       <input
         type="text"
-        value={`${totalComisionesCobradas.toLocaleString('es-ES')} €`}
+        value={`${totalComisionesCobradas.toLocaleString(getLocale())} €`}
         readOnly
       />
     </div>
     <div className="field">
-      <label>Pendiente de cobrar</label>
+      <label>{translateUI("Pendiente de cobrar")}</label>
       <input
         type="text"
-        value={`${totalComisionesPendientes.toLocaleString('es-ES')} €`}
+        value={`${totalComisionesPendientes.toLocaleString(getLocale())} €`}
         readOnly
       />
     </div>
@@ -1421,30 +1389,30 @@ if (clienteExiste) {
 </div>
 
 <div className="commission-new">
-  <div className="commission-new-title">+ Añadir nueva comisión</div>
+  <div className="commission-new-title">{translateUI("+ Añadir nueva comisión")}</div>
   <div className="commission-grid">
     <div className="field">
-      <label>Colaborador</label>
+      <label>{translateUI("Colaborador")}</label>
       <input
         type="text"
-        placeholder="Nombre del colaborador"
+        placeholder={translateUI("Nombre del colaborador")}
         value={nuevaComision.colaborador}
         onChange={(e) => setNuevaComision({ ...nuevaComision, colaborador: e.target.value })}
       />
     </div>
 
     <div className="field">
-      <label>Concepto</label>
+      <label>{translateUI("Concepto")}</label>
       <input
         type="text"
-        placeholder="Carpintería, iluminación…"
+        placeholder={translateUI("Carpintería, iluminación…")}
         value={nuevaComision.concepto}
         onChange={(e) => setNuevaComision({ ...nuevaComision, concepto: e.target.value })}
       />
     </div>
 
     <div className="field">
-      <label>Presupuesto aceptado (€)</label>
+      <label>{translateUI("Presupuesto aceptado (€)")}</label>
       <input
         type="number"
         min="0"
@@ -1456,7 +1424,7 @@ if (clienteExiste) {
     </div>
 
     <div className="field">
-      <label>Comisión acordada (%)</label>
+      <label>{translateUI("Comisión acordada (%)")}</label>
       <input
         type="number"
         min="0"
@@ -1468,7 +1436,7 @@ if (clienteExiste) {
     </div>
 
     <div className="field">
-      <label>Fecha presupuesto</label>
+      <label>{translateUI("Fecha presupuesto")}</label>
       <input
         type="date"
         value={nuevaComision.fecha}
@@ -1477,13 +1445,13 @@ if (clienteExiste) {
     </div>
 
     <div className="field">
-      <label>Estado inicial</label>
+      <label>{translateUI("Estado inicial")}</label>
       <select
         value={nuevaComision.estado}
         onChange={(e) => setNuevaComision({ ...nuevaComision, estado: e.target.value })}
       >
-        <option value="pendiente">Pendiente</option>
-        <option value="cobrada">Cobrada</option>
+        <option value="pendiente">{translateUI("Pendiente")}</option>
+        <option value="cobrada">{translateUI("Cobrada")}</option>
       </select>
     </div>
   </div>
@@ -1492,9 +1460,7 @@ if (clienteExiste) {
     type="button"
     className="btn btn-sm"
     onClick={agregarComision}
-  >
-    + Añadir comisión
-  </button>
+  >{translateUI("+ Añadir comisión")}</button>
 </div>
 
 
@@ -1504,20 +1470,20 @@ if (clienteExiste) {
   return (
     <div className="commission-card" key={comision.id}>
       <div className="commission-card-head">
-        <strong>{comision.colaborador || 'Colaborador'}</strong>
+        <strong>{comision.colaborador || translateUI("Colaborador")}</strong>
         <span
           className={
             'commission-status ' +
             (comision.estado === 'cobrada' ? 'is-paid' : 'is-pending')
           }
         >
-          {comision.estado === 'cobrada' ? '✓ Cobrada' : '⏳ Pendiente'}
+          {comision.estado === 'cobrada' ? translateUI("✓ Cobrada") : translateUI("⏳ Pendiente")}
         </span>
       </div>
 
       <div className="commission-grid">
         <div className="field">
-          <label>Colaborador</label>
+          <label>{translateUI("Colaborador")}</label>
           <input
             type="text"
             value={comision.colaborador || ''}
@@ -1526,7 +1492,7 @@ if (clienteExiste) {
         </div>
 
         <div className="field">
-          <label>Concepto</label>
+          <label>{translateUI("Concepto")}</label>
           <input
             type="text"
             value={comision.concepto || ''}
@@ -1535,7 +1501,7 @@ if (clienteExiste) {
         </div>
 
         <div className="field">
-          <label>Presupuesto aceptado (€)</label>
+          <label>{translateUI("Presupuesto aceptado (€)")}</label>
           <input
             type="number"
             min="0"
@@ -1546,7 +1512,7 @@ if (clienteExiste) {
         </div>
 
         <div className="field">
-          <label>Comisión acordada (%)</label>
+          <label>{translateUI("Comisión acordada (%)")}</label>
           <input
             type="number"
             min="0"
@@ -1557,16 +1523,16 @@ if (clienteExiste) {
         </div>
 
         <div className="field">
-          <label>Comisión (€)</label>
+          <label>{translateUI("Comisión (€)")}</label>
           <input
             type="text"
-            value={`${importeComision.toLocaleString('es-ES')} €`}
+            value={`${importeComision.toLocaleString(getLocale())} €`}
             readOnly
           />
         </div>
 
         <div className="field">
-          <label>Fecha presupuesto</label>
+          <label>{translateUI("Fecha presupuesto")}</label>
           <input
             type="date"
             value={comision.fecha || ''}
@@ -1576,8 +1542,7 @@ if (clienteExiste) {
       </div>
 
       {comision.estado === 'cobrada' && comision.fechaCobro && (
-        <div className="commission-paid-date">
-          Cobrado el {comision.fechaCobro}
+        <div className="commission-paid-date">{translateUI("Cobrado el ")}{formatearFecha(comision.fechaCobro)}
         </div>
       )}
 
@@ -1587,25 +1552,21 @@ if (clienteExiste) {
             type="button"
             className="btn btn-sm"
             onClick={() => marcarComisionPendiente(comision.id)}
-          >
-            ↩ Marcar pendiente
-          </button>
+          >{translateUI("↩ Marcar pendiente")}</button>
         ) : (
           <button
             type="button"
             className="btn btn-sm"
             onClick={() => marcarComisionCobrada(comision.id)}
-          >
-            ✓ Marcar cobrada
-          </button>
+          >{translateUI("✓ Marcar cobrada")}</button>
         )}
 
         <label className="btn btn-sm commission-upload-btn">
           {subiendoComisionId === comision.id
-            ? 'Subiendo…'
+            ? translateUI("Subiendo…")
             : comision.presupuestoPdf
-              ? '📎 Cambiar PDF'
-              : '📎 Subir presupuesto PDF'}
+              ? translateUI("📎 Cambiar PDF")
+              : translateUI("📎 Subir presupuesto PDF")}
           <input
             type="file"
             accept="application/pdf"
@@ -1623,17 +1584,15 @@ if (clienteExiste) {
             target="_blank"
             rel="noreferrer"
             className="btn btn-sm"
-          >
-            📄 Ver presupuesto
-          </a>
+          >{translateUI("📄 Ver presupuesto")}</a>
         )}
 
         <button
           type="button"
           className="icon-btn"
           onClick={() => borrarComision(comision.id)}
-          aria-label="Eliminar comisión"
-          title="Eliminar comisión"
+          aria-label={translateUI("Eliminar comisión")}
+          title={translateUI("Eliminar comisión")}
         >
           ✕
         </button>
@@ -1643,7 +1602,7 @@ if (clienteExiste) {
 })}
 
 
-<div ref={tareasRef} className="section-label">Tareas</div>
+<div ref={tareasRef} className="section-label">{translateUI("Tareas")}</div>
         {datos.tareas.map((t) => (
           <div className="list-row" key={t.id}>
             <input type="checkbox" checked={t.hecha} onChange={() => alternarTarea(t.id)} />
@@ -1658,7 +1617,7 @@ if (clienteExiste) {
               }
               style={{ textDecoration: t.hecha ? 'line-through' : 'none', color: t.hecha ? 'var(--ink-faint)' : 'inherit' }}
             />
-            <button type="button" className="icon-btn" onClick={() => borrarTarea(t.id)} aria-label="Eliminar tarea">
+            <button type="button" className="icon-btn" onClick={() => borrarTarea(t.id)} aria-label={translateUI("Eliminar tarea")}>
               ✕
             </button>
           </div>
@@ -1666,7 +1625,7 @@ if (clienteExiste) {
         <div className="add-row">
           <input
             type="text"
-            placeholder="Añadir tarea y pulsar Enter"
+            placeholder={translateUI("Añadir tarea y pulsar Enter")}
             value={nuevaTarea}
             onChange={(e) => setNuevaTarea(e.target.value)}
             onKeyDown={(e) => {
@@ -1676,12 +1635,10 @@ if (clienteExiste) {
               }
             }}
           />
-          <button type="button" className="btn btn-sm" onClick={agregarTarea}>
-            Añadir
-          </button>
+          <button type="button" className="btn btn-sm" onClick={agregarTarea}>{translateUI("Añadir")}</button>
         </div>
 
-        <div className="section-label">Proveedores</div>
+        <div className="section-label">{translateUI("Proveedores")}</div>
         {datos.proveedores.map((p) => (
           <div className="list-row" key={p.id}>
             <input
@@ -1697,11 +1654,11 @@ if (clienteExiste) {
             />
             <input
               type="text"
-              placeholder="contacto / teléfono"
+              placeholder={translateUI("contacto / teléfono")}
               value={p.contacto}
               onChange={(e) => actualizarProveedorContacto(p.id, e.target.value)}
             />
-            <button type="button" className="icon-btn" onClick={() => borrarProveedor(p.id)} aria-label="Eliminar proveedor">
+            <button type="button" className="icon-btn" onClick={() => borrarProveedor(p.id)} aria-label={translateUI("Eliminar proveedor")}>
               ✕
             </button>
           </div>
@@ -1709,7 +1666,7 @@ if (clienteExiste) {
         <div className="add-row">
           <input
             type="text"
-            placeholder="Añadir proveedor y pulsar Enter"
+            placeholder={translateUI("Añadir proveedor y pulsar Enter")}
             value={nuevoProveedor}
             onChange={(e) => setNuevoProveedor(e.target.value)}
             onKeyDown={(e) => {
@@ -1719,24 +1676,20 @@ if (clienteExiste) {
               }
             }}
           />
-          <button type="button" className="btn btn-sm" onClick={agregarProveedor}>
-          Añadir
-        </button>
+          <button type="button" className="btn btn-sm" onClick={agregarProveedor}>{translateUI("Añadir")}</button>
       </div>
 
     <ProjectHistory
   proyecto={datos}
   onDeleteHistory={borrarHistorial}
 />
-      <div className="section-label">
-        Notas
-      </div>
+      <div className="section-label">{translateUI("Notas")}</div>
 
       <div className="field">
         <textarea
           value={datos.notas}
           onChange={(e) => set('notas', e.target.value)}
-          placeholder="Observaciones, medidas, referencias…"
+          placeholder={translateUI("Observaciones, medidas, referencias…")}
         />
       </div>
 
@@ -1745,24 +1698,16 @@ if (clienteExiste) {
             {!esNuevo && (
               <>
                 {datos.estado === 'finalizado' ? (
-                  <button type="button" className="btn btn-ghost" disabled={guardando || subiendoImagen} onClick={onReopen}>
-                    ↩ Reabrir proyecto
-                  </button>
+                  <button type="button" className="btn btn-ghost" disabled={guardando || subiendoImagen} onClick={onReopen}>{translateUI("↩ Reabrir proyecto")}</button>
                 ) : (
-                  <button type="button" className="btn btn-ghost" disabled={guardando || subiendoImagen} onClick={onFinalize}>
-                    ✓ Finalizar proyecto
-                  </button>
+                  <button type="button" className="btn btn-ghost" disabled={guardando || subiendoImagen} onClick={onFinalize}>{translateUI("✓ Finalizar proyecto")}</button>
                 )}
-                <button type="button" className="btn btn-ghost btn-danger" disabled={guardando || subiendoImagen} onClick={() => onDelete(datos.id)}>
-                  Eliminar proyecto
-                </button>
+                <button type="button" className="btn btn-ghost btn-danger" disabled={guardando || subiendoImagen} onClick={() => onDelete(datos.id)}>{translateUI("Eliminar proyecto")}</button>
               </>
             )}
           </div>
           <div className="right">
-            <button type="button" className="btn btn-ghost" onClick={onClose}>
-              Cancelar
-            </button>
+            <button type="button" className="btn btn-ghost" onClick={onClose}>{translateUI("Cancelar")}</button>
           <input
   ref={contactoInputRef}
   type="file"
@@ -1778,7 +1723,7 @@ if (clienteExiste) {
   onChange={subirPresupuesto}
 />         
            <button type="submit" className="btn btn-primary" disabled={guardando || subiendoImagen || Boolean(subiendoComisionId) || subiendoPdf}>
-              {guardando || subiendoImagen ? 'Guardando…' : 'Guardar'}
+              {guardando || subiendoImagen ? translateUI("Guardando…") : translateUI("Guardar")}
             </button>
           </div>
         </div>

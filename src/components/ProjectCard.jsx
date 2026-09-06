@@ -1,3 +1,4 @@
+import { t as translateUI, getLocale, formatRelativeDays } from '../i18n.js'
 import PhaseRail from './PhaseRail.jsx'
 import { diasHasta, formatearFecha } from '../storage.js'
 
@@ -96,7 +97,7 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
         (tieneImagen ? ' has-project-image' : '')
       }
       style={{
-        borderLeft: `5px solid ${colorPrioridad}`,
+        borderInlineStart: `5px solid ${colorPrioridad}`,
       }}
     >
       {tieneImagen && (
@@ -107,7 +108,7 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
       )}
 
       {finalizado && (
-        <div className="finalized-watermark">FINALIZADO</div>
+        <div className="finalized-watermark">{translateUI("FINALIZADO")}</div>
       )}
 
      <div className="card-head">
@@ -117,31 +118,28 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
             className="project-open-btn"
             onClick={onOpen}
           >
-            {proyecto.nombre || 'Sin nombre'}
+            {proyecto.nombre || translateUI("Sin nombre")}
           </button>
         </h3>
 
         {!finalizado && vencido && (
-          <span className="tag-urgent">
-            Entrega vencida
-          </span>
+          <span className="tag-urgent">{translateUI("Entrega vencida")}</span>
         )}
 
 {!finalizado && !vencido && urgente && (
   <button
     className="tag-urgent"
+    aria-label={`${translateUI("Entrega")}: ${formatRelativeDays(dias)}`}
     onClick={(e) => {
       e.stopPropagation()
         onOpenDelivery(proyecto)
     }}
-  >
-    Entrega en {dias}d
-  </button>
+  >{translateUI("Entrega")}: &lt;{dias.toLocaleString(getLocale())} {translateUI("d")}</button>
 )}
       </div>
 
       <p className={tieneImagen ? "card-client card-client-image" : "card-client"}>
-  {proyecto.cliente || 'Sin cliente asignado'}
+  {proyecto.cliente || translateUI("Sin cliente asignado")}
 </p>
 
       <PhaseRail fase={proyecto.fase} />
@@ -164,59 +162,49 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
           >
             <span className="mono">
               <strong>
-                {totalCobrado.toLocaleString('es-ES')} €
-              </strong>{' '}
-              cobrados
-            </span>
+                {totalCobrado.toLocaleString(getLocale())} €
+              </strong>{' '}{translateUI("cobrados")}</span>
 
-            <span>
-              Pendiente:{' '}
-              {pendienteCobro.toLocaleString('es-ES')} €
+            <span>{translateUI("Pendiente:")}{' '}
+              {pendienteCobro.toLocaleString(getLocale())} €
             </span>
 
             {totalPrevisto > 0 && (
-              <span>
-                Previsto:{' '}
-                {totalPrevisto.toLocaleString('es-ES')} €
+              <span>{translateUI("Previsto:")}{' '}
+                {totalPrevisto.toLocaleString(getLocale())} €
               </span>
             )}
           </div>
 
-          <div className="mono" style={{ marginTop: 6 }}>
-            Total proyecto:{' '}
-            {valorProyecto.toLocaleString('es-ES')} €
+          <div className="mono" style={{ marginTop: 6 }}>{translateUI("Total proyecto:")}{' '}
+            {valorProyecto.toLocaleString(getLocale())} €
           </div>
         </div>
       )}
 
       {comisiones.length > 0 && (
         <div className="card-finance-section">
-          <div className="section-label">Comisiones</div>
+          <div className="section-label">{translateUI("Comisiones")}</div>
 
           <div className="card-stats">
-            <span>
-              Total:{' '}
-              <strong>{totalComisiones.toLocaleString('es-ES')} €</strong>
+            <span>{translateUI("Total:")}{' '}
+              <strong>{totalComisiones.toLocaleString(getLocale())} €</strong>
             </span>
-            <span>
-              Cobradas: {comisionesCobradas.toLocaleString('es-ES')} €
+            <span>{translateUI("Cobradas: ")}{comisionesCobradas.toLocaleString(getLocale())} €
             </span>
           </div>
 
           <div className="card-stats">
-            <span>
-              Pendiente: {comisionesPendientes.toLocaleString('es-ES')} €
+            <span>{translateUI("Pendiente: ")}{comisionesPendientes.toLocaleString(getLocale())} €
             </span>
-            <span>
-              Previsto: {comisionesPrevistas.toLocaleString('es-ES')} €
+            <span>{translateUI("Previsto: ")}{comisionesPrevistas.toLocaleString(getLocale())} €
             </span>
           </div>
         </div>
       )}
 
       <div className="card-footer">
-        <span>
-          Inicio: {formatearFecha(proyecto.fechaInicio)}
+        <span>{translateUI("Inicio: ")}{formatearFecha(proyecto.fechaInicio)}
         </span>
 
       {tareas.length > 0 && (
@@ -227,11 +215,9 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
       e.stopPropagation()
       onOpenTasks(proyecto)
     }}
-  >
-    Tareas
-    {tareasPendientes > 0
-      ? ` · ${tareasPendientes} pendiente${tareasPendientes !== 1 ? 's' : ''}`
-      : ' · completadas'}
+  >{translateUI("Tareas")}{tareasPendientes > 0
+      ? translateUI(" · Tareas pendientes: {0}", { 0: tareasPendientes.toLocaleString(getLocale()) })
+      : translateUI(" · completadas")}
   </button>
 )}
       </div>

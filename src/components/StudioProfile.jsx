@@ -1,3 +1,4 @@
+import { t as translateUI } from '../i18n.js'
 import { useEffect, useState } from 'react'
 import { supabase } from '../supabase.js'
 
@@ -75,7 +76,7 @@ export default function StudioProfile({ children, usuario }) {
       console.error('ERROR GUARDANDO PERFIL:', error)
 
       alert(
-        `No se pudo guardar el perfil.\n\n${error.message}`
+        translateUI("No se pudo guardar el perfil.\n\n{0}", { 0: error.message })
       )
 
       setGuardando(false)
@@ -120,7 +121,7 @@ export default function StudioProfile({ children, usuario }) {
         type="button"
         className="profile-trigger"
         onClick={() => setAbierto((a) => !a)}
-        aria-label="Abrir perfil del estudio"
+        aria-label={translateUI("Abrir perfil del estudio")}
       >
         {children}
       </button>
@@ -131,7 +132,7 @@ export default function StudioProfile({ children, usuario }) {
           {!editando ? (
             <>
               <h3 className="serif">
-                {perfil.nombre || 'Perfil del estudio'}
+                {perfil.nombre || translateUI("Perfil del estudio")}
               </h3>
 
               {perfil.web && (
@@ -172,9 +173,7 @@ export default function StudioProfile({ children, usuario }) {
                 type="button"
                 className="btn"
                 onClick={() => setEditando(true)}
-              >
-                Editar perfil
-              </button>
+              >{translateUI("Editar perfil")}</button>
             </>
           ) : (
             <>
@@ -182,28 +181,28 @@ export default function StudioProfile({ children, usuario }) {
                 name="nombre"
                 value={perfil.nombre}
                 onChange={cambiarCampo}
-                placeholder="Nombre y apellidos"
+                placeholder={translateUI("Nombre y apellidos")}
               />
 
               <input
                 name="web"
                 value={perfil.web}
                 onChange={cambiarCampo}
-                placeholder="Web"
+                placeholder={translateUI("Web")}
               />
 
               <input
                 name="instagram"
                 value={perfil.instagram}
                 onChange={cambiarCampo}
-                placeholder="Instagram"
+                placeholder={translateUI("Instagram")}
               />
 
               <input
                 name="telefono"
                 value={perfil.telefono}
                 onChange={cambiarCampo}
-                placeholder="Teléfono"
+                placeholder={translateUI("Teléfono")}
               />
 
               <button
@@ -212,7 +211,7 @@ export default function StudioProfile({ children, usuario }) {
                 onClick={guardarPerfil}
                 disabled={guardando}
               >
-                {guardando ? 'Guardando...' : 'Guardar'}
+                {guardando ? translateUI("Guardando...") : translateUI("Guardar")}
               </button>
 
               <button
@@ -220,9 +219,7 @@ export default function StudioProfile({ children, usuario }) {
                 className="btn"
                 onClick={() => setEditando(false)}
                 disabled={guardando}
-              >
-                Cancelar
-              </button>
+              >{translateUI("Cancelar")}</button>
             </>
           )}
 
