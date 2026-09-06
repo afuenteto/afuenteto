@@ -58,10 +58,8 @@ export default function App() {
       return undefined
     }
 
-    const ciclo = 2400
-    const transcurrido = Date.now() - splashInicioRef.current
-    const restante = ciclo - (transcurrido % ciclo)
-    const timer = setTimeout(() => setSplashTerminado(true), restante)
+    const ciclo = 1300
+    const timer = setTimeout(() => setSplashTerminado(true), ciclo)
 
     return () => clearTimeout(timer)
   }, [cargando])

@@ -144,6 +144,7 @@ a {
   inset: 0;
 
   z-index: 9999;
+  isolation: isolate;
 
   display: flex;
   align-items: center;
@@ -151,6 +152,17 @@ a {
 
   background: var(--bg);
 
+}
+
+.splash::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  z-index: 2;
+  background: #fff;
+  pointer-events: none;
+  opacity: 0.5;
+  animation: splashVeil 1.3s ease-in-out infinite;
 }
 
 .splash-inner {
@@ -174,12 +186,8 @@ a {
   box-shadow:
     0 12px 35px rgba(0, 0, 0, 0.16);
 
-  will-change: opacity, transform;
-
-  animation:
-    splashLogo 2.4s
-    cubic-bezier(.2, .8, .2, 1)
-    infinite;
+  position: relative;
+  z-index: 1;
 }
 
 /* Ocultar cualquier texto que pudiera existir */
@@ -191,25 +199,25 @@ a {
 
 /* ---------- Animación icono ---------- */
 
-@keyframes splashLogo {
+@keyframes splashVeil {
   0% {
-    opacity: 0;
-    transform: scale(0.85);
+    opacity: 0.5;
   }
 
-  25% {
-    opacity: 1;
-    transform: scale(1);
+  35% {
+    opacity: 0.3;
+  }
+
+  55% {
+    opacity: 0.14;
   }
 
   75% {
-    opacity: 1;
-    transform: scale(1);
+    opacity: 0.32;
   }
 
   100% {
-    opacity: 0;
-    transform: scale(1.04);
+    opacity: 0.5;
   }
 }
 
