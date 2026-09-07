@@ -1,8 +1,10 @@
 import { t as translateUI } from '../i18n.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 export default function BlockedPanel({
   proyectos,
   onClose,
-  onOpen
+  onOpen,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
 
 
@@ -65,8 +67,8 @@ export default function BlockedPanel({
             </strong>
 
 
-            <span>{translateUI("Cliente: ")}{proyecto.cliente || translateUI("Sin cliente")}
-            </span>
+            {modulos.clientes && <span>{translateUI("Cliente: ")}{proyecto.cliente || translateUI("Sin cliente")}
+            </span>}
 
 
             <span>{translateUI("🔵 Proyecto bloqueado")}</span>

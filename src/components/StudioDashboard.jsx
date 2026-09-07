@@ -1,6 +1,7 @@
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 import { diasHasta } from '../storage.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
 
 export default function StudioDashboard({
@@ -10,7 +11,8 @@ export default function StudioDashboard({
   onOpenDeliveries,
   onOpenPayments,
   onFilterPhase,
-  onShowAll
+  onShowAll,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
 
   const [mostrarResumen, setMostrarResumen] = useState(false)
@@ -142,6 +144,7 @@ export default function StudioDashboard({
       <div className="dashboard-grid">
 
 
+        {modulos.economia && <>
         <div className="field">
           <label>{translateUI("Valor contratado")}</label>
 
@@ -170,6 +173,7 @@ export default function StudioDashboard({
             value={`${pendienteTotal.toLocaleString(getLocale())} €`}
           />
         </div>
+        </>}
 
 
         <div className="field">
@@ -182,15 +186,16 @@ export default function StudioDashboard({
         </div>
 
 
-        <div className="field">
+        {modulos.clientes && <div className="field">
           <label>{translateUI("Clientes registrados")}</label>
 
           <input
             readOnly
             value={clientes.length}
           />
-        </div>
+        </div>}
 
+        {modulos.economia && <>
         <div className="field">
           <label>{translateUI("Comisiones generadas")}</label>
           <input
@@ -214,12 +219,14 @@ export default function StudioDashboard({
             value={`${resumenComisiones.pendientes.toLocaleString(getLocale())} €`}
           />
         </div>
+        </>}
 
 
       </div>
 
 
 
+      {(modulos.tareas || modulos.entregas || modulos.economia) && <>
       <div className="section-label dashboard-section-heading">{translateUI("⚠️ Atención")}</div>
 
 
@@ -227,7 +234,7 @@ export default function StudioDashboard({
       <div className="dashboard-grid">
 
 
-        <div
+        {modulos.tareas && <div
           className="field dashboard-action attention-task"
           onClick={onOpenTasks}
         >
@@ -239,11 +246,11 @@ export default function StudioDashboard({
             value={tareasPendientes}
           />
 
-        </div>
+        </div>}
 
 
 
-        <div
+        {modulos.entregas && <div
           className="field dashboard-action attention-delivery"
           onClick={onOpenDeliveries}
         >
@@ -255,11 +262,11 @@ export default function StudioDashboard({
             value={entregasProximas}
           />
 
-        </div>
+        </div>}
 
 
 
-        <div
+        {modulos.economia && <div
           className="field dashboard-action attention-payment"
           onClick={onOpenPayments}
         >
@@ -271,10 +278,11 @@ export default function StudioDashboard({
             value={cobrosPendientes}
           />
 
-        </div>
+        </div>}
 
 
       </div>
+      </>}
 
 
 

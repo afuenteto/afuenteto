@@ -14,6 +14,14 @@ Utiliza Node.js 24, la misma versión configurada en el workflow de publicación
 
 La configuración del cliente Supabase está en src/supabase.js.
 
+## Organización modular
+
+El botón **Módulos** permite que cada usuario active o desactive Clientes, Tareas, Entregas, Economía, Documentos y Proveedores. Proyectos siempre está disponible. La selección se guarda en su cuenta de Supabase y desactivar una función conserva sus datos. Todas están activadas inicialmente. No requiere una migración de base de datos.
+
+La carga de proyectos está en `src/modules/projects` y las preferencias en `src/modules/preferences`. El mapa de módulos, las dependencias y los siguientes pasos están en [docs/MODULARIDAD.md](docs/MODULARIDAD.md).
+
+**Hoy en el estudio** aparece antes de las fichas. **Economía general** y **Resumen del estudio** aparecen después de ellas, justo antes del pie; los paneles respetan los módulos activos.
+
 ## Idiomas
 
 El selector **Idioma / Language**, situado al final de la aplicación a la izquierda, permite cambiar entre 20 idiomas. Con una sesión iniciada, el botón **Salir** aparece a su derecha en la misma fila. El selector también está disponible antes de iniciar sesión. La selección se conserva en este navegador y se sincroniza entre sus pestañas. Español sigue siendo el idioma inicial. Árabe y urdu utilizan escritura de derecha a izquierda; fechas y números se adaptan al idioma. Los importes siguen expresados en euros.
@@ -24,7 +32,7 @@ Las traducciones parten de una traducción automática, con revisión de termino
 
 ## Comprobaciones
 
-- npm test: conservación de campos, validación numérica, ordenación con filtros, fechas locales y renderizado de 15 componentes con proyectos vacíos y con datos.
+- npm test: conservación de campos, preferencias por usuario, errores y cambios de sesión, carga de proyectos, validación numérica, ordenación con filtros, fechas locales, traducciones y renderizado con módulos activos y desactivados.
 - npm run build: compilación de producción.
 - npm run preview: sirve la compilación para comprobarla en el navegador.
 

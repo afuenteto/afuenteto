@@ -1,11 +1,13 @@
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { useState } from 'react'
 import { diasHasta } from '../storage.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
 export default function TasksPanel({
   proyectos,
   onClose,
-  onCompleteTask
+  onCompleteTask,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
 
   const [confirmando, setConfirmando] = useState(null)
@@ -116,7 +118,7 @@ export default function TasksPanel({
               </span>
 
 
-              {diasEntrega(
+              {modulos.entregas && diasEntrega(
                 tarea.proyecto.fechaEntrega
               ) !== null && (
 

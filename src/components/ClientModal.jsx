@@ -1,6 +1,7 @@
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 import { supabase } from '../supabase.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
 
 export default function ClientModal({
@@ -12,7 +13,8 @@ export default function ClientModal({
   setClientes,
   onDeleteClient,
   onOpenProject,
-  onClose
+  onClose,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
 
 
@@ -315,7 +317,7 @@ export default function ClientModal({
 </div>
 
 
-        <div className="section-label">{translateUI("Resumen económico")}</div>
+        {modulos.economia && <div className="section-label">{translateUI("Resumen económico")}</div>}
 
 
 
@@ -331,6 +333,7 @@ export default function ClientModal({
 
 
 
+        {modulos.economia && <>
         <div className="panel-item">
 
           <strong>{translateUI("Contratado")}</strong>
@@ -364,6 +367,7 @@ export default function ClientModal({
           </span>
 
         </div>
+        </>}
 
 
 

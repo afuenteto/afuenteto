@@ -1,9 +1,11 @@
 import { t as translateUI, getLocale } from '../i18n.js'
 import { formatearFecha } from '../storage.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 export default function PaymentsPanel({
   proyectos,
   onClose,
-  onOpen
+  onOpen,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
 
   const cobros = []
@@ -85,8 +87,8 @@ export default function PaymentsPanel({
             </strong>
 
 
-            <span>{translateUI("Cliente: ")}{item.proyecto.cliente || translateUI("Sin cliente")}
-            </span>
+            {modulos.clientes && <span>{translateUI("Cliente: ")}{item.proyecto.cliente || translateUI("Sin cliente")}
+            </span>}
 
 
             <span>

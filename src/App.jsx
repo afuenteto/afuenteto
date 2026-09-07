@@ -1,10 +1,13 @@
 import { t as translateUI, getLanguage, subscribeLanguage } from './i18n.js'
 import { proyectoDesdeBD, proyectoParaBD } from './projectModel.js'
+import { cargarProyectosDeUsuario } from './modules/projects/index.js'
+import { ModulesSettings, modulosDeUsuario, guardarModulosDeUsuario,
+  conservarDatosDesactivados, notificarCambioModulos, CLAVE_AVISO_MODULOS } from './modules/preferences/index.js'
 import { reordenarProyectos, fechaLocal } from './projectUtils.js'
 import StudioDashboard from './components/StudioDashboard.jsx'
 import StudioToday from './components/StudioToday.jsx'
 import EconomicChart from './components/EconomicChart.jsx'
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import SortableProjectCard from './components/SortableProjectCard'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable'
@@ -20,7 +23,6 @@ import BlockedPanel from './components/BlockedPanel.jsx'
 import ClientModal from './components/ClientModal.jsx'
 import ClientsPanel from './components/ClientsPanel.jsx'
 import { supabase } from './supabase.js'
-import { urlFirmada } from './storageFiles.js'
 import {
   FASES,
   nuevoProyecto,
@@ -29,6 +31,12 @@ import {
 export default function App() {
   useSyncExternalStore(subscribeLanguage, getLanguage, () => 'es')
   const [usuario, setUsuario] = useState(null)
+  const modulos = useMemo(() => modulosDeUsuario(usuario), [usuario])
+  const [configurandoModulos, setConfigurandoModulos] = useState(false)
+  const [guardandoModulos, setGuardandoModulos] = useState(false)
+  const usuarioActualRef = useRef(null)
+  const revisionUsuarioRef = useRef(0)
+  usuarioActualRef.current = usuario?.id
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorLogin, setErrorLogin] = useState('')
@@ -88,38 +96,6 @@ export default function App() {
       setGuardando(false)
     }
   }
-  async function cargarDesdeSupabase(user) {
-    const { data, error } = await supabase
-      .from('proyectos')
-      .select('*')
-      .eq('user_id', user.id)
-
-    if (error) {
-      console.error(error)
-      throw error
-    }
-
-    const proyectos = (data || []).map(proyectoDesdeBD)
-    return Promise.all(proyectos.map(async (proyecto) => {
-      const comisiones = await Promise.all((proyecto.comisiones || []).map(async (comision) => ({
-        ...comision,
-        presupuestoPdf: comision.presupuestoPdfPath
-          ? await urlFirmada('presupuestos', comision.presupuestoPdfPath)
-          : comision.presupuestoPdf
-      })))
-
-      return {
-        ...proyecto,
-        imagenProyecto: proyecto.imagenProyectoPath
-          ? await urlFirmada('imagenes-proyectos', proyecto.imagenProyectoPath)
-          : proyecto.imagenProyecto,
-        presupuestoPdf: proyecto.presupuestoPdfPath
-          ? await urlFirmada('presupuestos', proyecto.presupuestoPdfPath)
-          : proyecto.presupuestoPdf,
-        comisiones
-      }
-    }))
-  }
 
 async function cargarClientes(user) {
 
@@ -141,15 +117,59 @@ async function cargarClientes(user) {
 
 useEffect(() => {
     let activo = true
+    function actualizarPerfil(token, propietario) {
+      const revision = ++revisionUsuarioRef.current
+      // Consultar fuera del callback de Auth evita bloquear el cerrojo de su sesión.
+      queueMicrotask(() => {
+        if (!activo) return
+        supabase.auth.getUser(token).then(({ data, error }) => {
+          if (!error && activo && revision === revisionUsuarioRef.current &&
+            usuarioActualRef.current === propietario && data?.user?.id === propietario) {
+            setUsuario(data.user)
+          }
+        }).catch(error => console.error('ERROR ACTUALIZANDO PREFERENCIAS:', error))
+      })
+    }
+    function cambioPreferencias(event) {
+      if (event.key !== CLAVE_AVISO_MODULOS || !event.newValue) return
+      try {
+        const { usuarioId: propietario } = JSON.parse(event.newValue)
+        if (propietario && propietario === usuarioActualRef.current) actualizarPerfil(undefined, propietario)
+      } catch { /* Ignorar notificaciones inválidas de otras pestañas. */ }
+    }
+    window.addEventListener('storage', cambioPreferencias)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!activo) return
-      setUsuario(session?.user ?? null)
-      if (event === 'PASSWORD_RECOVERY') setRecuperando(true)
-      if (!session) {
+      const cambioDeCuenta = usuarioActualRef.current !== session?.user?.id
+      usuarioActualRef.current = session?.user?.id
+      ++revisionUsuarioRef.current
+      setUsuario(actual => !cambioDeCuenta && actual && session
+        ? { ...session.user, user_metadata: actual.user_metadata }
+        : session?.user ?? null)
+      if (session) actualizarPerfil(session.access_token, session.user.id)
+      if (cambioDeCuenta) {
+        setConfigurandoModulos(false)
         setProyectos([])
         setClientes([])
         setEditando(null)
         setTareasAbiertas(null)
+        setEntregaAbierta(null)
+        setClienteAbierto(null)
+        setPanelAbierto(null)
+        setSeccionInicial(null)
+        setInformacionAbierta(null)
+        setAviso('')
+        setErrorCarga('')
+        setCargando(Boolean(session))
+      }
+      if (event === 'PASSWORD_RECOVERY') setRecuperando(true)
+      if (!session) {
+        setConfigurandoModulos(false)
+        setProyectos([])
+        setClientes([])
+        setEditando(null)
+        setTareasAbiertas(null)
+        setEntregaAbierta(null)
         setClienteAbierto(null)
         setPanelAbierto(null)
         setSeccionInicial(null)
@@ -164,16 +184,29 @@ useEffect(() => {
     }).catch(error => {
       if (activo) { setErrorLogin(error.message); setCargando(false) }
     })
-    return () => { activo = false; subscription.unsubscribe() }
+    return () => { activo = false; subscription.unsubscribe(); window.removeEventListener('storage', cambioPreferencias) }
   }, [])
 
   const usuarioId = usuario?.id
+  useEffect(() => {
+    setConfigurandoModulos(false)
+  }, [usuarioId])
+
+  useEffect(() => {
+    if (!modulos.tareas) setTareasAbiertas(null)
+    if (!modulos.entregas) setEntregaAbierta(null)
+    if (!modulos.clientes) setClienteAbierto(null)
+    setPanelAbierto(actual => {
+      const modulo = { tareas: 'tareas', entregas: 'entregas', clientes: 'clientes', cobros: 'economia' }[actual]
+      return modulo && !modulos[modulo] ? null : actual
+    })
+  }, [modulos])
   useEffect(() => {
     if (!usuarioId) return
     let activo = true
     setCargando(true)
     setErrorCarga('')
-    Promise.all([cargarDesdeSupabase({ id: usuarioId }), cargarClientes({ id: usuarioId })])
+    Promise.all([cargarProyectosDeUsuario(usuarioId), cargarClientes({ id: usuarioId })])
       .then(([datos, datosClientes]) => {
         if (activo) { setProyectos(datos); setClientes(datosClientes) }
       })
@@ -250,6 +283,7 @@ useEffect(() => {
   }
 
   async function cerrarSesion() {
+    if (guardandoModulos) return
     const { error } = await supabase.auth.signOut()
     if (error) { setAviso(translateUI("No se pudo cerrar la sesión: ") + error.message); return }
     setUsuario(null)
@@ -258,6 +292,25 @@ useEffect(() => {
     setTareasAbiertas(null)
     setEntregaAbierta(null)
     setSeccionInicial(null)
+  }
+
+  async function guardarConfiguracionModulos(seleccion) {
+    if (!usuario || operacionRef.current) throw new Error('No se puede guardar ahora.')
+    const propietario = usuario.id
+    operacionRef.current = true
+    setGuardandoModulos(true)
+    try {
+      const actualizado = await guardarModulosDeUsuario(propietario, seleccion)
+      if (usuarioActualRef.current !== propietario) throw new Error('La sesión ha cambiado.')
+      ++revisionUsuarioRef.current
+      setUsuario(actualizado)
+      notificarCambioModulos(propietario)
+      setAviso(translateUI('Configuración guardada.'))
+      setTimeout(() => setAviso(''), 3000)
+    } finally {
+      operacionRef.current = false
+      setGuardandoModulos(false)
+    }
   }
 
   function abrirNuevo() {
@@ -273,17 +326,19 @@ function abrirExistente(proyecto, seccion = null) {
 }
 
   function abrirTareas(proyecto) {
+    if (!modulos.tareas) return
     setPanelAbierto(null)
     setTareasAbiertas(proyecto)
   }
 
   function abrirEntrega(proyecto) {
+    if (!modulos.entregas) return
     setPanelAbierto(null)
     setEntregaAbierta(proyecto)
   }
 
 async function guardarTareas(proyectoId, tareas) {
-  if (!usuario || operacionRef.current) return
+  if (!usuario || !modulos.tareas || operacionRef.current) return
   operacionRef.current = true
 
   setGuardando(true)
@@ -376,7 +431,7 @@ async function guardarTareas(proyectoId, tareas) {
   }
 }
   async function completarTareaDesdePanel(proyectoId, tareaId) {
-    if (!usuario || operacionRef.current) return false
+    if (!usuario || !modulos.tareas || operacionRef.current) return false
     const proyecto = proyectos.find(p => p.id === proyectoId)
     const tarea = proyecto?.tareas.find(t => t.id === tareaId)
     if (!tarea || tarea.hecha) return false
@@ -404,6 +459,7 @@ async function guardarTareas(proyectoId, tareas) {
   }
 async function guardar(datos) {
   if (!usuario || operacionRef.current) return
+  datos = conservarDatosDesactivados(datos, proyectos.find(p => p.id === datos.id), modulos)
   operacionRef.current = true
 
   setGuardando(true)
@@ -412,7 +468,7 @@ async function guardar(datos) {
   try {
 
     // Crear cliente si no existe todavía
-    if (datos.cliente) {
+    if (modulos.clientes && datos.cliente) {
 
       const clienteExiste = clientes.some(
         (c) =>
@@ -451,7 +507,7 @@ async function guardar(datos) {
 
     }
 // Comprobar cambios en cliente existente
-if (datos.cliente) {
+if (modulos.clientes && datos.cliente) {
 
   const clienteActual =
     clientes.find(
@@ -578,7 +634,7 @@ if (datos.cliente) {
     }
   }
 async function eliminarCliente(cliente) {
-  if (!usuario) return
+  if (!usuario || !modulos.clientes) return
 
   const tieneProyectos =
     proyectos.some(
@@ -897,10 +953,13 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     disabled={guardando}
   >{translateUI("+ Nuevo proyecto")}</button>
         
-<button
+{modulos.clientes && <button
   className="btn"
   onClick={() => setPanelAbierto('clientes')}
->{translateUI("👥 Clientes")}</button>
+>{translateUI("👥 Clientes")}</button>}
+
+<button type="button" className="btn" disabled={guardando || guardandoModulos}
+  onClick={() => setConfigurandoModulos(true)}>{translateUI('Módulos')}</button>
         
 </div>
 </div>
@@ -930,23 +989,13 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 
       <div className="study-overview-stack">
         <StudioToday
+          modulos={modulos}
           proyectos={proyectosActivos}
           onOpen={abrirExistente}
           onOpenTasks={abrirTareas}
           setPanelAbierto={setPanelAbierto}
         />
 
-        <EconomicChart proyectos={proyectosOrdenados} />
-
-        <StudioDashboard
-          proyectos={proyectosActivos}
-          clientes={clientes}
-          onOpenTasks={() => setPanelAbierto('tareas')}
-          onOpenDeliveries={() => setPanelAbierto('entregas')}
-          onOpenPayments={() => setPanelAbierto('cobros')}
-          onFilterPhase={(fase) => setFiltro(fase)}
-          onShowAll={() => setFiltro('Todos')}
-        />
       </div>
 
       <hr className="rule" />
@@ -1023,6 +1072,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     <div className="grid">
       {proyectosOrdenados.map((proyecto) => (
         <SortableProjectCard
+          modulos={modulos}
           key={proyecto.id}
           proyecto={proyecto}
           onOpen={() => abrirExistente(proyecto)}
@@ -1042,6 +1092,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 
 
    <ProjectModal
+  modulos={modulos}
   key={editando.id}
   guardando={guardando}
   proyecto={editando}
@@ -1062,8 +1113,9 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   </>
 )}
      
-{panelAbierto === 'tareas' && (
+{modulos.tareas && panelAbierto === 'tareas' && (
   <TasksPanel
+  modulos={modulos}
   proyectos={proyectosActivos}
   onClose={() => setPanelAbierto(null)}
   onOpenTasks={abrirTareas}
@@ -1071,7 +1123,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 />
   
 )}
-{panelAbierto === 'clientes' && (
+{modulos.clientes && panelAbierto === 'clientes' && (
   <ClientsPanel
     clientes={clientes}
     onOpenClient={(cliente)=>{
@@ -1084,16 +1136,18 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   />
 
 )}
-{panelAbierto === 'entregas' && (
+{modulos.entregas && panelAbierto === 'entregas' && (
   <DeliveriesPanel
+    modulos={modulos}
     proyectos={proyectosActivos}
     onClose={() => setPanelAbierto(null)}
     onOpen={abrirExistente}
   />
 )}
 
-{panelAbierto === 'cobros' && (
+{modulos.economia && panelAbierto === 'cobros' && (
   <PaymentsPanel
+    modulos={modulos}
     proyectos={proyectosActivos}
     onClose={() => setPanelAbierto(null)}
     onOpen={abrirExistente}
@@ -1102,13 +1156,15 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 
 {panelAbierto === 'bloqueados' && (
   <BlockedPanel
+    modulos={modulos}
     proyectos={proyectosActivos}
     onClose={() => setPanelAbierto(null)}
     onOpen={abrirExistente}
   />
 )}
-{clienteAbierto && (
+{modulos.clientes && clienteAbierto && (
   <ClientModal
+    modulos={modulos}
     key={clienteAbierto.id}
     usuario={usuario}
     clientes={clientes}
@@ -1137,7 +1193,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   />
 )}
 
-{tareasAbiertas && (
+{modulos.tareas && tareasAbiertas && (
   <TasksModal
     key={tareasAbiertas.id}
     proyecto={tareasAbiertas}
@@ -1147,8 +1203,9 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   />
 )}
 
-{entregaAbierta && (
+{modulos.entregas && entregaAbierta && (
   <DeliveryModal
+    modulos={modulos}
     key={entregaAbierta.id}
     proyecto={entregaAbierta}
     guardando={guardando}
@@ -1162,6 +1219,11 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
       abrirExistente(proyecto)
     }}
   />
+)}
+
+{configurandoModulos && (
+  <ModulesSettings key={usuario.id} modulos={modulos}
+    onSave={guardarConfiguracionModulos} onClose={() => setConfigurandoModulos(false)} />
 )}
 
 {informacionAbierta && (
@@ -1283,6 +1345,20 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   </div>
 )}
 
+<div className="study-overview-stack study-overview-bottom">
+  {modulos.economia && <EconomicChart proyectos={proyectosOrdenados} />}
+  <StudioDashboard
+    modulos={modulos}
+    proyectos={proyectosActivos}
+    clientes={clientes}
+    onOpenTasks={() => setPanelAbierto('tareas')}
+    onOpenDeliveries={() => setPanelAbierto('entregas')}
+    onOpenPayments={() => setPanelAbierto('cobros')}
+    onFilterPhase={(fase) => setFiltro(fase)}
+    onShowAll={() => setFiltro('Todos')}
+  />
+</div>
+
 <footer className="app-footer">
 
   <div className="app-footer-links">
@@ -1302,7 +1378,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
       rel="noreferrer"
     >{translateUI("Beusual")}</a>{' '}{translateUI("v1.0")}</div>
 
-  <FooterActions onLogout={cerrarSesion} disabled={guardando} />
+  <FooterActions onLogout={cerrarSesion} disabled={guardando || guardandoModulos} />
 
 </footer>
 

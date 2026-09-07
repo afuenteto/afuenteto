@@ -2,12 +2,14 @@ import { t as translateUI } from '../i18n.js'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import ProjectCard from './ProjectCard'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
 export default function SortableProjectCard({
   proyecto,
   onOpen,
   onOpenTasks,
-  onOpenDelivery
+  onOpenDelivery,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
 
   const {
@@ -23,7 +25,7 @@ export default function SortableProjectCard({
   return (
     <div
       ref={setNodeRef}
-      className={'sortable-project' + (proyecto.imagenProyecto ? ' has-project-image' : '')}
+      className={'sortable-project' + (modulos.documentos && proyecto.imagenProyecto ? ' has-project-image' : '')}
       style={{
         transform: CSS.Transform.toString(transform),
         transition,
@@ -32,6 +34,7 @@ export default function SortableProjectCard({
     >
       <ProjectCard
         proyecto={proyecto}
+        modulos={modulos}
         onOpen={onOpen}
         onOpenTasks={onOpenTasks}
         onOpenDelivery={onOpenDelivery}

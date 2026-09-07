@@ -1,8 +1,9 @@
 import { t as translateUI, getLocale, formatRelativeDays } from '../i18n.js'
 import PhaseRail from './PhaseRail.jsx'
 import { diasHasta, formatearFecha } from '../storage.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
-export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDelivery }) {
+export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDelivery, modulos = MODULOS_PREDETERMINADOS }) {
   const tareas = Array.isArray(proyecto.tareas) ? proyecto.tareas : []
   const tareasPendientes = tareas.filter((t) => !t.hecha).length
 
@@ -64,7 +65,7 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
 
   const dias = diasHasta(proyecto.fechaEntrega)
   const finalizado = proyecto.estado === 'finalizado'
-  const tieneImagen = Boolean(proyecto.imagenProyecto)
+  const tieneImagen = modulos.documentos && Boolean(proyecto.imagenProyecto)
 
   const urgente =
     !finalizado &&
@@ -122,11 +123,11 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
           </button>
         </h3>
 
-        {!finalizado && vencido && (
+        {modulos.entregas && !finalizado && vencido && (
           <span className="tag-urgent">{translateUI("Entrega vencida")}</span>
         )}
 
-{!finalizado && !vencido && urgente && (
+{modulos.entregas && !finalizado && !vencido && urgente && (
   <button
     className="tag-urgent"
     aria-label={`${translateUI("Entrega")}: ${formatRelativeDays(dias)}`}
@@ -138,13 +139,13 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
 )}
       </div>
 
-      <p className={tieneImagen ? "card-client card-client-image" : "card-client"}>
+      {modulos.clientes && <p className={tieneImagen ? "card-client card-client-image" : "card-client"}>
   {proyecto.cliente || translateUI("Sin cliente asignado")}
-</p>
+</p>}
 
       <PhaseRail fase={proyecto.fase} />
 
-      {valorProyecto > 0 && (
+      {modulos.economia && valorProyecto > 0 && (
         <div>
           <div className="budget-bar">
             <div
@@ -182,7 +183,7 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
         </div>
       )}
 
-      {comisiones.length > 0 && (
+      {modulos.economia && comisiones.length > 0 && (
         <div className="card-finance-section">
           <div className="section-label">{translateUI("Comisiones")}</div>
 
@@ -207,7 +208,7 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
         <span>{translateUI("Inicio: ")}{formatearFecha(proyecto.fechaInicio)}
         </span>
 
-      {tareas.length > 0 && (
+      {modulos.tareas && tareas.length > 0 && (
   <button
     type="button"
     className="tasks-open-btn"

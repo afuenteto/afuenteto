@@ -1599,6 +1599,10 @@ a {
   margin: 0;
 }
 
+.study-overview-bottom {
+  margin-top: 32px;
+}
+
 .studio-today .section-label {
   margin-bottom: 18px;
 }

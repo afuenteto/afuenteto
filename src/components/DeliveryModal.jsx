@@ -1,13 +1,15 @@
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { useState } from 'react'
 import { diasHasta, FASES } from '../storage.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
 export default function DeliveryModal({
   proyecto,
   onClose,
   onOpenProject,
   onSave,
-  guardando = false
+  guardando = false,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
   const [datos, setDatos] = useState({
     nombre: proyecto.nombre || '',
@@ -56,7 +58,7 @@ export default function DeliveryModal({
         </div>
 
         <div className="delivery-modal-details">
-          <div>
+          {modulos.clientes && <div>
             <label htmlFor="delivery-client">{translateUI("Cliente")}</label>
             <input
               id="delivery-client"
@@ -65,7 +67,7 @@ export default function DeliveryModal({
               placeholder={translateUI("Sin cliente asignado")}
               onChange={(event) => cambiarDato('cliente', event.target.value)}
             />
-          </div>
+          </div>}
           <div>
             <label htmlFor="delivery-date">{translateUI("Fecha de entrega")}</label>
             <input

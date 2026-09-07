@@ -1,0 +1,22 @@
+.modules-overlay { z-index: 10001; }
+.modules-settings { max-height: calc(100dvh - 32px); overflow-y: auto; }
+.modules-settings:focus { outline: none; }
+.modules-intro, .modules-preservation { color: var(--form-label); font-size: 13px; line-height: 1.5; }
+.modules-base { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; color: var(--form-heading); }
+.modules-base span:last-child { font-size: 11px; color: var(--ink-soft); }
+.app .modules-settings .module-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px dotted var(--form-line);
+  cursor: pointer;
+}
+.module-option-copy { display: flex; flex-direction: column; gap: 4px; }
+.module-option-copy strong { font-size: 14px; color: var(--form-heading); }
+.module-option-copy > span { font-size: 12px; }
+.app .module-option input[type="checkbox"] { flex: 0 0 20px; width: 20px; height: 20px; accent-color: #555550; cursor: pointer; }
+.app .module-option input:focus-visible { outline: 2px solid var(--form-heading); outline-offset: 4px; }
+.modules-settings .modal-actions { flex-wrap: wrap; }
+.modules-error { color: var(--alert); font-size: 13px; }

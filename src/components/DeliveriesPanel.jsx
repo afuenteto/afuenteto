@@ -1,10 +1,12 @@
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { diasHasta, formatearFecha } from '../storage.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
 export default function DeliveriesPanel({
   proyectos,
   onClose,
-  onOpen
+  onOpen,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
 
 
@@ -78,8 +80,8 @@ export default function DeliveriesPanel({
             </strong>
 
 
-            <span>{translateUI("Cliente: ")}{proyecto.cliente || translateUI("Sin cliente")}
-            </span>
+            {modulos.clientes && <span>{translateUI("Cliente: ")}{proyecto.cliente || translateUI("Sin cliente")}
+            </span>}
 
 
             <span>{translateUI("📅 Entrega:")}{' '}

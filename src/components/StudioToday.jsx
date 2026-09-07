@@ -1,12 +1,14 @@
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 import { diasHasta, formatearFecha } from '../storage.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
 export default function StudioToday({
   proyectos,
   onOpen,
   onOpenTasks,
-  setPanelAbierto
+  setPanelAbierto,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
 
   const [abierto, setAbierto] = useState(false)
@@ -97,7 +99,7 @@ export default function StudioToday({
         <div className="today-counters">
 
 
-          {tareasUrgentes.length > 0 && (
+          {modulos.tareas && tareasUrgentes.length > 0 && (
 
 <button
   type="button"
@@ -114,7 +116,7 @@ export default function StudioToday({
 
 
 
-          {entregas.length > 0 && (
+          {modulos.entregas && entregas.length > 0 && (
 
             <button
   className="today-counter"
@@ -131,7 +133,7 @@ export default function StudioToday({
 
 
 
-        {cobrosPendientes.length > 0 && (
+        {modulos.economia && cobrosPendientes.length > 0 && (
 
   <button
   className="today-counter"
@@ -182,7 +184,7 @@ export default function StudioToday({
 
 
 
-          {tareasUrgentes.length > 0 && (
+          {modulos.tareas && tareasUrgentes.length > 0 && (
 
             <div className="today-block">
 
@@ -224,7 +226,7 @@ export default function StudioToday({
 
 
 
-          {entregas.length > 0 && (
+          {modulos.entregas && entregas.length > 0 && (
 
             <div className="today-block">
 
@@ -267,7 +269,7 @@ export default function StudioToday({
 
 
 
-          {cobrosPendientes.length > 0 && (
+          {modulos.economia && cobrosPendientes.length > 0 && (
 
             <div className="today-block">
 

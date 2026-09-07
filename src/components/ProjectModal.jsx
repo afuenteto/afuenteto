@@ -4,6 +4,7 @@ import { fechaLocal } from '../projectUtils.js'
 import { FASES, uid, formatearFecha } from '../storage.js'
 import { supabase } from '../supabase.js'
 import { urlFirmada } from '../storageFiles.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 import ProjectHistory from './ProjectHistory.jsx'
 import ProjectImageCropper from './ProjectImageCropper.jsx'
 
@@ -19,8 +20,10 @@ export default function ProjectModal({
   onFinalize,
   onReopen,
   onClose,
-  seccionInicial = null
+  seccionInicial = null,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
+ const modulosActivos = { ...MODULOS_PREDETERMINADOS, ...modulos }
  const [datos, setDatos] = useState({
   ...proyecto,
   fechaInicio: proyecto.fechaInicio || '',
@@ -187,6 +190,7 @@ useEffect(() => {
 
 }, [])
  function importarContacto(e) {
+    if (!modulosActivos.clientes) return
     const file = e.target.files?.[0]
 
     if (!file) return
@@ -236,6 +240,7 @@ useEffect(() => {
   )
 }
  function seleccionarImagenProyecto(e) {
+  if (!modulosActivos.documentos) return
   const file = e.target.files?.[0]
   e.target.value = ''
 
@@ -293,6 +298,7 @@ useEffect(() => {
 }
 
  async function subirPresupuesto(e) {
+  if (!modulosActivos.documentos) return
   const file = e.target.files?.[0]
   e.target.value = ''
   if (!file || subiendoPdf) return
@@ -536,7 +542,7 @@ function borrarComision(id) {
 }
 
 async function subirPresupuestoComision(id, file) {
-  if (!file) return
+  if (!modulosActivos.economia || !modulosActivos.documentos || !file) return
 
   if (file.type !== 'application/pdf') {
     alert(translateUI("Selecciona un archivo PDF"))
@@ -607,7 +613,7 @@ async function subirPresupuestoComision(id, file) {
     try {
       let datosAGuardar = { ...datos }
 
-      if (imagenPendiente) {
+      if (modulosActivos.documentos && imagenPendiente) {
         const imagenSubida = await subirImagenProyecto(imagenPendiente)
 
         datosAGuardar = {
@@ -675,6 +681,7 @@ const existeCliente = clientes.some(
           />
         </div>
 
+        {modulosActivos.documentos && (
         <div className="project-image-field">
           <div className="project-image-field-head">
             <div>
@@ -724,7 +731,9 @@ const existeCliente = clientes.some(
             onChange={seleccionarImagenProyecto}
           />
         </div>
+        )}
 
+        {modulosActivos.clientes && (
         <div className="field-row">
           <div className="field">
          <label htmlFor="cliente">{translateUI("Cliente / contacto")}</label>
@@ -796,6 +805,7 @@ const existeCliente = clientes.some(
           type="button"
           className="client-result-item"
           onClick={async () => {
+if (!modulosActivos.clientes) return
 const nombreLimpio = busquedaCliente
   .trim()
   .replace(/\s+/g, ' ')
@@ -918,12 +928,15 @@ if (clienteExiste) {
             <input id="telefono" type="text" value={datos.telefono} onChange={(e) => set('telefono', e.target.value)} />
           </div>
         </div>
+        )}
 
         <div className="field-row">
+          {modulosActivos.clientes && (
           <div className="field">
             <label htmlFor="email">{translateUI("Email")}</label>
             <input id="email" type="email" value={datos.email} onChange={(e) => set('email', e.target.value)} />
           </div>
+          )}
           <div className="field">
             <label htmlFor="direccion">{translateUI("Dirección / ubicación")}</label>
             <input id="direccion" type="text" value={datos.direccion} onChange={(e) => set('direccion', e.target.value)} />
@@ -946,6 +959,7 @@ if (clienteExiste) {
   onChange={(e) => set('fechaInicio', e.target.value)}
 />
           </div>
+          {modulosActivos.entregas && (
           <div className="field">
   <label htmlFor="fechaEntrega">{translateUI("Fecha de entrega estimada")}</label>
 
@@ -981,6 +995,7 @@ if (clienteExiste) {
   />
 
 </div>
+          )}
         </div>
 
         <div className="field-row">
@@ -1052,24 +1067,6 @@ if (clienteExiste) {
     onChange={(e) => set('importancia', e.target.value)}
   />
 </div>
-        <div className="field-row">
-          <div className="field">
-            <label htmlFor="presupuestoTotal">{translateUI("Presupuesto total (€)")}</label>
-            <input
-              id="presupuestoTotal"
-              type="number"
-              min="0"
-              step="0.01"
-              value={datos.presupuestoTotal}
-              onChange={(e) => set('presupuestoTotal', e.target.value)}
-            />
-          </div>
-
-        <div
-  ref={economiaRef}
-  className="section-label"
->{translateUI("Economía del proyecto")}</div>
-
 <div className="field-row">
   <div className="field">
     <label>{translateUI("Tipo de proyecto")}</label>
@@ -1128,6 +1125,34 @@ if (clienteExiste) {
   </div>
 </div>
 
+{modulosActivos.economia && (
+<>
+<div ref={economiaRef} className="section-label">{translateUI("Economía del proyecto")}</div>
+<div className="field-row">
+  <div className="field">
+    <label htmlFor="presupuestoTotal">{translateUI("Presupuesto total (€)")}</label>
+    <input
+      id="presupuestoTotal"
+      type="number"
+      min="0"
+      step="0.01"
+      value={datos.presupuestoTotal}
+      onChange={(e) => set('presupuestoTotal', e.target.value)}
+    />
+  </div>
+  <div className="field">
+    <label htmlFor="presupuestoGastado">{translateUI("Gastado hasta ahora (€)")}</label>
+    <input
+      id="presupuestoGastado"
+      type="number"
+      min="0"
+      step="0.01"
+      value={datos.presupuestoGastado}
+      onChange={(e) => set('presupuestoGastado', e.target.value)}
+    />
+  </div>
+</div>
+
 <div className="field-row">
   <div className="field">
     <label>{translateUI("Honorarios diseño (€)")}</label>
@@ -1175,18 +1200,9 @@ if (clienteExiste) {
 
          
          
-          <div className="field">
-            <label htmlFor="presupuestoGastado">{translateUI("Gastado hasta ahora (€)")}</label>
-            <input
-              id="presupuestoGastado"
-              type="number"
-              min="0"
-              step="0.01"
-              value={datos.presupuestoGastado}
-              onChange={(e) => set('presupuestoGastado', e.target.value)}
-            />
-          </div>
-        </div>
+</>
+)}
+{modulosActivos.documentos && (
 <div className="field">
   <label>{translateUI("Presupuesto")}</label>
   <button
@@ -1213,6 +1229,9 @@ if (clienteExiste) {
     >{translateUI("📄 Ver presupuesto")}</a>
   )}
 </div>
+)}
+{modulosActivos.economia && (
+<>
 <div className="section-label">{translateUI("Resumen económico")}</div>
 
 <div className="field-row">
@@ -1561,6 +1580,7 @@ if (clienteExiste) {
           >{translateUI("✓ Marcar cobrada")}</button>
         )}
 
+        {modulosActivos.documentos && (
         <label className="btn btn-sm commission-upload-btn">
           {subiendoComisionId === comision.id
             ? translateUI("Subiendo…")
@@ -1577,8 +1597,9 @@ if (clienteExiste) {
             }}
           />
         </label>
+        )}
 
-        {comision.presupuestoPdf && (
+        {modulosActivos.documentos && comision.presupuestoPdf && (
           <a
             href={comision.presupuestoPdf}
             target="_blank"
@@ -1600,8 +1621,12 @@ if (clienteExiste) {
     </div>
   )
 })}
+</>
+)}
 
 
+{modulosActivos.tareas && (
+<>
 <div ref={tareasRef} className="section-label">{translateUI("Tareas")}</div>
         {datos.tareas.map((t) => (
           <div className="list-row" key={t.id}>
@@ -1637,7 +1662,11 @@ if (clienteExiste) {
           />
           <button type="button" className="btn btn-sm" onClick={agregarTarea}>{translateUI("Añadir")}</button>
         </div>
+</>
+)}
 
+{modulosActivos.proveedores && (
+<>
         <div className="section-label">{translateUI("Proveedores")}</div>
         {datos.proveedores.map((p) => (
           <div className="list-row" key={p.id}>
@@ -1678,6 +1707,8 @@ if (clienteExiste) {
           />
           <button type="button" className="btn btn-sm" onClick={agregarProveedor}>{translateUI("Añadir")}</button>
       </div>
+</>
+)}
 
     <ProjectHistory
   proyecto={datos}
@@ -1708,6 +1739,7 @@ if (clienteExiste) {
           </div>
           <div className="right">
             <button type="button" className="btn btn-ghost" onClick={onClose}>{translateUI("Cancelar")}</button>
+          {modulosActivos.clientes && (
           <input
   ref={contactoInputRef}
   type="file"
@@ -1715,20 +1747,23 @@ if (clienteExiste) {
   style={{ display: 'none' }}
   onChange={importarContacto}
 />
+          )}
+          {modulosActivos.documentos && (
   <input
   type="file"
   accept="application/pdf"
   id="pdfPresupuesto"
   style={{ display: 'none' }}
   onChange={subirPresupuesto}
-/>         
+/>
+          )}
            <button type="submit" className="btn btn-primary" disabled={guardando || subiendoImagen || Boolean(subiendoComisionId) || subiendoPdf}>
               {guardando || subiendoImagen ? translateUI("Guardando…") : translateUI("Guardar")}
             </button>
           </div>
         </div>
 
-        {editorImagenSrc && (
+        {modulosActivos.documentos && editorImagenSrc && (
           <ProjectImageCropper
             src={editorImagenSrc}
             onCancel={() => setEditorImagenSrc('')}
