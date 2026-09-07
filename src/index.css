@@ -2979,6 +2979,14 @@ input[type='date'] {
   white-space: nowrap;
 }
 
+.app-login .app-footer-actions {
+  justify-content: center;
+}
+
+.app-login .language-settings {
+  align-items: center;
+}
+
 @media (max-width: 540px) {
   .language-settings {
     flex-direction: column;

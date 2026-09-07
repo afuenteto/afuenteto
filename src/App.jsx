@@ -826,7 +826,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   }
   if (!usuario) {
     return (
-      <div className="app">
+      <div className="app app-login">
         <div
           style={{
             maxWidth: '420px',
