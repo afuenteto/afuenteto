@@ -1,3 +1,4 @@
+import { iconText } from './LineIcon.jsx'
 import { t as translateUI } from '../i18n.js'
 export default function ClientsPanel({
   clientes,
@@ -23,7 +24,7 @@ export default function ClientsPanel({
 
         <div className="panel-head">
 
-          <h2 className="serif">{translateUI("👥 Clientes")}</h2>
+          <h2 className="serif">{iconText("👥 Clientes")}</h2>
 
 
           <button

@@ -1,3 +1,4 @@
+import { iconText } from './LineIcon.jsx'
 import FlatStatus from './FlatStatus.jsx'
 import { t, getLocale, formatRelativeDays } from '../i18n.js'
 import { useEffect, useMemo, useState } from 'react'
@@ -126,10 +127,9 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
     </>}
     <footer className="daily-footer">
       {modulos.economia && <button type="button" onClick={() => setPanelAbierto('cobros')}>
-        <strong>{payments.length}</strong> {t('💰 Cobros previstos')} · {payments.reduce((sum, c) => sum + Number(c.importe || 0), 0).toLocaleString(getLocale(), { style: 'currency', currency: 'EUR' })}
+        <strong>{payments.length}</strong> {iconText('💰 Cobros previstos')} · {payments.reduce((sum, c) => sum + Number(c.importe || 0), 0).toLocaleString(getLocale(), { style: 'currency', currency: 'EUR' })}
       </button>}
       <button type="button" onClick={() => setPanelAbierto('bloqueados')}><strong>{blocked.length}</strong> <FlatStatus label="🔵 Proyectos bloqueados" /></button>
     </footer>
   </section>
 }
-

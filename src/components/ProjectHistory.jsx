@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import { t as translateUI, getLocale } from '../i18n.js'
 export default function ProjectHistory({
   proyecto,
@@ -31,7 +32,7 @@ export default function ProjectHistory({
           >
 
             <span className="history-icon">
-              {evento.icono || '•'}
+              <LineIcon name={evento.icono} />
             </span>
 
             <div>
@@ -61,3 +62,4 @@ export default function ProjectHistory({
 
   )
 }
+

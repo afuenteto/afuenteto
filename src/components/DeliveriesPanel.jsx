@@ -1,3 +1,4 @@
+import { iconText } from './LineIcon.jsx'
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { diasHasta, formatearFecha } from '../storage.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
@@ -40,7 +41,7 @@ export default function DeliveriesPanel({
 
         <div className="panel-head">
 
-          <h2 className="serif">{translateUI("📅 Entregas próximas")}</h2>
+          <h2 className="serif">{iconText("📅 Entregas próximas")}</h2>
 
           <button
             className="icon-btn"
@@ -80,7 +81,7 @@ export default function DeliveriesPanel({
             </span>}
 
 
-            <span>{translateUI("📅 Entrega:")}{' '}
+            <span>{iconText("📅 Entrega:")}{' '}
               {formatearFecha(proyecto.fechaEntrega)}
             </span>
 

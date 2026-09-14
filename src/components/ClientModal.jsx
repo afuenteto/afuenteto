@@ -1,3 +1,4 @@
+import LineIcon, { iconText } from './LineIcon.jsx'
 import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
@@ -115,7 +116,7 @@ export default function ClientModal({
         <div className="panel-head">
 
           <h2 className="serif">
-            👤 {cliente.nombre}
+            <LineIcon name="👤" /> {cliente.nombre}
           </h2>
 
 
@@ -132,7 +133,7 @@ export default function ClientModal({
             type="button"
             onClick={() => setConfirmarBorrado(true)}
             disabled={guardando}
-          >{translateUI("🗑️ Eliminar")}</button>
+          >{iconText("🗑️ Eliminar")}</button>
 
 
           <button
@@ -221,7 +222,7 @@ export default function ClientModal({
     type="button"
     disabled={guardando}
     onClick={guardarCliente}
-  >{translateUI("💾 Guardar cliente")}</button>
+  >{iconText("💾 Guardar cliente")}</button>
 
           </div>
 
@@ -389,4 +390,4 @@ export default function ClientModal({
 
   )
 
-} 
+}

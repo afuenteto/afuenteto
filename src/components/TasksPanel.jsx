@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import FlatStatus from './FlatStatus.jsx'
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { useState } from 'react'
@@ -120,7 +121,7 @@ export default function TasksPanel({
                 tarea.proyecto.fechaEntrega
               ) !== null && (
 
-                <small>📅 {translateUI("Entrega")}: {formatRelativeDays(diasEntrega(
+                <small><LineIcon name="📅" /> {translateUI("Entrega")}: {formatRelativeDays(diasEntrega(
                     tarea.proyecto.fechaEntrega
                   ))}</small>
 
@@ -179,4 +180,3 @@ export default function TasksPanel({
   )
 
 }
-

@@ -1,3 +1,4 @@
+import { iconText } from './LineIcon.jsx'
 import FlatStatus from './FlatStatus.jsx'
 import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale } from '../i18n.js'
@@ -205,7 +206,7 @@ export default function StudioDashboard({
 
 
       {(modulos.tareas || modulos.entregas || modulos.economia) && <>
-      <div className="section-label dashboard-section-heading">{translateUI("⚠️ Atención")}</div>
+      <div className="section-label dashboard-section-heading">{iconText("⚠️ Atención")}</div>
 
 
 
@@ -233,7 +234,7 @@ export default function StudioDashboard({
           onClick={onOpenDeliveries}
         >
 
-          <label><FlatStatus label="📅 Entregas previstas" /></label>
+          <label>{iconText("📅 Entregas previstas")}</label>
 
           <input
             readOnly
@@ -249,7 +250,7 @@ export default function StudioDashboard({
           onClick={onOpenPayments}
         >
 
-          <label><FlatStatus label="💰 Cobros pendientes" /></label>
+          <label>{iconText("💰 Cobros pendientes")}</label>
 
           <input
             readOnly
@@ -327,4 +328,3 @@ export default function StudioDashboard({
   )
 
 }
-

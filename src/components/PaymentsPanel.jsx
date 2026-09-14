@@ -1,3 +1,4 @@
+import LineIcon, { iconText } from './LineIcon.jsx'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { formatearFecha } from '../storage.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
@@ -49,7 +50,7 @@ export default function PaymentsPanel({
 
         <div className="panel-head">
 
-          <h2 className="serif">{translateUI("💰 Cobros pendientes")}</h2>
+          <h2 className="serif">{iconText("💰 Cobros pendientes")}</h2>
 
           <button
             className="icon-btn"
@@ -95,12 +96,12 @@ export default function PaymentsPanel({
 
 
             <span>
-              📅 {formatearFecha(item.fecha)}
+              <LineIcon name="📅" /> {formatearFecha(item.fecha)}
             </span>
 
 
             <b>
-              💰 {Number(item.importe)
+              <LineIcon name="💰" /> {Number(item.importe)
                 .toLocaleString(getLocale())} €
             </b>
 

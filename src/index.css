@@ -3013,3 +3013,6 @@ input[type='date'] {
 .flat-status-select { display: inline-block; position: relative; width: 100%; }
 .flat-status-select > .flat-status-dot { position: absolute; inset-inline-start: 12px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; pointer-events: none; }
 .flat-status-select > select { width: 100%; padding-inline-start: 28px; }
+
+.line-icon { display: inline-block; flex-shrink: 0; color: var(--ink-soft); vertical-align: -.2em; }
+.icon-label { display: inline-flex; align-items: center; gap: .45em; }

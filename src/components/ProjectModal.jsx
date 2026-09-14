@@ -1,3 +1,4 @@
+import { iconText, plainIconLabel } from './LineIcon.jsx'
 import { StatusSelect, statusLabel } from './FlatStatus.jsx'
 import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale } from '../i18n.js'
@@ -728,7 +729,7 @@ async function subirPresupuestoComision(id, file) {
 
   <input
     type="text"
-    placeholder={translateUI("🔍 Buscar cliente...")}
+    placeholder={plainIconLabel("🔍 Buscar cliente...")}
     value={busquedaCliente}
     onFocus={() => {
       setBusquedaCliente('')
@@ -897,14 +898,14 @@ if (clienteExiste) {
   }
 
 }}
-  >{translateUI("👤 Ver ficha cliente")}</button>
+  >{iconText("👤 Ver ficha cliente")}</button>
 
 )}
              <button
   type="button"
   className="btn"
   onClick={() => contactoInputRef.current?.click()}
->{translateUI("👤 Importar contacto")}</button>
+>{iconText("👤 Importar contacto")}</button>
           </div>
           <div className="field">
             <label htmlFor="telefono">{translateUI("Teléfono")}</label>
@@ -928,7 +929,7 @@ if (clienteExiste) {
   className="btn"
   onClick={abrirMaps}
   disabled={!datos.direccion}
->{translateUI("📍 Abrir en Maps")}</button>
+>{iconText("📍 Abrir en Maps")}</button>
           </div>
         </div>
 
@@ -1057,7 +1058,7 @@ if (clienteExiste) {
       value={datos.tipoProyecto}
       onChange={(e) => set('tipoProyecto', e.target.value)}
     >
-      <optgroup label={translateUI("🏠 Residencial")}>
+      <optgroup label={plainIconLabel("🏠 Residencial")}>
         <option value="Vivienda unifamiliar">{translateUI("Vivienda unifamiliar")}</option>
         <option value="Piso / apartamento">{translateUI("Piso / apartamento")}</option>
         <option value="Reforma parcial">{translateUI("Reforma parcial")}</option>
@@ -1066,7 +1067,7 @@ if (clienteExiste) {
         <option value="Segunda residencia">{translateUI("Segunda residencia")}</option>
       </optgroup>
 
-      <optgroup label={translateUI("🏢 Contract / Hospitality")}>
+      <optgroup label={plainIconLabel("🏢 Contract / Hospitality")}>
         <option value="Oficina">{translateUI("Oficina")}</option>
         <option value="Hotel">{translateUI("Hotel")}</option>
         <option value="Restaurante">{translateUI("Restaurante")}</option>
@@ -1076,7 +1077,7 @@ if (clienteExiste) {
         <option value="Local comercial">{translateUI("Local comercial")}</option>
       </optgroup>
 
-      <optgroup label={translateUI("🪑 Diseño y producto")}>
+      <optgroup label={plainIconLabel("🪑 Diseño y producto")}>
         <option value="Diseño de mobiliario">{translateUI("Diseño de mobiliario")}</option>
         <option value="Diseño de piezas a medida">{translateUI("Diseño de piezas a medida")}</option>
         <option value="Ebanistería">{translateUI("Ebanistería")}</option>
@@ -1084,14 +1085,14 @@ if (clienteExiste) {
         <option value="Diseño de elementos especiales">{translateUI("Diseño de elementos especiales")}</option>
       </optgroup>
 
-      <optgroup label={translateUI("🏗️ Arquitectura e intervención")}>
+      <optgroup label={plainIconLabel("🏗️ Arquitectura e intervención")}>
         <option value="Obra nueva">{translateUI("Obra nueva")}</option>
         <option value="Rehabilitación">{translateUI("Rehabilitación")}</option>
         <option value="Exterior / terrazas / jardines">{translateUI("Exterior / terrazas / jardines")}</option>
         <option value="Fachada">{translateUI("Fachada")}</option>
       </optgroup>
 
-      <optgroup label={translateUI("🎨 Identidad y marca")}>
+      <optgroup label={plainIconLabel("🎨 Identidad y marca")}>
         <option value="Branding">{translateUI("Branding")}</option>
         <option value="Diseño gráfico">{translateUI("Diseño gráfico")}</option>
         <option value="Imagen corporativa">{translateUI("Imagen corporativa")}</option>
@@ -1195,7 +1196,7 @@ if (clienteExiste) {
       document.getElementById('pdfPresupuesto').click()
     }
   >
-    {subiendoPdf ? translateUI("Subiendo PDF…") : translateUI("📎 Subir presupuesto PDF")}
+    {subiendoPdf ? translateUI("Subiendo PDF…") : iconText("📎 Subir presupuesto PDF")}
   </button>
 
   {subiendoPdf && (
@@ -1209,7 +1210,7 @@ if (clienteExiste) {
       rel="noreferrer"
       className="btn"
       style={{ marginTop: '8px' }}
-    >{translateUI("📄 Ver presupuesto")}</a>
+    >{iconText("📄 Ver presupuesto")}</a>
   )}
 </div>
 )}
@@ -1568,8 +1569,8 @@ if (clienteExiste) {
           {subiendoComisionId === comision.id
             ? translateUI("Subiendo…")
             : comision.presupuestoPdf
-              ? translateUI("📎 Cambiar PDF")
-              : translateUI("📎 Subir presupuesto PDF")}
+              ? iconText("📎 Cambiar PDF")
+              : iconText("📎 Subir presupuesto PDF")}
           <input
             type="file"
             accept="application/pdf"
@@ -1588,7 +1589,7 @@ if (clienteExiste) {
             target="_blank"
             rel="noreferrer"
             className="btn btn-sm"
-          >{translateUI("📄 Ver presupuesto")}</a>
+          >{iconText("📄 Ver presupuesto")}</a>
         )}
 
         <button
@@ -1759,5 +1760,3 @@ if (clienteExiste) {
     </div>
   )
 }
-
-
