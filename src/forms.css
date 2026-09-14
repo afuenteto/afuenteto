@@ -133,3 +133,8 @@
     --form-control-size: 16px;
   }
 }
+
+/* Reservar el espacio del punto frente al padding general de los controles. */
+.app .flat-status-select > select {
+  padding-inline-start: 28px !important;
+}
