@@ -18,14 +18,24 @@ const paths = {
   tareas: 'M9 11l2 2 4-4 M9 4H5v16h14V4h-4 M9 3h6v4H9z',
   bloqueados: 'M7 10V7a5 5 0 0110 0v3 M5 10h14v11H5z',
 }
+const images = {
+  '📅': 'calendar', '💰': 'money', '📎': 'attachment', '📄': 'document',
+  '🗑': 'trash', '👤': 'person', '👥': 'people', '💾': 'save', '⚠': 'warning',
+  '✅': 'check', '✓': 'check', '📍': 'location', '🖼': 'image', '🔄': 'refresh', '⏳': 'pending',
+  bloqueados: 'lock', cobros: 'payment', close: 'close', grip: 'grip', move: 'move', color: 'color',
+  'import-contact': 'import-contact', payment: 'payment',
+}
 const aliases = { entregas: '📅', cobros: '💰' }
 export default function LineIcon({ name }) {
   const key = aliases[name] || Array.from(name || '')[0]
+  const asset = images[name] || images[key]
+  if (asset) return <img className="line-icon custom-icon" src={import.meta.env.BASE_URL + 'icons/' + asset + '.png'} width="18" height="18" alt="" aria-hidden="true" draggable={false} />
   const path = paths[name] || paths[key]
   if (!path) return <span aria-hidden="true">·</span>
   return <svg className="line-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={path} /></svg>
 }
-export const plainIconLabel = key => t(key).replace(/^[\p{Extended_Pictographic}\uFE0F\s]+/u, '')
-export function iconText(key) {
-  return <span className="icon-label"><LineIcon name={key} />{plainIconLabel(key)}</span>
+export const plainIconLabel = key => t(key).replace(/^\s*✓\s*/u, '').replace(/^[\p{Extended_Pictographic}\uFE0F\s]+/u, '')
+export function iconText(key, name) {
+  return <span className="icon-label"><LineIcon name={name || key.trim()} />{plainIconLabel(key)}</span>
 }
+

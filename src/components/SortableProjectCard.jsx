@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import { t as translateUI } from '../i18n.js'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -51,12 +52,11 @@ export default function SortableProjectCard({
   style={{ touchAction: 'none' }}
   aria-label={translateUI("Mover proyecto")}
 >
-  <span className="drag-dots">
-  {Array.from({ length: 10 }).map((_, i) => (
-    <span key={i}></span>
-  ))}
-</span>
+  <LineIcon name="grip" />
 </button>
     </div>
   )
 }
+
+
+

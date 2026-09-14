@@ -1,3 +1,4 @@
+import LineIcon, { iconText } from './components/LineIcon.jsx'
 import HomeModules from './components/HomeModules.jsx'
 import { useLiveData } from './useLiveData.js'
 import ModulePreview from './components/ModulePreview.jsx'
@@ -987,7 +988,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 {modulos.clientes && <button
   className="btn"
   onClick={() => setPanelAbierto('clientes')}
->{translateUI("👥 Clientes")}</button>}
+>{iconText("👥 Clientes")}</button>}
 
 <button type="button" className="btn" disabled={guardando || guardandoModulos}
   onClick={() => setConfigurandoModulos(true)}>{translateUI('Módulos')}</button>
@@ -1300,7 +1301,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
           onClick={() => setInformacionAbierta(null)}
           aria-label={translateUI("Cerrar")}
         >
-          ✕
+          <LineIcon name="close" />
         </button>
       </div>
 
@@ -1427,4 +1428,6 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 </div>
 )
 }
+
+
 

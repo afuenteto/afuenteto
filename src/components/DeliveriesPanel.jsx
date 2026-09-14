@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import { iconText } from './LineIcon.jsx'
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { diasHasta, formatearFecha } from '../storage.js'
@@ -47,7 +48,7 @@ export default function DeliveriesPanel({
             className="icon-btn"
             onClick={onClose}
           >
-            ✕
+            <LineIcon name="close" />
           </button>
 
         </div>
@@ -103,3 +104,4 @@ export default function DeliveriesPanel({
   )
 
 }
+

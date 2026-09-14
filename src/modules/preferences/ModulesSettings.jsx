@@ -1,3 +1,4 @@
+import LineIcon from '../../components/LineIcon.jsx'
 import { useEffect, useId, useRef, useState } from 'react'
 import { t } from '../../i18n.js'
 import { MODULOS_CONFIGURABLES, normalizarModulos } from './model.js'
@@ -60,7 +61,7 @@ export default function ModulesSettings({ modulos, onSave, onClose }) {
         ref={panelRef} tabIndex={-1} onKeyDown={teclado}>
         <div className="modal-head">
           <h2 id={`${id}-title`} className="serif">{t('Módulos')}</h2>
-          <button type="button" className="icon-btn" aria-label={t('Cerrar')} disabled={guardando} onClick={onClose}>✕</button>
+          <button type="button" className="icon-btn" aria-label={t('Cerrar')} disabled={guardando} onClick={onClose}><LineIcon name="close" /></button>
         </div>
         <p id={`${id}-intro`} className="modules-intro">{t('Elige las funciones que quieres utilizar. Puedes volver a activarlas cuando quieras.')}</p>
         <div className="modules-base">
@@ -92,3 +93,4 @@ export default function ModulesSettings({ modulos, onSave, onClose }) {
     </div>
   )
 }
+

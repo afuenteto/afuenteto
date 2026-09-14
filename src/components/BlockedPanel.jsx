@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import FlatStatus from './FlatStatus.jsx'
 import { t as translateUI } from '../i18n.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
@@ -36,7 +37,7 @@ export default function BlockedPanel({
             className="icon-btn"
             onClick={onClose}
           >
-            ✕
+            <LineIcon name="close" />
           </button>
 
         </div>
@@ -94,4 +95,5 @@ export default function BlockedPanel({
   )
 
 }
+
 

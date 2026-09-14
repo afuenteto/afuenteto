@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { useState } from 'react'
 import { diasHasta, FASES } from '../storage.js'
@@ -43,7 +44,7 @@ export default function DeliveryModal({
             onClick={onClose}
             aria-label={translateUI("Cerrar")}
           >
-            ✕
+            <LineIcon name="close" />
           </button>
         </div>
 
@@ -119,3 +120,4 @@ export default function DeliveryModal({
     </div>
   )
 }
+

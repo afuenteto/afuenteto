@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import { useEffect, useId, useState } from 'react'
 import { DndContext, PointerSensor, KeyboardSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, useSortable, verticalListSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
@@ -18,7 +19,7 @@ function Module({ section, open, toggle }) {
       </button>
       {section.summary}
       <button type="button" className="home-module-handle" {...attributes} {...listeners} style={{ touchAction: 'none' }} aria-label={t('Mover módulo') + ': ' + t(section.title)}>
-        <span aria-hidden="true">⠿</span>
+        <LineIcon name="grip" />
       </button>
     </header>
     <div id={panelId} hidden={!open} className="home-module-body">{(open || visited) && section.content}</div>
@@ -48,4 +49,5 @@ export default function HomeModules({ usuarioId, sections, openRequest }) {
     </SortableContext>
   </DndContext>
 }
+
 

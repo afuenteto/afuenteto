@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import { StatusSelect, statusLabel } from './FlatStatus.jsx'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
@@ -100,7 +101,7 @@ function cambiarEstado(id) {
             className="icon-btn"
             onClick={onClose}
           >
-            ✕
+            <LineIcon name="close" />
           </button>
 
         </div>
@@ -211,7 +212,7 @@ function cambiarEstado(id) {
     borrarTarea(t.id)
   }
 >
-  ✕
+  <LineIcon name="close" />
 </button>
 
           </div>
@@ -291,7 +292,7 @@ function cambiarEstado(id) {
         borrarTarea(t.id)
       }
     >
-      ✕
+      <LineIcon name="close" />
     </button>
 
   </div>
@@ -326,5 +327,6 @@ function cambiarEstado(id) {
 
   )
 }
+
 
 

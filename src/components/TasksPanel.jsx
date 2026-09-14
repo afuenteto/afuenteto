@@ -1,4 +1,4 @@
-import LineIcon from './LineIcon.jsx'
+import LineIcon, { iconText } from './LineIcon.jsx'
 import FlatStatus from './FlatStatus.jsx'
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { useState } from 'react'
@@ -73,7 +73,7 @@ export default function TasksPanel({
             className="icon-btn"
             onClick={onClose}
           >
-            ✕
+            <LineIcon name="close" />
           </button>
 
         </div>
@@ -157,7 +157,7 @@ export default function TasksPanel({
                     onClick={() =>
                       completar(tarea)
                     }
-                  >{translateUI("✓ Completar")}</button>
+                  >{iconText("✓ Completar")}</button>
 
 
                 </div>
@@ -180,3 +180,5 @@ export default function TasksPanel({
   )
 
 }
+
+

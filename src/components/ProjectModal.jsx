@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import { iconText, plainIconLabel } from './LineIcon.jsx'
 import { StatusSelect, statusLabel } from './FlatStatus.jsx'
 import { valorContratado } from '../projectFinance.js'
@@ -651,7 +652,7 @@ async function subirPresupuestoComision(id, file) {
   {esNuevo ? translateUI("Nuevo proyecto") : datos.nombre || translateUI("Editar proyecto")}
 </h2>
           <button type="button" className="icon-btn" onClick={onClose} aria-label={translateUI("Cerrar")}>
-            ✕
+            <LineIcon name="close" />
           </button>
         </div>
 
@@ -905,7 +906,7 @@ if (clienteExiste) {
   type="button"
   className="btn"
   onClick={() => contactoInputRef.current?.click()}
->{iconText("👤 Importar contacto")}</button>
+>{iconText("👤 Importar contacto", "import-contact")}</button>
           </div>
           <div className="field">
             <label htmlFor="telefono">{translateUI("Teléfono")}</label>
@@ -1266,7 +1267,7 @@ if (clienteExiste) {
     <span>{c.concepto}</span>
 <strong>
   {Number(c.importe).toLocaleString(getLocale())} €
-  {c.estado === 'previsto' ? translateUI(" ⏳ Previsto") : translateUI(" ✓ Cobrado")}
+  {c.estado === 'previsto' ? iconText(" ⏳ Previsto") : iconText(" ✓ Cobrado")}
 </strong>
    
    {c.estado === 'previsto' && (
@@ -1274,7 +1275,7 @@ if (clienteExiste) {
     type="button"
     className="btn btn-sm"
     onClick={() => marcarCobrado(c.id)}
-  >{translateUI("✓ Cobrar")}</button>
+  >{iconText("✓ Cobrar")}</button>
 )}
 
     <button
@@ -1288,7 +1289,7 @@ if (clienteExiste) {
       }
       aria-label={translateUI("Eliminar cobro")}
     >
-      ✕
+      <LineIcon name="close" />
     </button>
   </div>
 ))}
@@ -1480,7 +1481,7 @@ if (clienteExiste) {
             (comision.estado === 'cobrada' ? 'is-paid' : 'is-pending')
           }
         >
-          {comision.estado === 'cobrada' ? translateUI("✓ Cobrada") : translateUI("⏳ Pendiente")}
+          {comision.estado === 'cobrada' ? iconText("✓ Cobrada") : iconText("⏳ Pendiente")}
         </span>
       </div>
 
@@ -1561,7 +1562,7 @@ if (clienteExiste) {
             type="button"
             className="btn btn-sm"
             onClick={() => marcarComisionCobrada(comision.id)}
-          >{translateUI("✓ Marcar cobrada")}</button>
+          >{iconText("✓ Marcar cobrada")}</button>
         )}
 
         {modulosActivos.documentos && (
@@ -1599,7 +1600,7 @@ if (clienteExiste) {
           aria-label={translateUI("Eliminar comisión")}
           title={translateUI("Eliminar comisión")}
         >
-          ✕
+          <LineIcon name="close" />
         </button>
       </div>
     </div>
@@ -1627,7 +1628,7 @@ if (clienteExiste) {
               style={{ textDecoration: t.hecha ? 'line-through' : 'none', color: t.hecha ? 'var(--ink-faint)' : 'inherit' }}
             />
             <button type="button" className="icon-btn" onClick={() => borrarTarea(t.id)} aria-label={translateUI("Eliminar tarea")}>
-              ✕
+              <LineIcon name="close" />
             </button>
           </div>
         ))}
@@ -1672,7 +1673,7 @@ if (clienteExiste) {
               onChange={(e) => actualizarProveedorContacto(p.id, e.target.value)}
             />
             <button type="button" className="icon-btn" onClick={() => borrarProveedor(p.id)} aria-label={translateUI("Eliminar proveedor")}>
-              ✕
+              <LineIcon name="close" />
             </button>
           </div>
         ))}
@@ -1715,7 +1716,7 @@ if (clienteExiste) {
                 {datos.estado === 'finalizado' ? (
                   <button type="button" className="btn btn-ghost" disabled={guardando || subiendoImagen} onClick={onReopen}>{translateUI("↩ Reabrir proyecto")}</button>
                 ) : (
-                  <button type="button" className="btn btn-ghost" disabled={guardando || subiendoImagen} onClick={onFinalize}>{translateUI("✓ Finalizar proyecto")}</button>
+                  <button type="button" className="btn btn-ghost" disabled={guardando || subiendoImagen} onClick={onFinalize}>{iconText("✓ Finalizar proyecto")}</button>
                 )}
                 <button type="button" className="btn btn-ghost btn-danger" disabled={guardando || subiendoImagen} onClick={() => onDelete(datos.id)}>{translateUI("Eliminar proyecto")}</button>
               </>
@@ -1760,3 +1761,5 @@ if (clienteExiste) {
     </div>
   )
 }
+
+

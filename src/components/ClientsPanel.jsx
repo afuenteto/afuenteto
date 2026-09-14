@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import { iconText } from './LineIcon.jsx'
 import { t as translateUI } from '../i18n.js'
 export default function ClientsPanel({
@@ -31,7 +32,7 @@ export default function ClientsPanel({
             className="icon-btn"
             onClick={onClose}
           >
-            ✕
+            <LineIcon name="close" />
           </button>
 
         </div>
@@ -70,3 +71,4 @@ export default function ClientsPanel({
   )
 
 }
+

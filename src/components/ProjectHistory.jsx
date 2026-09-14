@@ -51,7 +51,7 @@ export default function ProjectHistory({
               className="icon-btn"
               onClick={() => onDeleteHistory?.(evento.id)}
             >
-              ✕
+              <LineIcon name="close" />
             </button>
 
           </div>
@@ -62,4 +62,5 @@ export default function ProjectHistory({
 
   )
 }
+
 

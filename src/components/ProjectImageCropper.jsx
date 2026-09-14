@@ -1,3 +1,4 @@
+import LineIcon from './LineIcon.jsx'
 import { t as translateUI } from '../i18n.js'
 import { useEffect, useRef, useState } from 'react'
 
@@ -139,7 +140,7 @@ export default function ProjectImageCropper({ src, onCancel, onConfirm }) {
             <p>{translateUI("Arrastra la imagen hasta dejar encuadrada la zona que quieres ver en la ficha.")}</p>
           </div>
           <button type="button" className="icon-btn" onClick={onCancel} aria-label={translateUI("Cerrar")}>
-            ✕
+            <LineIcon name="close" />
           </button>
         </div>
 
@@ -157,7 +158,7 @@ export default function ProjectImageCropper({ src, onCancel, onConfirm }) {
             draggable="false"
             style={{ objectPosition: `${posicion.x}% ${posicion.y}%` }}
           />
-          <div className="project-image-crop-guide">{translateUI("Arrastra para recolocar")}</div>
+          <div className="project-image-crop-guide"><LineIcon name="move" /> {translateUI("Arrastra para recolocar")}</div>
         </div>
 
         <div className="project-image-crop-info">{translateUI("La app guardará una versión optimizada de 1200 × 240 px en WebP, sin deformar la imagen.")}</div>
@@ -172,3 +173,5 @@ export default function ProjectImageCropper({ src, onCancel, onConfirm }) {
     </div>
   )
 }
+
+

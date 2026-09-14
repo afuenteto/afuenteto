@@ -56,7 +56,7 @@ export default function PaymentsPanel({
             className="icon-btn"
             onClick={onClose}
           >
-            ✕
+            <LineIcon name="close" />
           </button>
 
         </div>
@@ -118,3 +118,4 @@ export default function PaymentsPanel({
   )
 
 }
+
