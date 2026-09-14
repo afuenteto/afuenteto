@@ -15,7 +15,6 @@ function Module({ section, open, toggle }) {
     <header className="home-module-heading">
       <button type="button" className="home-module-toggle serif" aria-expanded={open} aria-controls={panelId} onClick={toggle}>
         <span>{t(section.title)}</span>
-        {section.badge}
       </button>
       {section.summary}
       <button type="button" className="home-module-handle" {...attributes} {...listeners} style={{ touchAction: 'none' }} aria-label={t('Mover módulo') + ': ' + t(section.title)}>

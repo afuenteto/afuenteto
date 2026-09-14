@@ -2997,7 +2997,7 @@ input[type='date'] {
   min-width: 0;
 }
 
-.module-active-count { margin-inline-start: 10px; font-family: Arial, sans-serif; font-size: 14px; color: var(--ink-soft); }
+.module-project-counts { margin-inline-start: auto; padding-inline: 8px; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4; color: var(--ink-soft); text-align: end; }
 .module-quick-actions { display: flex; flex-wrap: wrap; gap: 4px; }
 .module-quick-action { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 40px; min-height: 44px; padding: 6px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); cursor: pointer; font-size: 12px; }
 .module-quick-action:hover { background: var(--accent); }
@@ -3005,6 +3005,7 @@ input[type='date'] {
 @media (max-width: 600px) {
   .home-module-heading { flex-wrap: wrap; }
   .module-quick-actions { order: 3; flex-basis: 100%; padding: 0 10px 6px; }
+  .module-project-counts { max-width: 45%; padding-inline: 4px; }
 }
 
 .flat-status { display: inline-flex; align-items: center; gap: .45em; }
