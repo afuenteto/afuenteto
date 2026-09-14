@@ -9,7 +9,6 @@ export default function DeliveriesPanel({
   modulos = MODULOS_PREDETERMINADOS
 }) {
 
-
   const entregas =
     proyectos.filter((proyecto) => {
 
@@ -20,13 +19,10 @@ export default function DeliveriesPanel({
 
     })
 
-
   entregas.sort((a, b) =>
     diasHasta(a.fechaEntrega) -
     diasHasta(b.fechaEntrega)
   )
-
-
 
   return (
 

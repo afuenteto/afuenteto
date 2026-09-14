@@ -13,9 +13,7 @@ export default function TasksPanel({
   const [confirmando, setConfirmando] = useState(null)
   const [guardando, setGuardando] = useState(false)
 
-
   const tareas = []
-
 
   proyectos.forEach((proyecto) => {
 
@@ -33,7 +31,6 @@ export default function TasksPanel({
     })
 
   })
-
 
   tareas.sort((a, b) =>
     (diasHasta(a.fecha || a.proyecto.fechaEntrega) ?? Infinity) -

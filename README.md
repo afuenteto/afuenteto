@@ -2,7 +2,7 @@
 
 Aplicación React y Vite para gestionar proyectos de interiorismo, clientes, tareas, cobros, comisiones y archivos adjuntos.
 
-Los datos se guardan en **Supabase**, asociados al usuario autenticado. Las imágenes se suben al bucket imagenes-proyectos y los PDF a presupuestos. La aplicación utiliza sus URL públicas. No incluye exportación/importación de copias locales.
+Los datos se guardan en **Supabase**, asociados al usuario autenticado. Las imágenes se suben al bucket imagenes-proyectos y los PDF a presupuestos. Los archivos privados utilizan rutas por usuario y enlaces firmados temporales; la carga agrupa las firmas por bucket. No incluye exportación/importación de copias locales de los proyectos.
 
 ## Desarrollo
 
@@ -21,6 +21,8 @@ El botón **Módulos** permite que cada usuario active o desactive Clientes, Tar
 La carga de proyectos está en `src/modules/projects` y las preferencias en `src/modules/preferences`. El mapa de módulos, las dependencias y los siguientes pasos están en [docs/MODULARIDAD.md](docs/MODULARIDAD.md).
 
 **Hoy en el estudio** aparece antes de las fichas. **Economía general** y **Resumen del estudio** aparecen después de ellas, justo antes del pie; los paneles respetan los módulos activos.
+
+La agenda muestra tareas, citas y entregas sin desplegarla. Permite programar tareas o citas vinculadas a un proyecto y completar tareas. Cada fecha se puede copiar a Google Calendar o descargar como archivo `.ics`; los cambios posteriores no se sincronizan automáticamente. Los gráficos económicos se descargan al abrir su apartado.
 
 ## Idiomas
 
@@ -48,4 +50,6 @@ La recuperación de contraseña requiere que la URL de la aplicación esté auto
 
 Las operaciones que cambian el nombre de un cliente y sus proyectos utilizan varias consultas con restauración en caso de fallo. Para garantizar atomicidad ante interrupciones de red, sería necesario trasladarlas a una transacción en la base de datos. La ordenación también se guarda mediante varias consultas; ante un fallo parcial, la aplicación vuelve a cargar el orden persistido.
 
-Los botones legales y de contacto del pie todavía no tienen contenido asociado.
+Los botones del pie abren información legal y el formulario de contacto. El formulario guarda el mensaje en `mensajes_contacto` e invoca `send-contact-email`; el envío necesita que esa función y sus secretos estén configurados en Supabase.
+
+La revisión de rendimiento, sus mediciones y sus límites están en [docs/REVISION_CODIGO.md](docs/REVISION_CODIGO.md).

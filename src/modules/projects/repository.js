@@ -1,12 +1,12 @@
 import { supabase } from '../../supabase.js'
 import { proyectoDesdeBD } from '../../projectModel.js'
-import { urlFirmada } from '../../storageFiles.js'
+import { urlsFirmadas } from '../../storageFiles.js'
 
 // El módulo entrega proyectos listos para mostrar; la pantalla no conoce
 // el formato de Supabase ni cómo resolver los archivos privados.
 export async function cargarProyectosDeUsuario(
   usuarioId,
-  { cliente = supabase, firmarUrl = urlFirmada } = {},
+  { cliente = supabase, firmarUrls = urlsFirmadas } = {},
 ) {
   if (!usuarioId) throw new Error('Se necesita un usuario para cargar sus proyectos.')
 
@@ -17,24 +17,21 @@ export async function cargarProyectosDeUsuario(
 
   if (error) throw error
 
-  return Promise.all((data || []).map(async (fila) => {
-    const proyecto = proyectoDesdeBD(fila)
-    const comisiones = await Promise.all((proyecto.comisiones || []).map(async (comision) => ({
+  const proyectos = (data || []).map(fila => proyectoDesdeBD(fila))
+  const imagenes = [...new Set(proyectos.map(p => p.imagenProyectoPath).filter(Boolean))]
+  const pdfs = [...new Set(proyectos.flatMap(p => [p.presupuestoPdfPath,
+    ...p.comisiones.map(c => c.presupuestoPdfPath)]).filter(Boolean))]
+  const [urlsImagenes, urlsPdfs] = await Promise.all([
+    imagenes.length ? firmarUrls('imagenes-proyectos', imagenes) : new Map(),
+    pdfs.length ? firmarUrls('presupuestos', pdfs) : new Map(),
+  ])
+  return proyectos.map(proyecto => ({
+    ...proyecto,
+    imagenProyecto: urlsImagenes.get(proyecto.imagenProyectoPath) || proyecto.imagenProyecto,
+    presupuestoPdf: urlsPdfs.get(proyecto.presupuestoPdfPath) || proyecto.presupuestoPdf,
+    comisiones: proyecto.comisiones.map(comision => ({
       ...comision,
-      presupuestoPdf: comision.presupuestoPdfPath
-        ? await firmarUrl('presupuestos', comision.presupuestoPdfPath)
-        : comision.presupuestoPdf,
-    })))
-
-    return {
-      ...proyecto,
-      imagenProyecto: proyecto.imagenProyectoPath
-        ? await firmarUrl('imagenes-proyectos', proyecto.imagenProyectoPath)
-        : proyecto.imagenProyecto,
-      presupuestoPdf: proyecto.presupuestoPdfPath
-        ? await firmarUrl('presupuestos', proyecto.presupuestoPdfPath)
-        : proyecto.presupuestoPdf,
-      comisiones,
-    }
+      presupuestoPdf: urlsPdfs.get(comision.presupuestoPdfPath) || comision.presupuestoPdf,
+    })),
   }))
 }

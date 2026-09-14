@@ -1,8 +1,8 @@
+import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 import { supabase } from '../supabase.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
-
 
 export default function ClientModal({
   cliente,
@@ -17,11 +17,9 @@ export default function ClientModal({
   modulos = MODULOS_PREDETERMINADOS
 }) {
 
-
   const [guardando, setGuardando] = useState(false)
   const [editando, setEditando] = useState(false)
   const [confirmarBorrado, setConfirmarBorrado] = useState(false)
-
 
  const [datosCliente, setDatosCliente] = useState({
   nombre: cliente?.nombre || '',
@@ -33,27 +31,13 @@ export default function ClientModal({
 
   if (!cliente) return null
 
-
-
   const proyectosCliente =
     proyectos.filter(
       (p) =>
         p.cliente === cliente.nombre
     )
 
-
-
-  const totalContratado =
-    proyectosCliente.reduce(
-      (total, p) =>
-        total +
-        Number(p.honorariosDiseno || 0) +
-        Number(p.honorariosGestion || 0) +
-        Number(p.otrosImportes || 0),
-      0
-    )
-
-
+  const totalContratado = proyectosCliente.reduce((total, p) => total + valorContratado(p), 0)
 
   const totalCobrado =
     proyectosCliente.reduce(
@@ -71,11 +55,8 @@ export default function ClientModal({
       0
     )
 
-
   const pendiente =
     totalContratado - totalCobrado
-
-
 
   async function guardarCliente() {
     if (!usuario || guardando) return
@@ -120,7 +101,7 @@ export default function ClientModal({
       className="panel-overlay"
       onMouseDown={(e)=>{
 
-        if(e.target === e.currentTarget){
+        if(e.target === e.currentTarget && !guardando){
           onClose()
         }
 
@@ -142,6 +123,7 @@ export default function ClientModal({
             className="btn"
             type="button"
             onClick={() => setEditando(!editando)}
+            disabled={guardando}
           >{translateUI("✏️ Editar")}</button>
 
 
@@ -149,12 +131,14 @@ export default function ClientModal({
             className="btn"
             type="button"
             onClick={() => setConfirmarBorrado(true)}
+            disabled={guardando}
           >{translateUI("🗑️ Eliminar")}</button>
 
 
           <button
             className="icon-btn"
             onClick={onClose}
+            disabled={guardando}
           >
             ✕
           </button>
@@ -259,6 +243,7 @@ export default function ClientModal({
               className="btn"
               type="button"
               onClick={() => onDeleteClient(cliente)}
+              disabled={guardando}
             >{translateUI("Sí, eliminar")}</button>
 
 

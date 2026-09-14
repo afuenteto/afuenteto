@@ -1,10 +1,11 @@
+import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 import { diasHasta } from '../storage.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
-
 export default function StudioDashboard({
+  embedded = false,
   proyectos = [],
   clientes = [],
   onOpenTasks,
@@ -17,23 +18,7 @@ export default function StudioDashboard({
 
   const [mostrarResumen, setMostrarResumen] = useState(false)
 
-
-  const valorTotal = proyectos.reduce(
-    (total, p) => {
-
-      const valor =
-        p.presupuestoTotal &&
-        Number(p.presupuestoTotal) > 0
-          ? Number(p.presupuestoTotal)
-          : Number(p.honorariosDiseno || 0) +
-            Number(p.honorariosGestion || 0) +
-            Number(p.otrosImportes || 0)
-
-      return total + valor
-
-    }, 0
-  )
-
+  const valorTotal = proyectos.reduce((total, p) => total + valorContratado(p), 0)
 
   const cobradoTotal = proyectos.reduce(
     (total, p) =>
@@ -47,10 +32,8 @@ export default function StudioDashboard({
     0
   )
 
-
   const pendienteTotal =
     valorTotal - cobradoTotal
-
 
   const resumenComisiones = proyectos.reduce(
     (acc, p) => {
@@ -75,7 +58,6 @@ export default function StudioDashboard({
     { generadas: 0, cobradas: 0, pendientes: 0 }
   )
 
-
   const tareasPendientes =
     proyectos.reduce(
       (total, p) =>
@@ -86,12 +68,10 @@ export default function StudioDashboard({
       0
     )
 
-
   const entregasProximas =
     proyectos.filter(
       p => diasHasta(p.fechaEntrega) !== null
     ).length
-
 
   const cobrosPendientes =
     proyectos.reduce(
@@ -102,7 +82,6 @@ export default function StudioDashboard({
           .length,
       0
     )
-
 
   const proyectosPorFase =
     proyectos.reduce((acc, p) => {
@@ -115,14 +94,12 @@ export default function StudioDashboard({
 
     }, {})
 
-
-
   return (
 
     <div className="studio-dashboard">
 
 
-      <h3
+      {!embedded && <h3
         className="serif dashboard-toggle"
         onClick={() =>
           setMostrarResumen(!mostrarResumen)
@@ -132,11 +109,11 @@ export default function StudioDashboard({
           {mostrarResumen ? '−' : '+'}
         </span>
 
-      </h3>
+      </h3>}
 
 
 
-      {mostrarResumen && (
+      {(embedded || mostrarResumen) && (
 
       <>
 

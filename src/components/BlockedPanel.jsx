@@ -7,13 +7,11 @@ export default function BlockedPanel({
   modulos = MODULOS_PREDETERMINADOS
 }) {
 
-
   const bloqueados =
     proyectos.filter(
       (proyecto) =>
         proyecto.prioridad === 'bloqueado'
     )
-
 
   return (
 

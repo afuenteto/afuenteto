@@ -1,3 +1,4 @@
+import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useEffect, useState, useRef } from 'react'
 import { fechaLocal } from '../projectUtils.js'
@@ -78,10 +79,7 @@ useEffect(() => () => {
   if (imagenPendientePreview?.startsWith('blob:')) URL.revokeObjectURL(imagenPendientePreview)
 }, [imagenPendientePreview])
 
-const totalProyecto =
-  Number(datos.honorariosDiseno || 0) +
-  Number(datos.honorariosGestion || 0) +
-  Number(datos.otrosImportes || 0)
+const totalProyecto = valorContratado(datos)
 
 const totalCobrado =
   (datos.cobros || [])
@@ -132,7 +130,6 @@ useEffect(() => {
 
   if (!seccionInicial) return
 
-
   const timer = setTimeout(() => {
 
     if (seccionInicial === 'tareas') {
@@ -144,7 +141,6 @@ useEffect(() => {
 
     }
 
-
     if (seccionInicial === 'economia') {
 
       economiaRef.current?.scrollIntoView({
@@ -154,9 +150,7 @@ useEffect(() => {
 
     }
 
-
   }, 120)
-
 
   return () => clearTimeout(timer)
 
@@ -174,12 +168,10 @@ useEffect(() => {
 
   }
 
-
   document.addEventListener(
     'mousedown',
     cerrarClientes
   )
-
 
   return () => {
     document.removeEventListener(
@@ -272,7 +264,8 @@ useEffect(() => {
   setImagenPendientePreview('')
   setDatos((actual) => ({
     ...actual,
-    imagenProyecto: ''
+    imagenProyecto: '',
+    imagenProyectoPath: ''
   }))
 }
 
@@ -368,7 +361,6 @@ function borrarHistorial(id) {
   )
 
   if (!cobro) return
-
 
   setDatos({
     ...datos,
@@ -642,11 +634,6 @@ async function subirPresupuestoComision(id, file) {
   }
 
   const esNuevo = !proyecto.nombre && proyecto.tareas.length === 0 && proyecto.proveedores.length === 0
-const existeCliente = clientes.some(
-  (c) =>
-    c.nombre.toLowerCase().trim() ===
-    busquedaCliente.toLowerCase().trim()
-)
   return (
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && !guardando && !subiendoImagen && !subiendoComisionId && !subiendoPdf && onClose()}>
       <form
@@ -658,8 +645,6 @@ const existeCliente = clientes.some(
           <div className="finalized-watermark finalized-watermark-modal">{translateUI("FINALIZADO")}</div>
         )}
         <div className="modal-head">
-         <p style={{color:"red", fontSize:"20px"}}>
-  </p>
         <h2 className="serif">
   {esNuevo ? translateUI("Nuevo proyecto") : datos.nombre || translateUI("Editar proyecto")}
 </h2>
@@ -810,7 +795,6 @@ const nombreLimpio = busquedaCliente
   .trim()
   .replace(/\s+/g, ' ')
 
-
 if (!nombreLimpio) return
 
 const clienteExiste = clientes.find(
@@ -818,7 +802,6 @@ const clienteExiste = clientes.find(
     c.nombre.toLowerCase().trim() ===
     nombreLimpio.toLowerCase()
 )
-
 
 if (clienteExiste) {
 
@@ -835,7 +818,6 @@ if (clienteExiste) {
 
   return
 }
-
 
   const { data, error } =
     await supabase

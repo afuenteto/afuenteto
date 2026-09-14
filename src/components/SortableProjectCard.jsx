@@ -9,6 +9,7 @@ export default function SortableProjectCard({
   onOpen,
   onOpenTasks,
   onOpenDelivery,
+  disabled = false,
   modulos = MODULOS_PREDETERMINADOS
 }) {
 
@@ -19,7 +20,8 @@ export default function SortableProjectCard({
     transform,
     transition
   } = useSortable({
-    id: proyecto.id
+    id: proyecto.id,
+    disabled,
   })
 
   return (
@@ -45,6 +47,8 @@ export default function SortableProjectCard({
   {...attributes}
   {...listeners}
   type="button"
+  disabled={disabled}
+  style={{ touchAction: 'none' }}
   aria-label={translateUI("Mover proyecto")}
 >
   <span className="drag-dots">

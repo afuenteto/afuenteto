@@ -3,10 +3,11 @@ import assert from 'node:assert/strict'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { createServer } from 'vite'
+import { createServer as createHttpServer } from 'node:http'
 import { proyectoDesdeBD } from '../src/projectModel.js'
 
 test('renderiza los componentes con proyectos nuevos y con datos', async () => {
-  const server = await createServer({ server: { middlewareMode: true }, appType: 'custom' })
+  const server = await createServer({ server: { middlewareMode: true, hmr: { server: createHttpServer() } }, appType: 'custom' })
   try {
     const cliente = { id: 'c1', nombre: 'Ana' }
     const ejemplos = [proyectoDesdeBD({ id: 'nuevo' }), proyectoDesdeBD({
@@ -17,7 +18,7 @@ test('renderiza los componentes con proyectos nuevos y con datos', async () => {
       historial: [{ id: 'h1', fecha: '2026-09-05', texto: 'Creado' }],
     })]
     const nombres = ['ProjectCard', 'ProjectModal', 'TasksModal', 'TasksPanel', 'ClientsPanel',
-      'ClientModal', 'StudioDashboard', 'StudioToday', 'StudioProfile', 'EconomicChart',
+      'ClientModal', 'StudioDashboard', 'StudioToday', 'StudioProfile', 'EconomicChart', 'EconomicChartContent',
       'DeliveriesPanel', 'PaymentsPanel', 'BlockedPanel', 'ProjectHistory', 'PhaseRail']
     for (const nombre of nombres) {
       const { default: Componente } = await server.ssrLoadModule('/src/components/' + nombre + '.jsx')

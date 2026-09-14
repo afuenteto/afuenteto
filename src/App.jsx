@@ -1,16 +1,18 @@
+import HomeModules from './components/HomeModules.jsx'
+import DebtsPanel from './components/DebtsPanel.jsx'
 import { t as translateUI, getLanguage, subscribeLanguage } from './i18n.js'
 import { proyectoDesdeBD, proyectoParaBD } from './projectModel.js'
 import { cargarProyectosDeUsuario } from './modules/projects/index.js'
 import { ModulesSettings, modulosDeUsuario, guardarModulosDeUsuario,
   conservarDatosDesactivados, notificarCambioModulos, CLAVE_AVISO_MODULOS } from './modules/preferences/index.js'
-import { reordenarProyectos, fechaLocal } from './projectUtils.js'
+import { reordenarProyectos, ordenarProyectos, fechaLocal } from './projectUtils.js'
 import StudioDashboard from './components/StudioDashboard.jsx'
 import StudioToday from './components/StudioToday.jsx'
 import EconomicChart from './components/EconomicChart.jsx'
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import SortableProjectCard from './components/SortableProjectCard'
-import { DndContext, closestCenter } from '@dnd-kit/core'
-import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable'
+import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { SortableContext, rectSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import ProjectModal from './components/ProjectModal.jsx'
 import TasksModal from './components/TasksModal.jsx'
 import DeliveryModal from './components/DeliveryModal.jsx'
@@ -23,6 +25,7 @@ import BlockedPanel from './components/BlockedPanel.jsx'
 import ClientModal from './components/ClientModal.jsx'
 import ClientsPanel from './components/ClientsPanel.jsx'
 import { supabase } from './supabase.js'
+import { retryJwtRead } from './retryJwt.js'
 import {
   FASES,
   nuevoProyecto,
@@ -37,6 +40,9 @@ export default function App() {
   const usuarioActualRef = useRef(null)
   const revisionUsuarioRef = useRef(0)
   usuarioActualRef.current = usuario?.id
+  function actualizarClientesDeSesion(actualizar) {
+    if (usuarioActualRef.current === usuario?.id) setClientes(actualizar)
+  }
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorLogin, setErrorLogin] = useState('')
@@ -49,9 +55,25 @@ export default function App() {
   const [entregaAbierta, setEntregaAbierta] = useState(null)
   const [seccionInicial, setSeccionInicial] = useState(null)
   const [filtro, setFiltro] = useState('Todos')
-  const [ordenProyectos, setOrdenProyectos] = useState('fecha')
+  const [openHomeModule, setOpenHomeModule] = useState(null)
+  function mostrarProyectos(fase = 'Todos') {
+    setFiltro(fase)
+    setOpenHomeModule({ id: 'projects' })
+  }
+  const [ordenProyectos, setOrdenProyectos] = useState('personalizado')
+  const sensoresArrastre = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  )
   const [guardando, setGuardando] = useState(false)
   const [aviso, setAviso] = useState('')
+  const avisoTimerRef = useRef(null)
+  function mostrarAvisoTemporal(mensaje) {
+    clearTimeout(avisoTimerRef.current)
+    setAviso(mensaje)
+    avisoTimerRef.current = setTimeout(() => setAviso(''), 3000)
+  }
+  useEffect(() => () => clearTimeout(avisoTimerRef.current), [usuario?.id])
   const [panelAbierto, setPanelAbierto] = useState(null)
   const [informacionAbierta, setInformacionAbierta] = useState(null)
   const [enviandoContacto, setEnviandoContacto] = useState(false)
@@ -60,17 +82,19 @@ export default function App() {
   const [intentoCarga, setIntentoCarga] = useState(0)
   const [recuperando, setRecuperando] = useState(false)
   const [nuevaPassword, setNuevaPassword] = useState('')
-  const splashInicioRef = useRef(Date.now())
   const [splashTerminado, setSplashTerminado] = useState(false)
+  const inicioCargaRef = useRef(Date.now())
 
   useEffect(() => {
     if (cargando) {
+      inicioCargaRef.current = Date.now()
       setSplashTerminado(false)
       return undefined
     }
 
     const ciclo = 1300
-    const timer = setTimeout(() => setSplashTerminado(true), ciclo)
+    const restante = Math.max(0, ciclo - (Date.now() - inicioCargaRef.current))
+    const timer = setTimeout(() => setSplashTerminado(true), restante)
 
     return () => clearTimeout(timer)
   }, [cargando])
@@ -81,13 +105,16 @@ export default function App() {
     if (ordenados === proyectos) return
     operacionRef.current = true
     setGuardando(true)
+    setOrdenProyectos('personalizado')
+    setProyectos(ordenados)
     try {
-      for (const proyecto of ordenados) {
+      const ordenAnterior = new Map(proyectos.map(p => [p.id, p.orden ?? 0]))
+      for (const proyecto of ordenados.filter(p => p.orden !== ordenAnterior.get(p.id))) {
         const { error } = await supabase.from('proyectos').update({ orden: proyecto.orden })
           .eq('id', proyecto.id).eq('user_id', usuario.id).select('id').single()
         if (error) throw error
+        if (usuarioActualRef.current !== usuario.id) return
       }
-      setProyectos(ordenados)
     } catch (error) {
       setAviso(translateUI("No se pudo guardar todo el orden: ") + error.message)
       setIntentoCarga(n => n + 1)
@@ -113,7 +140,6 @@ async function cargarClientes(user) {
   return data || []
 
 }
-
 
 useEffect(() => {
     let activo = true
@@ -148,6 +174,7 @@ useEffect(() => {
         : session?.user ?? null)
       if (session) actualizarPerfil(session.access_token, session.user.id)
       if (cambioDeCuenta) {
+        setOpenHomeModule(null)
         setConfigurandoModulos(false)
         setProyectos([])
         setClientes([])
@@ -206,9 +233,16 @@ useEffect(() => {
     let activo = true
     setCargando(true)
     setErrorCarga('')
-    Promise.all([cargarProyectosDeUsuario(usuarioId), cargarClientes({ id: usuarioId })])
-      .then(([datos, datosClientes]) => {
-        if (activo) { setProyectos(datos); setClientes(datosClientes) }
+    retryJwtRead(
+      () => Promise.all([cargarProyectosDeUsuario(usuarioId), cargarClientes({ id: usuarioId })]),
+      { isActive: () => activo },
+    )
+      .then(resultado => {
+        if (activo && resultado) {
+          const [datos, datosClientes] = resultado
+          setProyectos(datos)
+          setClientes(datosClientes)
+        }
       })
       .catch(error => { if (activo) setErrorCarga(error.message) })
       .finally(() => { if (activo) setCargando(false) })
@@ -305,8 +339,7 @@ useEffect(() => {
       ++revisionUsuarioRef.current
       setUsuario(actualizado)
       notificarCambioModulos(propietario)
-      setAviso(translateUI('Configuración guardada.'))
-      setTimeout(() => setAviso(''), 3000)
+      mostrarAvisoTemporal(translateUI('Configuración guardada.'))
     } finally {
       operacionRef.current = false
       setGuardandoModulos(false)
@@ -338,7 +371,7 @@ function abrirExistente(proyecto, seccion = null) {
   }
 
 async function guardarTareas(proyectoId, tareas) {
-  if (!usuario || !modulos.tareas || operacionRef.current) return
+  if (!usuario || !modulos.tareas || operacionRef.current) return false
   operacionRef.current = true
 
   setGuardando(true)
@@ -357,13 +390,11 @@ async function guardarTareas(proyectoId, tareas) {
     const tareasAnteriores =
       proyectoActual?.tareas || []
 
-
     tareas.forEach((tarea) => {
 
       const anterior = tareasAnteriores.find(
         (t) => t.id === tarea.id
       )
-
 
       if (
         tarea.hecha &&
@@ -381,7 +412,6 @@ async function guardarTareas(proyectoId, tareas) {
 
     })
 
-
     const { error } = await supabase
       .from('proyectos')
       .update({
@@ -394,7 +424,7 @@ async function guardarTareas(proyectoId, tareas) {
 
     if (error) throw error
 
-
+    if (usuarioActualRef.current !== usuario.id) return false
     setProyectos((prev) =>
       prev.map((p) =>
         p.id === proyectoId
@@ -407,13 +437,11 @@ async function guardarTareas(proyectoId, tareas) {
       )
     )
 
-
     setTareasAbiertas(null)
 
-    setAviso(translateUI("Tareas guardadas correctamente."))
+    mostrarAvisoTemporal(translateUI("Tareas guardadas correctamente."))
 
-    setTimeout(() => setAviso(''), 3000)
-
+    return true
 
   } catch (error) {
 
@@ -422,6 +450,8 @@ async function guardarTareas(proyectoId, tareas) {
     alert(
       translateUI("No se pudieron guardar las tareas.\n\n{0}", { 0: error.message })
     )
+
+    return false
 
   } finally {
 
@@ -447,6 +477,7 @@ async function guardarTareas(proyectoId, tareas) {
       const { error } = await supabase.from('proyectos').update({ tareas, historial })
         .eq('id', proyectoId).eq('user_id', usuario.id).select('id').single()
       if (error) throw error
+      if (usuarioActualRef.current !== usuario.id) return false
       setProyectos(prev => prev.map(p => p.id === proyectoId ? { ...p, tareas, historial } : p))
       return true
     } catch (error) {
@@ -476,7 +507,6 @@ async function guardar(datos) {
           datos.cliente.toLowerCase().trim()
       )
 
-
       if (!clienteExiste) {
 
         const { data: nuevoCliente, error: errorCliente } =
@@ -492,11 +522,11 @@ async function guardar(datos) {
             .select()
             .single()
 
-
         if (errorCliente) {
           throw errorCliente
         }
 
+        if (usuarioActualRef.current !== usuario.id) return false
 
         setClientes((prev) => [
           ...prev,
@@ -516,7 +546,6 @@ if (modulos.clientes && datos.cliente) {
         datos.cliente.toLowerCase().trim()
     )
 
-
   if (clienteActual) {
 
     const cambios =
@@ -524,14 +553,12 @@ if (modulos.clientes && datos.cliente) {
       clienteActual.email !== datos.email ||
       clienteActual.direccion !== datos.direccion
 
-
     if (cambios) {
 
       const actualizar =
         window.confirm(
           translateUI("Los datos de {0} han cambiado.\n\n¿Actualizar ficha del cliente?", { 0: clienteActual.nombre })
         )
-
 
       if (actualizar) {
 
@@ -546,11 +573,11 @@ if (modulos.clientes && datos.cliente) {
             .eq('id', clienteActual.id)
             .eq('user_id', usuario.id)
 
-
         if (error) {
           throw error
         }
 
+        if (usuarioActualRef.current !== usuario.id) return false
 
         setClientes((prev) =>
           prev.map((c) =>
@@ -601,7 +628,8 @@ if (modulos.clientes && datos.cliente) {
 
       if (error) throw error
 
-      const proyectoGuardado = proyectoDesdeBD(data)
+      const proyectoGuardado = proyectoDesdeBD(data, datos)
+      if (usuarioActualRef.current !== usuario.id) return false
 
       setProyectos((prev) => {
         const existe = prev.some((p) => p.id === proyectoGuardado.id)
@@ -618,8 +646,7 @@ if (modulos.clientes && datos.cliente) {
       setEditando(null)
       setSeccionInicial(null)
 
-      setAviso(translateUI("Proyecto guardado correctamente."))
-      setTimeout(() => setAviso(''), 3000)
+      mostrarAvisoTemporal(translateUI("Proyecto guardado correctamente."))
       return true
     } catch (error) {
       console.error(error)
@@ -634,13 +661,12 @@ if (modulos.clientes && datos.cliente) {
     }
   }
 async function eliminarCliente(cliente) {
-  if (!usuario || !modulos.clientes) return
+  if (!usuario || !modulos.clientes || operacionRef.current) return
 
   const tieneProyectos =
     proyectos.some(
       p => p.cliente.trim().toLowerCase() === cliente.nombre.trim().toLowerCase()
     )
-
 
   if (tieneProyectos) {
 
@@ -652,14 +678,12 @@ async function eliminarCliente(cliente) {
 
   }
 
-
   const { error } =
     await supabase
       .from('clientes')
       .delete()
       .eq('id', cliente.id)
       .eq('user_id', usuario.id)
-
 
   if (error) {
 
@@ -669,13 +693,12 @@ async function eliminarCliente(cliente) {
 
   }
 
-
+  if (usuarioActualRef.current !== usuario.id) return
   setClientes(prev =>
     prev.filter(
       c => c.id !== cliente.id
     )
   )
-
 
   setClienteAbierto(null)
 
@@ -707,13 +730,13 @@ async function eliminarCliente(cliente) {
 
       if (error) throw error
 
-      const actualizado = proyectoDesdeBD(data)
+      const actualizado = proyectoDesdeBD(data, proyecto)
+      if (usuarioActualRef.current !== usuario.id) return
       setProyectos((prev) =>
         prev.map((p) => (p.id === id ? actualizado : p))
       )
       setEditando(actualizado)
-      setAviso(estado === 'finalizado' ? translateUI("Proyecto finalizado.") : translateUI("Proyecto reabierto."))
-      setTimeout(() => setAviso(''), 3000)
+      mostrarAvisoTemporal(estado === 'finalizado' ? translateUI("Proyecto finalizado.") : translateUI("Proyecto reabierto."))
     } catch (error) {
       console.error(error)
       alert(
@@ -746,12 +769,12 @@ async function eliminarCliente(cliente) {
 
       if (error) throw error
 
+      if (usuarioActualRef.current !== usuario.id) return
       setProyectos((prev) => prev.filter((p) => p.id !== id))
       setEditando(null)
       setSeccionInicial(null)
 
-      setAviso(translateUI("Proyecto eliminado."))
-      setTimeout(() => setAviso(''), 3000)
+      mostrarAvisoTemporal(translateUI("Proyecto eliminado."))
     } catch (error) {
       console.error(error)
 
@@ -764,26 +787,18 @@ async function eliminarCliente(cliente) {
     }
   }
 
-  const proyectosActivos = proyectos.filter((p) => p.estado !== 'finalizado')
-  const proyectosFinalizados = proyectos.filter((p) => p.estado === 'finalizado')
+  const proyectosActivos = useMemo(() => proyectos.filter((p) => p.estado !== 'finalizado'), [proyectos])
+  const proyectosFinalizados = useMemo(() => proyectos.filter((p) => p.estado === 'finalizado'), [proyectos])
 
-  const proyectosFiltrados =
+  const proyectosFiltrados = useMemo(() =>
     filtro === 'Todos'
       ? proyectosActivos
       : filtro === 'Finalizados'
         ? proyectosFinalizados
-        : proyectosActivos.filter((p) => p.fase === filtro)
+        : proyectosActivos.filter((p) => p.fase === filtro), [filtro, proyectosActivos, proyectosFinalizados])
 
-const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
-  if (ordenProyectos === 'importancia') {
-    return (Number(b.importancia) || 5) - (Number(a.importancia) || 5)
-  }
-
-  const fechaA = a.fechaEntrega || '9999-12-31'
-  const fechaB = b.fechaEntrega || '9999-12-31'
-
-  return fechaA.localeCompare(fechaB) || (a.orden ?? 0) - (b.orden ?? 0)
-})
+const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, ordenProyectos),
+  [proyectosFiltrados, ordenProyectos])
 
   /*
    * PANTALLA DE ENTRADA
@@ -930,7 +945,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     <div className="app">
      <div className="topbar">
   <div className="brand">
-<StudioProfile usuario={usuario}>
+<StudioProfile key={usuarioId} usuario={usuario}>
   <img
     src={import.meta.env.BASE_URL + "icon-180.png"}
     className="app-logo"
@@ -987,20 +1002,22 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
         >{translateUI("Guardando...")}</p>
       )}
 
-      <div className="study-overview-stack">
-        <StudioToday
+      <HomeModules key={usuarioId} usuarioId={usuarioId} openRequest={openHomeModule} sections={[
+        { id: 'today', title: 'Hoy en el estudio', content: (        <StudioToday
+          key={usuarioId}
+          onSchedule={(proyectoId, tarea) => {
+            const proyecto = proyectos.find(p => p.id === proyectoId)
+            return proyecto ? guardarTareas(proyectoId, [...proyecto.tareas, tarea]) : Promise.resolve(false)
+          }}
+          onCompleteTask={completarTareaDesdePanel}
+          guardando={guardando}
           modulos={modulos}
           proyectos={proyectosActivos}
           onOpen={abrirExistente}
           onOpenTasks={abrirTareas}
           setPanelAbierto={setPanelAbierto}
-        />
-
-      </div>
-
-      <hr className="rule" />
-
-      <div className="filters">
+        />) },
+        { id: 'projects', title: 'Proyectos', content: (<>      <div className="filters">
         <div className="filter-row filter-row-categories">
         <button
           className={'chip' + (filtro === 'Todos' ? ' active' : '')}
@@ -1032,6 +1049,11 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 
         <div className="filter-row filter-row-sorting">
         <button
+          className={'chip' + (ordenProyectos === 'personalizado' ? ' active' : '')}
+          aria-pressed={ordenProyectos === 'personalizado'}
+          onClick={() => setOrdenProyectos('personalizado')}
+        >{translateUI("Personalizado")}</button>
+        <button
           className={'chip' + (ordenProyectos === 'fecha' ? ' active' : '')}
           onClick={() => setOrdenProyectos('fecha')}
         >{translateUI("Fecha")}</button>
@@ -1062,6 +1084,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
        ) : (
     <div>
      <DndContext
+  sensors={sensoresArrastre}
   collisionDetection={closestCenter}
   onDragEnd={handleDragEnd}
 >
@@ -1072,6 +1095,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     <div className="grid">
       {proyectosOrdenados.map((proyecto) => (
         <SortableProjectCard
+          disabled={guardando}
           modulos={modulos}
           key={proyecto.id}
           proyecto={proyecto}
@@ -1086,6 +1110,13 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 </DndContext>
     </div>
   )}
+</>) },
+        { id: 'debts', title: 'Deudas', content: <DebtsPanel key={usuarioId} usuarioId={usuarioId} /> },
+        ...(modulos.economia ? [{ id: 'economy', title: 'Economía general', content: <EconomicChart embedded proyectos={proyectosActivos} /> }] : []),
+        { id: 'summary', title: 'Resumen del estudio', content: <StudioDashboard embedded modulos={modulos} proyectos={proyectosActivos} clientes={clientes}
+          onOpenTasks={() => setPanelAbierto('tareas')} onOpenDeliveries={() => setPanelAbierto('entregas')} onOpenPayments={() => setPanelAbierto('cobros')}
+          onFilterPhase={mostrarProyectos} onShowAll={() => mostrarProyectos()} /> },
+      ]} />
 
  {editando && (
   <>
@@ -1098,7 +1129,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   proyecto={editando}
   clientes={clientes}
   usuario={usuario}
-  setClientes={setClientes}
+  setClientes={actualizarClientesDeSesion}
   onOpenClient={setClienteAbierto}
   onSave={guardar}
   onDelete={eliminar}
@@ -1169,13 +1200,14 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
     usuario={usuario}
     clientes={clientes}
     onClientUpdated={(actualizado, nombreAnterior) => {
+      if (usuarioActualRef.current !== usuario.id) return
       setClienteAbierto(actualizado)
       setProyectos(prev => prev.map(p => p.cliente === nombreAnterior ? { ...p, cliente: actualizado.nombre } : p))
       setEditando(prev => prev?.cliente === nombreAnterior ? { ...prev, cliente: actualizado.nombre } : prev)
     }}
     cliente={clienteAbierto}
     proyectos={proyectos}
-    setClientes={setClientes}
+    setClientes={actualizarClientesDeSesion}
     onDeleteClient={eliminarCliente}
  onOpenProject={(proyecto) => {
 
@@ -1280,6 +1312,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
           className="footer-contact-form"
           onSubmit={async (event) => {
             event.preventDefault()
+            if (enviandoContacto) return
             const formulario = event.currentTarget
             const formData = new FormData(formulario)
             const nombre = formData.get('nombre')
@@ -1301,6 +1334,7 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 
               if (error) throw error
 
+              if (usuarioActualRef.current !== usuario.id) return
               const { error: emailError } = await supabase.functions.invoke(
                 'send-contact-email',
                 {
@@ -1310,10 +1344,10 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
 
               if (emailError) throw emailError
 
+              if (usuarioActualRef.current !== usuario.id) return
               formulario.reset()
-              setAviso(translateUI("Mensaje enviado correctamente."))
+              mostrarAvisoTemporal(translateUI("Mensaje enviado correctamente."))
               setInformacionAbierta(null)
-              setTimeout(() => setAviso(''), 3000)
             } catch (error) {
               console.error('ERROR MENSAJE CONTACTO:', error)
               alert(translateUI("No se pudo enviar el mensaje.\n\n{0}", { 0: error.message }))
@@ -1345,19 +1379,6 @@ const proyectosOrdenados = [...proyectosFiltrados].sort((a, b) => {
   </div>
 )}
 
-<div className="study-overview-stack study-overview-bottom">
-  {modulos.economia && <EconomicChart proyectos={proyectosOrdenados} />}
-  <StudioDashboard
-    modulos={modulos}
-    proyectos={proyectosActivos}
-    clientes={clientes}
-    onOpenTasks={() => setPanelAbierto('tareas')}
-    onOpenDeliveries={() => setPanelAbierto('entregas')}
-    onOpenPayments={() => setPanelAbierto('cobros')}
-    onFilterPhase={(fase) => setFiltro(fase)}
-    onShowAll={() => setFiltro('Todos')}
-  />
-</div>
 
 <footer className="app-footer">
 

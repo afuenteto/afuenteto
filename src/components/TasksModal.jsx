@@ -16,7 +16,6 @@ export default function TasksModal({
 
   const [nuevaTarea, setNuevaTarea] = useState('')
 
-
 function cambiarEstado(id) {
 
   setTareas((prev) =>
@@ -39,13 +38,11 @@ function cambiarEstado(id) {
 
 }
 
-
   function añadirTarea() {
 
     const texto = nuevaTarea.trim()
 
     if (!texto) return
-
 
     setTareas((prev) => [
       ...prev,
@@ -61,7 +58,6 @@ function cambiarEstado(id) {
 
   }
 
-
   function borrarTarea(id) {
 
     setTareas((prev) =>
@@ -72,7 +68,6 @@ function cambiarEstado(id) {
 
   }
 
-
   const pendientes =
     tareas.filter(
       (t) => !t.hecha
@@ -82,7 +77,6 @@ function cambiarEstado(id) {
     tareas.filter(
       (t) => t.hecha
     )
-
 
   return (
 
@@ -157,6 +151,12 @@ function cambiarEstado(id) {
 
   <div className="task-options">
 
+    <label>
+      {translateUI('Hora (opcional)')}
+      <input type="time" value={t.hora || ''} disabled={!t.fecha}
+        onChange={e => setTareas(prev => prev.map(x => x.id === t.id ? { ...x, hora: e.target.value } : x))} />
+    </label>
+
     <input
       type="date"
       value={t.fecha || ''}
@@ -166,7 +166,8 @@ function cambiarEstado(id) {
             x.id === t.id
               ? {
                   ...x,
-                  fecha: e.target.value
+                  fecha: e.target.value,
+                  hora: e.target.value ? x.hora || '' : ''
                 }
               : x
           )
@@ -274,7 +275,7 @@ function cambiarEstado(id) {
 
      <small>{translateUI("Completada ")}{t.fechaCompletada && (
     <>
-      {new Date(t.fechaCompletada)
+      {new Date(t.fechaCompletada + 'T12:00:00')
         .toLocaleDateString(getLocale())}
     </>
   )}

@@ -5,8 +5,8 @@ function numeroOpcional(valor) {
   if (!Number.isFinite(numero)) throw new Error('Hay un importe o número de horas inválido.');
   return numero;
 }
-export function proyectoDesdeBD(row) {
-  return {
+export function proyectoDesdeBD(row, anterior) {
+  const proyecto = {
     id: row.id,
     prioridad: row.prioridad || 'en_curso',
     estado: row.estado || 'activo',
@@ -39,6 +39,15 @@ export function proyectoDesdeBD(row) {
     horasEstimadas: row.horas_estimadas ?? '',
     horasReales: row.horas_reales ?? ''
   };
+  // La BD devuelve rutas privadas; conservar el enlace resuelto si el archivo
+  // no ha cambiado evita que desaparezca la imagen tras guardar o archivar.
+  if (anterior?.id === proyecto.id) {
+    for (const campo of ['imagenProyecto', 'presupuestoPdf']) {
+      const ruta = campo + 'Path';
+      if (proyecto[ruta] && proyecto[ruta] === anterior[ruta]) proyecto[campo] = anterior[campo] || '';
+    }
+  }
+  return proyecto;
 }
 export function proyectoParaBD(proyecto, userId) {
   return {

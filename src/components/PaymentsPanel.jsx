@@ -27,13 +27,11 @@ export default function PaymentsPanel({
 
   })
 
-
   cobros.sort(
     (a, b) =>
       new Date(a.fecha) -
       new Date(b.fecha)
   )
-
 
   return (
 
@@ -75,7 +73,7 @@ export default function PaymentsPanel({
         {cobros.map((item) => (
 
           <button
-            key={item.id}
+            key={item.proyecto.id + ':' + item.id}
             className="panel-item"
             onClick={() =>
               onOpen(item.proyecto, 'economia')

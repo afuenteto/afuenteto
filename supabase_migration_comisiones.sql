@@ -27,79 +27,13 @@ BEGIN
   END IF;
 END $$;
 
--- 2) Bucket para los PDF de presupuestos de colaboradores.
--- La app ya utiliza el bucket "presupuestos".
+-- 2) Crear el bucket privado si todavía no existe.
+-- No modificar la visibilidad de instalaciones existentes ni reinstalar
+-- permisos amplios al volver a ejecutar esta migración histórica.
 insert into storage.buckets (id, name, public)
-values ('presupuestos', 'presupuestos', true)
-on conflict (id) do update
-set public = true;
+values ('presupuestos', 'presupuestos', false)
+on conflict (id) do nothing;
 
--- 3) Permisos del bucket para usuarios autenticados
--- Lectura
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE schemaname = 'storage'
-      AND tablename = 'objects'
-      AND policyname = 'presupuestos_select_authenticated'
-  ) THEN
-    CREATE POLICY presupuestos_select_authenticated
-      ON storage.objects
-      FOR SELECT
-      TO authenticated
-      USING (bucket_id = 'presupuestos');
-  END IF;
-END $$;
-
--- Subida
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE schemaname = 'storage'
-      AND tablename = 'objects'
-      AND policyname = 'presupuestos_insert_authenticated'
-  ) THEN
-    CREATE POLICY presupuestos_insert_authenticated
-      ON storage.objects
-      FOR INSERT
-      TO authenticated
-      WITH CHECK (bucket_id = 'presupuestos');
-  END IF;
-END $$;
-
--- Sustitución/actualización
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE schemaname = 'storage'
-      AND tablename = 'objects'
-      AND policyname = 'presupuestos_update_authenticated'
-  ) THEN
-    CREATE POLICY presupuestos_update_authenticated
-      ON storage.objects
-      FOR UPDATE
-      TO authenticated
-      USING (bucket_id = 'presupuestos')
-      WITH CHECK (bucket_id = 'presupuestos');
-  END IF;
-END $$;
-
--- Borrado
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_policies
-    WHERE schemaname = 'storage'
-      AND tablename = 'objects'
-      AND policyname = 'presupuestos_delete_authenticated'
-  ) THEN
-    CREATE POLICY presupuestos_delete_authenticated
-      ON storage.objects
-      FOR DELETE
-      TO authenticated
-      USING (bucket_id = 'presupuestos');
-  END IF;
-END $$;
+-- 3) Los permisos por propietario están centralizados en
+-- supabase_migration_storage_privado.sql. Aplicar esa migración después
+-- de preparar las rutas por usuario; no habilitar lectura pública.

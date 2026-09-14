@@ -1,3 +1,4 @@
+import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale, formatRelativeDays } from '../i18n.js'
 import PhaseRail from './PhaseRail.jsx'
 import { diasHasta, formatearFecha } from '../storage.js'
@@ -7,12 +8,7 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
   const tareas = Array.isArray(proyecto.tareas) ? proyecto.tareas : []
   const tareasPendientes = tareas.filter((t) => !t.hecha).length
 
-  const valorProyecto =
-    proyecto.presupuestoTotal && Number(proyecto.presupuestoTotal) > 0
-      ? Number(proyecto.presupuestoTotal)
-      : Number(proyecto.honorariosDiseno || 0) +
-        Number(proyecto.honorariosGestion || 0) +
-        Number(proyecto.otrosImportes || 0)
+  const valorProyecto = valorContratado(proyecto)
 
   const totalCobrado =
     (proyecto.cobros || [])
@@ -103,7 +99,7 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
     >
       {tieneImagen && (
         <div className="card-cover-strip" aria-hidden="true">
-          <img src={proyecto.imagenProyecto} alt="" />
+          <img src={proyecto.imagenProyecto} alt="" loading="lazy" decoding="async" />
           <span className="card-cover-shade" />
         </div>
       )}

@@ -30,7 +30,7 @@ export default function DeliveryModal({
     <div
       className="overlay"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose()
+        if (event.target === event.currentTarget && !guardando) onClose()
       }}
     >
       <div className="modal delivery-modal">

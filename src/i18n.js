@@ -86,9 +86,12 @@ export function translate(code, key, values = {}) {
   return template.replace(/\{(\w+)\}/g, (match, name) => Object.hasOwn(values, name) ? String(values[name]) : match)
 }
 export const t = (key, values) => translate(language, key, values)
+const relativeFormatters = new Map()
 export function formatRelativeDays(days) {
   if (days === null || !Number.isFinite(days)) return '—'
-  return new Intl.RelativeTimeFormat(getLocale(), { numeric: 'auto' }).format(days, 'day')
+  const locale = getLocale()
+  if (!relativeFormatters.has(locale)) relativeFormatters.set(locale, new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }))
+  return relativeFormatters.get(locale).format(days, 'day')
 }
 updateDocument()
 if (typeof window !== 'undefined') {

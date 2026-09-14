@@ -38,17 +38,16 @@ test('el módulo carga solo los proyectos del usuario y resuelve sus archivos pr
   const firmas = []
   const [proyecto] = await cargarProyectosDeUsuario('u1', {
     cliente: clienteSimulado({ data: [fila], error: null }, consultas),
-    firmarUrl: async (bucket, ruta) => {
-      firmas.push([bucket, ruta])
-      return `https://archivos.test/${bucket}/${ruta}`
+    firmarUrls: async (bucket, rutas) => {
+      firmas.push([bucket, rutas])
+      return new Map(rutas.map(ruta => [ruta, `https://archivos.test/${bucket}/${ruta}`]))
     },
   })
 
   assert.deepEqual(consultas, [['from', 'proyectos'], ['select', '*'], ['eq', 'user_id', 'u1']])
   assert.deepEqual(firmas, [
-    ['presupuestos', 'u1/p1/colaborador.pdf'],
-    ['imagenes-proyectos', 'u1/p1/cabecera.webp'],
-    ['presupuestos', 'u1/p1/presupuesto.pdf'],
+    ['imagenes-proyectos', ['u1/p1/cabecera.webp']],
+    ['presupuestos', ['u1/p1/presupuesto.pdf', 'u1/p1/colaborador.pdf']],
   ])
   assert.equal(proyecto.imagenProyecto, 'https://archivos.test/imagenes-proyectos/u1/p1/cabecera.webp')
   assert.equal(proyecto.presupuestoPdf, 'https://archivos.test/presupuestos/u1/p1/presupuesto.pdf')
@@ -69,7 +68,7 @@ test('conserva las URL antiguas y admite proyectos sin archivos', async () => {
       { id: 'p1', imagen_proyecto: 'https://ejemplo.test/imagen.webp', presupuesto_pdf: 'https://ejemplo.test/presupuesto.pdf' },
       { id: 'p2' },
     ] }),
-    firmarUrl: async () => assert.fail('no debe firmar rutas públicas ni vacías'),
+    firmarUrls: async () => assert.fail('no debe firmar rutas públicas ni vacías'),
   })
   assert.equal(proyectos[0].imagenProyecto, 'https://ejemplo.test/imagen.webp')
   assert.equal(proyectos[0].presupuestoPdf, 'https://ejemplo.test/presupuesto.pdf')
@@ -81,22 +80,36 @@ test('devuelve una lista vacía cuando no hay proyectos', async () => {
   for (const data of [null, []]) {
     assert.deepEqual(await cargarProyectosDeUsuario('u1', {
       cliente: clienteSimulado({ data }),
-      firmarUrl: async () => assert.fail('no debe solicitar archivos'),
+      firmarUrls: async () => assert.fail('no debe solicitar archivos'),
     }), [])
   }
+})
+
+test('firma una sola vez un PDF compartido entre el proyecto y sus comisiones', async () => {
+  const calls = []
+  const [proyecto] = await cargarProyectosDeUsuario('u1', {
+    cliente: clienteSimulado({ data: [{ id: 'p1', presupuesto_pdf: 'u1/a.pdf',
+      comisiones: [{ id: 'c1', presupuestoPdfPath: 'u1/a.pdf' }] }] }),
+    firmarUrls: async (bucket, rutas) => {
+      calls.push([bucket, rutas])
+      return new Map(rutas.map(path => [path, 'https://test/' + path]))
+    },
+  })
+  assert.deepEqual(calls, [['presupuestos', ['u1/a.pdf']]])
+  assert.equal(proyecto.presupuestoPdf, proyecto.comisiones[0].presupuestoPdf)
 })
 
 test('propaga los errores de carga y de acceso a archivos', async () => {
   const errorConsulta = new Error('Error de consulta')
   await assert.rejects(cargarProyectosDeUsuario('u1', {
     cliente: clienteSimulado({ error: errorConsulta }),
-    firmarUrl: async () => assert.fail('no debe solicitar archivos tras un error'),
+    firmarUrls: async () => assert.fail('no debe solicitar archivos tras un error'),
   }), error => error === errorConsulta)
 
   const errorArchivo = new Error('Archivo no disponible')
   await assert.rejects(cargarProyectosDeUsuario('u1', {
     cliente: clienteSimulado({ data: [{ id: 'p1', imagen_proyecto: 'u1/p1/imagen.webp' }] }),
-    firmarUrl: async () => { throw errorArchivo },
+    firmarUrls: async () => { throw errorArchivo },
   }), error => error === errorArchivo)
 })
 

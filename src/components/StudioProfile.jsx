@@ -1,11 +1,28 @@
 import { t as translateUI } from '../i18n.js'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { supabase } from '../supabase.js'
 
 export default function StudioProfile({ children, usuario }) {
   const [abierto, setAbierto] = useState(false)
   const [editando, setEditando] = useState(false)
   const [guardando, setGuardando] = useState(false)
+  const perfilRef = useRef(null)
+
+  useEffect(() => {
+    if (!abierto) return
+    function cerrarFuera(event) {
+      if (perfilRef.current && !perfilRef.current.contains(event.target)) setAbierto(false)
+    }
+    function cerrarConEscape(event) {
+      if (event.key === 'Escape') setAbierto(false)
+    }
+    document.addEventListener('pointerdown', cerrarFuera)
+    document.addEventListener('keydown', cerrarConEscape)
+    return () => {
+      document.removeEventListener('pointerdown', cerrarFuera)
+      document.removeEventListener('keydown', cerrarConEscape)
+    }
+  }, [abierto])
 
   const [perfil, setPerfil] = useState({
     id: null,
@@ -16,7 +33,8 @@ export default function StudioProfile({ children, usuario }) {
   })
 
   useEffect(() => {
-    if (!usuario) return
+    if (!usuario?.id) return
+    let activo = true
 
     async function cargarPerfil() {
       const { data, error } = await supabase
@@ -30,7 +48,7 @@ export default function StudioProfile({ children, usuario }) {
         return
       }
 
-      if (data) {
+      if (activo && data) {
         setPerfil({
           id: data.id,
           nombre: data.nombre || '',
@@ -41,8 +59,9 @@ export default function StudioProfile({ children, usuario }) {
       }
     }
 
-    cargarPerfil()
-  }, [usuario])
+    cargarPerfil().catch(error => console.error('ERROR CARGANDO PERFIL:', error))
+    return () => { activo = false }
+  }, [usuario?.id])
 
   function cambiarCampo(e) {
     setPerfil((p) => ({
@@ -52,7 +71,7 @@ export default function StudioProfile({ children, usuario }) {
   }
 
   async function guardarPerfil() {
-    if (!usuario) return
+    if (!usuario || guardando) return
 
     setGuardando(true)
 
@@ -64,6 +83,7 @@ export default function StudioProfile({ children, usuario }) {
       telefono: perfil.telefono || '',
     }
 
+    try {
     const { data, error } = await supabase
       .from('perfil_estudio')
       .upsert(fila, {
@@ -72,16 +92,7 @@ export default function StudioProfile({ children, usuario }) {
       .select()
       .single()
 
-    if (error) {
-      console.error('ERROR GUARDANDO PERFIL:', error)
-
-      alert(
-        translateUI("No se pudo guardar el perfil.\n\n{0}", { 0: error.message })
-      )
-
-      setGuardando(false)
-      return
-    }
+    if (error) throw error
 
     if (data) {
       setPerfil({
@@ -95,7 +106,11 @@ export default function StudioProfile({ children, usuario }) {
       setEditando(false)
     }
 
-    setGuardando(false)
+    } catch (error) {
+      alert(translateUI("No se pudo guardar el perfil.\n\n{0}", { 0: error.message }))
+    } finally {
+      setGuardando(false)
+    }
   }
 
   function urlWeb(web) {
@@ -115,11 +130,12 @@ export default function StudioProfile({ children, usuario }) {
     perfil.instagram.replace('@', '').trim()
 
   return (
-    <div className="studio-profile">
+    <div className="studio-profile" ref={perfilRef}>
 
       <button
         type="button"
         className="profile-trigger"
+        aria-expanded={abierto}
         onClick={() => setAbierto((a) => !a)}
         aria-label={translateUI("Abrir perfil del estudio")}
       >
