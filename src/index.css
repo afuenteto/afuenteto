@@ -3019,3 +3019,19 @@ input[type='date'] {
 .icon-label > .line-icon { display: block; }
 .dashboard-action > label { display: flex; align-items: center; min-height: 1.4em; }
 .module-quick-action > .line-icon { width: 18px; height: 18px; }
+
+/* Un mismo espacio para el icono y separación explícita entre los grupos. */
+.icon-label, .flat-status { gap: 7px; }
+.icon-label > .line-icon { width: 14px; height: 14px; }
+.flat-status > .flat-status-dot { width: 6px; height: 6px; margin-inline: 4px; }
+.dashboard-action { padding: 10px 12px; box-sizing: border-box; }
+.dashboard-action > label { min-height: 20px; margin-bottom: 6px; }
+.daily-footer button { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.task-options { align-items: end; flex-wrap: wrap; }
+.task-options > label { display: flex; flex-direction: column; gap: 4px; flex: 1 1 130px; min-width: 0; }
+.task-options > input, .task-options > .flat-status-select { flex: 1 1 130px; min-width: 0; width: auto; }
+.task-options > label > input { width: 100%; flex: none; box-sizing: border-box; }
+.flat-status-select { display: inline-flex; align-items: center; }
+.flat-status-select > .flat-status-dot { top: auto; transform: none; }
+.task-options .flat-status-select > select { flex: none; width: 100%; min-height: 36px; padding-inline-start: 28px; box-sizing: border-box; }
+.task-options > input, .task-options > label > input { min-height: 36px; box-sizing: border-box; }
