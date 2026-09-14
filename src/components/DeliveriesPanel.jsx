@@ -87,7 +87,7 @@ export default function DeliveriesPanel({
             </span>
 
 
-            <b>⏳ {formatRelativeDays(diasHasta(
+            <b className="icon-label"><LineIcon name="⏳" />{formatRelativeDays(diasHasta(
                 proyecto.fechaEntrega
               ))}</b>
 
