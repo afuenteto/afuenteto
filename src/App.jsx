@@ -1,4 +1,6 @@
 import HomeModules from './components/HomeModules.jsx'
+import { useLiveData } from './useLiveData.js'
+import ModulePreview from './components/ModulePreview.jsx'
 import DebtsPanel from './components/DebtsPanel.jsx'
 import { t as translateUI, getLanguage, subscribeLanguage } from './i18n.js'
 import { proyectoDesdeBD, proyectoParaBD } from './projectModel.js'
@@ -215,6 +217,20 @@ useEffect(() => {
   }, [])
 
   const usuarioId = usuario?.id
+  useLiveData({
+    userId: usuarioId, tables: 'proyectos,clientes',
+    enabled: !cargando && !errorCarga && !guardando && !editando && !tareasAbiertas && !entregaAbierta && !clienteAbierto,
+    refresh: async isCurrent => {
+      if (operacionRef.current) return
+      const result = await retryJwtRead(
+        () => Promise.all([cargarProyectosDeUsuario(usuarioId), cargarClientes({ id: usuarioId })]),
+        { isActive: isCurrent },
+      )
+      if (!isCurrent() || operacionRef.current || usuarioActualRef.current !== usuarioId || !result) return
+      setProyectos(result[0])
+      setClientes(result[1])
+    },
+  })
   useEffect(() => {
     setConfigurandoModulos(false)
   }, [usuarioId])
@@ -1111,12 +1127,13 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     </div>
   )}
 </>) },
-        { id: 'debts', title: 'Deudas', content: <DebtsPanel key={usuarioId} usuarioId={usuarioId} /> },
+        { id: 'debts', title: 'Deudas', eager: true, content: onSummary => <DebtsPanel key={usuarioId} usuarioId={usuarioId} onSummary={onSummary} /> },
         ...(modulos.economia ? [{ id: 'economy', title: 'Economía general', content: <EconomicChart embedded proyectos={proyectosActivos} /> }] : []),
         { id: 'summary', title: 'Resumen del estudio', content: <StudioDashboard embedded modulos={modulos} proyectos={proyectosActivos} clientes={clientes}
           onOpenTasks={() => setPanelAbierto('tareas')} onOpenDeliveries={() => setPanelAbierto('entregas')} onOpenPayments={() => setPanelAbierto('cobros')}
           onFilterPhase={mostrarProyectos} onShowAll={() => mostrarProyectos()} /> },
-      ]} />
+      ].map(section => ({ ...section, summary: section.id === 'debts' ? null :
+        <ModulePreview kind={section.id} proyectos={proyectosActivos} clientes={clientes} modulos={modulos} /> }))} />
 
  {editando && (
   <>

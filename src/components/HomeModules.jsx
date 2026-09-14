@@ -8,16 +8,20 @@ import { normalizeHomeOrder, moveHomeModule } from '../homeModulesModel.js'
 function Module({ section, open, toggle }) {
   const panelId = useId()
   const [visited, setVisited] = useState(open)
+  const [summary, setSummary] = useState(null)
   useEffect(() => { if (open) setVisited(true) }, [open])
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({ id: section.id })
   return <section ref={setNodeRef} className="home-module" style={{ transform: CSS.Transform.toString(transform), transition, position: 'relative', zIndex: isDragging ? 20 : undefined }}>
     <header className="home-module-heading">
-      <button type="button" className="home-module-toggle serif" aria-expanded={open} aria-controls={panelId} onClick={toggle}>{t(section.title)}</button>
+      <button type="button" className="home-module-toggle serif" aria-expanded={open} aria-controls={panelId} onClick={toggle}>
+        <span>{t(section.title)}</span>
+        {section.summary || summary}
+      </button>
       <button type="button" className="home-module-handle" {...attributes} {...listeners} style={{ touchAction: 'none' }} aria-label={t('Mover módulo') + ': ' + t(section.title)}>
         <span aria-hidden="true">⠿</span>
       </button>
     </header>
-    <div id={panelId} hidden={!open} className="home-module-body">{(open || visited) && section.content}</div>
+    <div id={panelId} hidden={!open} className="home-module-body">{(open || visited || section.eager) && (typeof section.content === 'function' ? section.content(setSummary) : section.content)}</div>
   </section>
 }
 

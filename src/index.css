@@ -31,6 +31,13 @@
 .home-module-toggle { flex: 1; min-width: 0; border: 0; background: transparent; text-align: start; padding: 20px; cursor: pointer; font-size: 21px; color: var(--ink); }
 .home-module-handle { border: 0; background: transparent; cursor: grab; min-width: 56px; min-height: 56px; font-size: 30px; color: var(--ink-soft); }
 .home-module-handle:active { cursor: grabbing; }
+.module-preview-wrap { display: block; }
+.module-preview { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 12px; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4; }
+.module-preview-stat { display: flex; flex-direction: column; gap: 3px; }
+.module-preview-stat strong { font-size: 18px; font-weight: 600; overflow-wrap: anywhere; }
+.module-preview-stat > span { color: var(--ink-soft); }
+.module-preview-stat.is-alert strong { color: var(--alert); }
+.module-preview-event { display: block; margin-top: 8px; font-family: Arial, sans-serif; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
 .home-module-body { padding: 20px; }
 .home-module-body[hidden] { display: none; }
 .home-module-body > .studio-dashboard, .home-module-body > .chart-box { margin: 0; padding: 0; border: 0; box-shadow: none; background: transparent; }
