@@ -113,11 +113,18 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
           <button
             type="button"
             className="project-open-btn"
+            title={proyecto.nombre || translateUI("Sin nombre")}
             onClick={onOpen}
           >
             {proyecto.nombre || translateUI("Sin nombre")}
           </button>
         </h3>
+      </div>
+
+      {(modulos.clientes || (modulos.entregas && !finalizado && (vencido || urgente))) && <div className="card-details-row">
+        {modulos.clientes && <p className="card-client">
+          {proyecto.cliente || translateUI("Sin cliente asignado")}
+        </p>}
 
         {modulos.entregas && !finalizado && vencido && (
           <span className="tag-urgent">{translateUI("Entrega vencida")}</span>
@@ -133,11 +140,7 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
     }}
   >{translateUI("Entrega")}: &lt;{dias.toLocaleString(getLocale())} {translateUI("d")}</button>
 )}
-      </div>
-
-      {modulos.clientes && <p className={tieneImagen ? "card-client card-client-image" : "card-client"}>
-  {proyecto.cliente || translateUI("Sin cliente asignado")}
-</p>}
+      </div>}
 
       <PhaseRail fase={proyecto.fase} />
 

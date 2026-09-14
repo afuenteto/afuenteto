@@ -2620,6 +2620,14 @@ input[type='date'] {
   padding-inline-end: 66px;
 }
 
+.card-head h3 { min-width: 0; overflow-wrap: anywhere; }
+.card.has-project-image .card-head { min-height: 30px; }
+.card.has-project-image .card-head h3 { width: 100%; }
+.card.has-project-image .project-open-btn { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card-details-row { display: flex; align-items: center; gap: 10px; min-width: 0; margin-right: -4px; }
+.card-details-row .card-client { margin: 0; min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.card-details-row .tag-urgent { flex-shrink: 0; margin-left: auto; max-width: 100%; white-space: normal; text-align: center; }
+
 .card:not(.has-project-image) .card-head {
   margin-bottom: -10px;
 }
