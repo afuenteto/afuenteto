@@ -3040,5 +3040,4 @@ input[type='date'] {
 .custom-icon { object-fit: contain; }
 .tinted-icon { mask-size: contain; mask-position: center; mask-repeat: no-repeat; -webkit-mask-size: contain; -webkit-mask-position: center; -webkit-mask-repeat: no-repeat; }
 .tinted-icon-warning { background-color: #e02020; }
-.tinted-icon-money, .tinted-icon-payment { background-color: #f5c400; }
 .icon-btn > .custom-icon, .home-module-handle > .custom-icon, .drag-handle > .custom-icon { width: 18px; height: 18px; display: block; margin: auto; }

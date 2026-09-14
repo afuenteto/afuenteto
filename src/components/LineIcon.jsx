@@ -29,7 +29,7 @@ const aliases = { entregas: '📅', cobros: '💰' }
 export default function LineIcon({ name }) {
   const key = aliases[name] || Array.from(name || '')[0]
   const asset = images[name] || images[key]
-  if (['warning', 'money', 'payment'].includes(asset)) {
+  if (asset === 'warning') {
     const mask = `url("${import.meta.env.BASE_URL}icons/${asset}.png")`
     return <span className={`line-icon custom-icon tinted-icon tinted-icon-${asset}`} style={{ maskImage: mask, WebkitMaskImage: mask }} aria-hidden="true" />
   }
