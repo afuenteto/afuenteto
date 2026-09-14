@@ -1127,13 +1127,13 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     </div>
   )}
 </>) },
-        { id: 'debts', title: 'Deudas', eager: true, content: onSummary => <DebtsPanel key={usuarioId} usuarioId={usuarioId} onSummary={onSummary} /> },
+        { id: 'debts', title: 'Deudas', content: <DebtsPanel key={usuarioId} usuarioId={usuarioId} /> },
         ...(modulos.economia ? [{ id: 'economy', title: 'Economía general', content: <EconomicChart embedded proyectos={proyectosActivos} /> }] : []),
         { id: 'summary', title: 'Resumen del estudio', content: <StudioDashboard embedded modulos={modulos} proyectos={proyectosActivos} clientes={clientes}
           onOpenTasks={() => setPanelAbierto('tareas')} onOpenDeliveries={() => setPanelAbierto('entregas')} onOpenPayments={() => setPanelAbierto('cobros')}
           onFilterPhase={mostrarProyectos} onShowAll={() => mostrarProyectos()} /> },
-      ].map(section => ({ ...section, summary: section.id === 'debts' ? null :
-        <ModulePreview kind={section.id} proyectos={proyectosActivos} clientes={clientes} modulos={modulos} /> }))} />
+      ].map(section => ({ ...section, badge: section.id === 'projects' ? <span className="module-active-count" title={translateUI('Proyectos activos')} aria-label={translateUI('Proyectos activos')}>{proyectosActivos.length}</span> : null, summary: section.id !== 'today' ? null :
+        <ModulePreview proyectos={proyectosActivos} modulos={modulos} onOpenTasks={abrirTareas} onOpenDelivery={abrirEntrega} setPanelAbierto={setPanelAbierto} /> }))} />
 
  {editando && (
   <>
@@ -1423,3 +1423,4 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 </div>
 )
 }
+

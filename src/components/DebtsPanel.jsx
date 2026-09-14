@@ -4,10 +4,10 @@ import { fechaLocal } from '../projectUtils.js'
 import { formatearFecha } from '../storage.js'
 import { retryJwtRead } from '../retryJwt.js'
 import { debtBalance, loadDebts, createDebt, addDebtPayment, deleteDebtPayment, deleteDebt } from '../debts.js'
-import { PreviewStats } from './ModulePreview.jsx'
+
 import { useLiveData } from '../useLiveData.js'
 
-export default function DebtsPanel({ usuarioId, onSummary }) {
+export default function DebtsPanel({ usuarioId }) {
   const [debts, setDebts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -41,15 +41,6 @@ export default function DebtsPanel({ usuarioId, onSummary }) {
   }
   const money = amount => (amount / 100).toLocaleString(getLocale(), { style: 'currency', currency: 'EUR' })
   const totals = debts.reduce((sum, debt) => { const b = debtBalance(debt); return { total: sum.total + b.total, paid: sum.paid + b.paid, remaining: sum.remaining + b.remaining } }, { total: 0, paid: 0, remaining: 0 })
-  const locale = getLocale()
-  useEffect(() => {
-    const format = value => (value / 100).toLocaleString(locale, { style: 'currency', currency: 'EUR' })
-    onSummary?.(loading || error
-      ? <span className="module-preview">{t(loading ? 'Cargando...' : 'No se pudieron cargar los datos')}</span>
-      : <PreviewStats items={[
-        ['Importe inicial', format(totals.total)], ['Pagado', format(totals.paid)], ['Saldo pendiente', format(totals.remaining)],
-      ]} />)
-  }, [onSummary, loading, error, totals.total, totals.paid, totals.remaining, locale])
   if (loading) return <progress aria-label={t('Deudas')} />
   return <div className="debts-panel">
     {error && <div role="alert"><p>{error}</p><button type="button" className="chip" disabled={busy} onClick={() => setRetry(n => n + 1)}>{t('Reintentar')}</button></div>}
@@ -100,3 +91,4 @@ export default function DebtsPanel({ usuarioId, onSummary }) {
     })}
   </div>
 }
+

@@ -31,13 +31,6 @@
 .home-module-toggle { flex: 1; min-width: 0; border: 0; background: transparent; text-align: start; padding: 20px; cursor: pointer; font-size: 21px; color: var(--ink); }
 .home-module-handle { border: 0; background: transparent; cursor: grab; min-width: 56px; min-height: 56px; font-size: 30px; color: var(--ink-soft); }
 .home-module-handle:active { cursor: grabbing; }
-.module-preview-wrap { display: block; }
-.module-preview { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 12px; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4; }
-.module-preview-stat { display: flex; flex-direction: column; gap: 3px; }
-.module-preview-stat strong { font-size: 18px; font-weight: 600; overflow-wrap: anywhere; }
-.module-preview-stat > span { color: var(--ink-soft); }
-.module-preview-stat.is-alert strong { color: var(--alert); }
-.module-preview-event { display: block; margin-top: 8px; font-family: Arial, sans-serif; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
 .home-module-body { padding: 20px; }
 .home-module-body[hidden] { display: none; }
 .home-module-body > .studio-dashboard, .home-module-body > .chart-box { margin: 0; padding: 0; border: 0; box-shadow: none; background: transparent; }
@@ -3002,4 +2995,14 @@ input[type='date'] {
   padding: 0;
   margin: 0;
   min-width: 0;
+}
+
+.module-active-count { margin-inline-start: 10px; font-family: Arial, sans-serif; font-size: 14px; color: var(--ink-soft); }
+.module-quick-actions { display: flex; flex-wrap: wrap; gap: 4px; }
+.module-quick-action { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 40px; min-height: 44px; padding: 6px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); cursor: pointer; font-size: 12px; }
+.module-quick-action:hover { background: var(--accent); }
+.module-quick-action:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (max-width: 600px) {
+  .home-module-heading { flex-wrap: wrap; }
+  .module-quick-actions { order: 3; flex-basis: 100%; padding: 0 10px 6px; }
 }
