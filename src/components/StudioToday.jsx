@@ -1,3 +1,4 @@
+import FlatStatus from './FlatStatus.jsx'
 import { t, getLocale, formatRelativeDays } from '../i18n.js'
 import { useEffect, useMemo, useState } from 'react'
 import { fechaLocal } from '../projectUtils.js'
@@ -104,7 +105,7 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
             {item.time && <span>{item.time}</span>}
           </div>
           <button type="button" className="daily-main" onClick={() => item.type === 'task' ? onOpenTasks(item.project) : onOpen(item.project)}>
-            <span className="daily-kind">{t(item.type === 'task' ? (item.task.tipo === 'cita' ? 'Cita' : 'Tareas') : 'Entregas')}{item.task?.prioridad === 'alta' ? ' · ' + t('🔴 Alta') : ''}</span>
+            <span className="daily-kind">{t(item.type === 'task' ? (item.task.tipo === 'cita' ? 'Cita' : 'Tareas') : 'Entregas')}{item.task?.prioridad === 'alta' ? <> · <FlatStatus label="🔴 Alta" /></> : ''}</span>
             <strong>{item.title}</strong>
             <span>{item.type === 'task' ? item.project.nombre : item.project.cliente}</span>
           </button>
@@ -127,7 +128,8 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
       {modulos.economia && <button type="button" onClick={() => setPanelAbierto('cobros')}>
         <strong>{payments.length}</strong> {t('💰 Cobros previstos')} · {payments.reduce((sum, c) => sum + Number(c.importe || 0), 0).toLocaleString(getLocale(), { style: 'currency', currency: 'EUR' })}
       </button>}
-      <button type="button" onClick={() => setPanelAbierto('bloqueados')}><strong>{blocked.length}</strong> {t('🔵 Proyectos bloqueados')}</button>
+      <button type="button" onClick={() => setPanelAbierto('bloqueados')}><strong>{blocked.length}</strong> <FlatStatus label="🔵 Proyectos bloqueados" /></button>
     </footer>
   </section>
 }
+

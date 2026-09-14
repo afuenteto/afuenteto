@@ -1,3 +1,4 @@
+import FlatStatus from './FlatStatus.jsx'
 import { t as translateUI } from '../i18n.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 export default function BlockedPanel({
@@ -29,7 +30,7 @@ export default function BlockedPanel({
 
         <div className="panel-head">
 
-          <h2 className="serif">{translateUI("🔵 Proyectos bloqueados")}</h2>
+          <h2 className="serif"><FlatStatus label="🔵 Proyectos bloqueados" /></h2>
 
           <button
             className="icon-btn"
@@ -69,7 +70,7 @@ export default function BlockedPanel({
             </span>}
 
 
-            <span>{translateUI("🔵 Proyecto bloqueado")}</span>
+            <span><FlatStatus label="🔵 Proyecto bloqueado" /></span>
 
 
             {proyecto.notas && (
@@ -93,3 +94,4 @@ export default function BlockedPanel({
   )
 
 }
+

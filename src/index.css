@@ -3006,3 +3006,9 @@ input[type='date'] {
   .home-module-heading { flex-wrap: wrap; }
   .module-quick-actions { order: 3; flex-basis: 100%; padding: 0 10px 6px; }
 }
+
+.flat-status { display: inline-flex; align-items: center; gap: .45em; }
+.flat-status-dot { display: inline-block; flex: 0 0 auto; width: .55em; height: .55em; border-radius: 50%; box-shadow: none; }
+.flat-status-select { display: inline-block; position: relative; width: 100%; }
+.flat-status-select > .flat-status-dot { position: absolute; inset-inline-start: 12px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; pointer-events: none; }
+.flat-status-select > select { width: 100%; padding-inline-start: 28px; }

@@ -1,3 +1,4 @@
+import FlatStatus from './FlatStatus.jsx'
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { useState } from 'react'
 import { diasHasta } from '../storage.js'
@@ -64,7 +65,7 @@ export default function TasksPanel({
 
         <div className="panel-head">
 
-          <h2 className="serif">{translateUI("🔴 Tareas pendientes")}</h2>
+          <h2 className="serif"><FlatStatus label="🔴 Tareas pendientes" /></h2>
 
 
           <button
@@ -178,3 +179,4 @@ export default function TasksPanel({
   )
 
 }
+

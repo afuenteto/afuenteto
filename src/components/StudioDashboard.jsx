@@ -1,3 +1,4 @@
+import FlatStatus from './FlatStatus.jsx'
 import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
@@ -216,7 +217,7 @@ export default function StudioDashboard({
           onClick={onOpenTasks}
         >
 
-          <label>{translateUI("🔴 Tareas pendientes")}</label>
+          <label><FlatStatus label="🔴 Tareas pendientes" /></label>
 
           <input
             readOnly
@@ -232,7 +233,7 @@ export default function StudioDashboard({
           onClick={onOpenDeliveries}
         >
 
-          <label>{translateUI("📅 Entregas previstas")}</label>
+          <label><FlatStatus label="📅 Entregas previstas" /></label>
 
           <input
             readOnly
@@ -248,7 +249,7 @@ export default function StudioDashboard({
           onClick={onOpenPayments}
         >
 
-          <label>{translateUI("💰 Cobros pendientes")}</label>
+          <label><FlatStatus label="💰 Cobros pendientes" /></label>
 
           <input
             readOnly
@@ -326,3 +327,4 @@ export default function StudioDashboard({
   )
 
 }
+

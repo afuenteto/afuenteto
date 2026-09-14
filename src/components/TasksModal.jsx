@@ -1,3 +1,4 @@
+import { StatusSelect, statusLabel } from './FlatStatus.jsx'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 import { fechaLocal } from '../projectUtils.js'
@@ -176,7 +177,7 @@ function cambiarEstado(id) {
     />
 
 
-    <select
+    <StatusSelect
       value={t.prioridad || 'normal'}
       onChange={(e) =>
         setTareas((prev) =>
@@ -191,13 +192,13 @@ function cambiarEstado(id) {
         )
       }
     >
-      <option value="alta">{translateUI("🔴 Alta")}</option>
+      <option value="alta">{statusLabel("🔴 Alta")}</option>
 
-      <option value="normal">{translateUI("🟡 Normal")}</option>
+      <option value="normal">{statusLabel("🟡 Normal")}</option>
 
-      <option value="baja">{translateUI("⚪ Baja")}</option>
+      <option value="baja">{statusLabel("⚪ Baja")}</option>
 
-     </select>
+     </StatusSelect>
 
   </div>
 
@@ -325,3 +326,5 @@ function cambiarEstado(id) {
 
   )
 }
+
+

@@ -1,3 +1,4 @@
+import { StatusSelect, statusLabel } from './FlatStatus.jsx'
 import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useEffect, useState, useRef } from 'react'
@@ -1022,7 +1023,7 @@ if (clienteExiste) {
 <div className="field">
   <label>{translateUI("Prioridad")}</label>
 
-  <select
+  <StatusSelect
     value={datos.prioridad || 'en_curso'}
     onChange={(e) =>
       setDatos({
@@ -1031,11 +1032,11 @@ if (clienteExiste) {
       })
     }
   >
-    <option value="urgente">{translateUI("🔴 Urgente")}</option>
-    <option value="en_curso">{translateUI("🟡 En curso")}</option>
-    <option value="estable">{translateUI("🟢 Estable")}</option>
-    <option value="bloqueado">{translateUI("🔵 Bloqueado")}</option>
-  </select>
+    <option value="urgente">{statusLabel("🔴 Urgente")}</option>
+    <option value="en_curso">{statusLabel("🟡 En curso")}</option>
+    <option value="estable">{statusLabel("🟢 Estable")}</option>
+    <option value="bloqueado">{statusLabel("🔵 Bloqueado")}</option>
+  </StatusSelect>
 </div>
 <div className="field">
   <label htmlFor="importancia">{translateUI("Importancia (1-10)")}</label>
@@ -1758,3 +1759,5 @@ if (clienteExiste) {
     </div>
   )
 }
+
+
