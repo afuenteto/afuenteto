@@ -85,7 +85,6 @@
 }
 [dir="rtl"] .phase-rail-fill,
 [dir="rtl"] .profile-panel { left: auto; right: 0; }
-[dir="rtl"] .drag-handle { right: auto; left: 10px; }
 input[type="email"], input[type="tel"], input[type="url"] { direction: ltr; }
 .btn-primary {
   background: #7a1f1f;
@@ -1562,11 +1561,12 @@ a {
 /* ASA PARA DESPLAZAR LAS FICHAS */
 .drag-handle {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 4px;
+  right: 4px;
 
-  width: 70px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
 
   border: 0;
   background: transparent;
@@ -2636,9 +2636,8 @@ input[type='date'] {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
 }
 
-.sortable-project.has-project-image .drag-dots span {
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+.sortable-project.has-project-image .drag-handle .custom-icon {
+  filter: brightness(0) invert(1);
 }
 
 .project-image-field {

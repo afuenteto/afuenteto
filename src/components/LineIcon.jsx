@@ -23,7 +23,7 @@ const images = {
   '🗑': 'trash', '👤': 'person', '👥': 'people', '💾': 'save', '⚠': 'warning',
   '✅': 'check', '✓': 'check', '📍': 'location', '🖼': 'image', '🔄': 'refresh', '⏳': 'pending',
   bloqueados: 'lock', cobros: 'payment', close: 'close', grip: 'grip', move: 'move', color: 'color',
-  'import-contact': 'import-contact', payment: 'payment', tareas: 'check', '⌛': 'pending', unlocked: 'unlocked',
+  'import-contact': 'import-contact', payment: 'payment', tareas: 'check', '⌛': 'pending', unlocked: 'unlocked', drag: 'drag',
 }
 const aliases = { entregas: '📅', cobros: '💰' }
 export default function LineIcon({ name }) {

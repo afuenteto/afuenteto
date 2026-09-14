@@ -52,7 +52,7 @@ export default function SortableProjectCard({
   style={{ touchAction: 'none' }}
   aria-label={translateUI("Mover proyecto")}
 >
-  <LineIcon name="grip" />
+  <LineIcon name="drag" />
 </button>
     </div>
   )
