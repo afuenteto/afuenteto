@@ -65,6 +65,7 @@
 }
 
 .language-settings label { color: var(--ink-soft); }
+.language-settings label img { display: block; object-fit: contain; }
 .language-settings select {
   width: 160px;
   min-width: 0;
