@@ -27,6 +27,7 @@ const images = {
 }
 const aliases = { entregas: '📅', cobros: '💰' }
 export default function LineIcon({ name }) {
+  if (name === 'unlocked') return <svg className="line-icon" width="18" height="18" viewBox="0 0 100 100" fill="none" stroke="#111" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M29 43V31a21 21 0 0141 0" /><rect x="17" y="43" width="62" height="44" rx="12" /><path d="M48 60v10" /></svg>
   const key = aliases[name] || Array.from(name || '')[0]
   const asset = images[name] || images[key]
   if (asset) return <img className="line-icon custom-icon" src={import.meta.env.BASE_URL + 'icons/' + asset + '.png'} width="18" height="18" alt="" aria-hidden="true" draggable={false} />

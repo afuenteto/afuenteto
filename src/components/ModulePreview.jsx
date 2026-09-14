@@ -16,12 +16,10 @@ export default function ModulePreview({ proyectos, modulos, onOpenTasks, onOpenD
   const tasks = agenda.filter(item => item.type === 'task' && ((item.days !== null && item.days <= 0) || item.task.prioridad === 'alta'))
   const deliveries = agenda.filter(item => item.type === 'delivery' && item.days <= 7)
   const payments = modulos.economia ? proyectos.flatMap(p => (p.cobros || []).filter(c => c.estado === 'previsto')) : []
-  const blocked = proyectos.filter(p => p.prioridad === 'bloqueado')
   const actions = [
     ['tareas', 'Tareas', tasks.length, () => tasks.length === 1 ? onOpenTasks(tasks[0].project) : setPanelAbierto('tareas')],
     ['entregas', 'Entregas', deliveries.length, () => deliveries.length === 1 ? onOpenDelivery(deliveries[0].project) : setPanelAbierto('entregas')],
     ['cobros', 'Cobros pendientes', payments.length, () => setPanelAbierto('cobros')],
-    ['bloqueados', 'Proyectos bloqueados', blocked.length, () => setPanelAbierto('bloqueados')],
   ].filter(([, , count]) => count > 0)
   if (!actions.length) return null
   return <div className="module-quick-actions">{actions.map(([id, label, count, onClick]) =>
