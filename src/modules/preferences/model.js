@@ -3,6 +3,7 @@ export const MODULOS_CONFIGURABLES = Object.freeze([
   { id: 'tareas', nombre: 'Tareas', descripcion: 'Listas de tareas y prioridades.' },
   { id: 'entregas', nombre: 'Entregas', descripcion: 'Fechas y avisos de entrega.' },
   { id: 'economia', nombre: 'Economía', descripcion: 'Presupuestos, cobros y comisiones.' },
+  { id: 'deudas', nombre: 'Deudas', descripcion: 'Historial de pagos' },
   { id: 'documentos', nombre: 'Documentos', descripcion: 'Imágenes y archivos PDF.' },
   { id: 'proveedores', nombre: 'Proveedores', descripcion: 'Contactos de proveedores.' },
 ])

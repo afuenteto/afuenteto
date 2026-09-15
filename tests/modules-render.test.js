@@ -128,11 +128,11 @@ test('los módulos controlan los formularios y tarjetas sin quitar el proyecto b
       }
     })
 
-    await context.test('ModulesSettings presenta seis switches y Proyectos siempre activo', () => {
+    await context.test('ModulesSettings presenta siete switches y Proyectos siempre activo', () => {
       for (const modulos of [desactivados, MODULOS_PREDETERMINADOS, { ...desactivados, tareas: true }]) {
         const html = render('ModulesSettings', modulos)
         const switches = html.match(/<input\b[^>]*role="switch"[^>]*>/g) || []
-        assert.equal(switches.length, 6, 'Deben existir seis módulos configurables')
+        assert.equal(switches.length, 7, 'Deben existir siete módulos configurables')
         for (const { id, nombre } of MODULOS_CONFIGURABLES) {
           const control = switches.find(input => input.includes(`-${id}"`))
           assert.ok(control, `Debe existir el switch de ${id}`)

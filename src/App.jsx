@@ -1128,14 +1128,15 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     </div>
   )}
 </>) },
-        { id: 'debts', title: 'Deudas', content: <DebtsPanel key={usuarioId} usuarioId={usuarioId} /> },
+        ...(modulos.deudas ? [{ id: 'debts', title: 'Deudas', content: <DebtsPanel key={usuarioId} usuarioId={usuarioId} /> }] : []),
         ...(modulos.economia ? [{ id: 'economy', title: 'Economía general', content: <EconomicChart embedded proyectos={proyectosActivos} /> }] : []),
         { id: 'summary', title: 'Resumen del estudio', content: <StudioDashboard embedded modulos={modulos} proyectos={proyectosActivos} clientes={clientes}
           onOpenTasks={() => setPanelAbierto('tareas')} onOpenDeliveries={() => setPanelAbierto('entregas')} onOpenPayments={() => setPanelAbierto('cobros')}
           onFilterPhase={mostrarProyectos} onShowAll={() => mostrarProyectos()} /> },
       ].map(section => ({ ...section, summary: section.id === 'projects' ?
+        ({ open, toggle, panelId }) =>
         <div className="module-project-counts">
-          <button type="button" className="module-quick-action" onClick={() => mostrarProyectos()}
+          <button type="button" className="module-quick-action" onClick={() => { setFiltro('Todos'); toggle() }} aria-expanded={open} aria-controls={panelId}
             title={translateUI('Proyectos activos')} aria-label={`${translateUI('Proyectos activos')}: ${proyectosActivos.length}`}>
             <LineIcon name="unlocked" /><span>{proyectosActivos.length}</span>
           </button>

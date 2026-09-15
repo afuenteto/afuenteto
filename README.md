@@ -16,7 +16,7 @@ La configuración del cliente Supabase está en src/supabase.js.
 
 ## Organización modular
 
-El botón **Módulos** permite que cada usuario active o desactive Clientes, Tareas, Entregas, Economía, Documentos y Proveedores. Proyectos siempre está disponible. La selección se guarda en su cuenta de Supabase y desactivar una función conserva sus datos. Todas están activadas inicialmente. No requiere una migración de base de datos.
+El botón **Módulos** permite que cada usuario active o desactive Clientes, Tareas, Entregas, Economía, Deudas, Documentos y Proveedores. Proyectos siempre está disponible. La selección se guarda en su cuenta de Supabase y desactivar una función conserva sus datos. Todas están activadas inicialmente. No requiere una migración de base de datos.
 
 La carga de proyectos está en `src/modules/projects` y las preferencias en `src/modules/preferences`. El mapa de módulos, las dependencias y los siguientes pasos están en [docs/MODULARIDAD.md](docs/MODULARIDAD.md).
 

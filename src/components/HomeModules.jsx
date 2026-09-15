@@ -17,7 +17,7 @@ function Module({ section, open, toggle }) {
       <button type="button" className="home-module-toggle serif" aria-expanded={open} aria-controls={panelId} onClick={toggle}>
         <span>{t(section.title)}</span>
       </button>
-      {section.summary}
+      {typeof section.summary === 'function' ? section.summary({ open, toggle, panelId }) : section.summary}
       <button type="button" className="home-module-handle" {...attributes} {...listeners} style={{ touchAction: 'none' }} aria-label={t('Mover módulo') + ': ' + t(section.title)}>
         <LineIcon name="grip" />
       </button>
