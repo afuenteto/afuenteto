@@ -1,6 +1,6 @@
 import ProjectName from './ProjectName.jsx'
 import LineIcon from './LineIcon.jsx'
-import FlatStatus from './FlatStatus.jsx'
+import { plainIconLabel } from './LineIcon.jsx'
 import { t as translateUI } from '../i18n.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 export default function BlockedPanel({
@@ -30,9 +30,9 @@ export default function BlockedPanel({
       <div className="panel">
 
 
-        <div className="panel-head">
+        <div className="panel-head window-title-bar">
 
-          <h2 className="serif"><FlatStatus label="🔵 Proyectos bloqueados" /></h2>
+          <h2 className="serif">{plainIconLabel('🔵 Proyectos bloqueados')}</h2>
 
           <button
             className="icon-btn"
