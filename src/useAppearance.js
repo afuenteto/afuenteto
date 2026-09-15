@@ -15,7 +15,7 @@ export default function useAppearance(usuario) {
   const [logo, setLogo] = useState(readLogo)
   const [palette, setPalette] = useState(() => resolvePalette(settings.palette))
   const base = import.meta.env.BASE_URL
-  const colors = paletteColors(palette, settings.paletteVersions)
+  const colors = paletteColors(palette)
   useEffect(() => {
     const refresh = () => setPalette(resolvePalette(settings.palette))
     refresh()

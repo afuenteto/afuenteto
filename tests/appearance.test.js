@@ -1,13 +1,13 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { normalizeAppearance, resolvePalette, APPEARANCE_KEY, squareCrop, paletteColors, PALETTES, LEGACY_PALETTES } from '../src/appearance.js'
+import { normalizeAppearance, resolvePalette, APPEARANCE_KEY, squareCrop, paletteColors, PALETTES } from '../src/appearance.js'
 import { guardarMetadatosDeUsuario } from '../src/modules/preferences/repository.js'
 
 test('la apariencia conserva valores válidos y recupera los predeterminados', () => {
-  assert.deepEqual(normalizeAppearance(null), { useProfileIcon: true, palette: 'yellow', font: 'default', logoPath: '', headerLabel: '', headerTitle: '', paletteVersions: {green: 'new', yellow: 'new', red: 'new', blue: 'new'} })
+  assert.deepEqual(normalizeAppearance(null), { useProfileIcon: true, palette: 'yellow', font: 'default', logoPath: '', headerLabel: '', headerTitle: '' })
   assert.equal(normalizeAppearance({ palette: '__proto__', font: 'otro' }).palette, 'yellow')
   assert.deepEqual(normalizeAppearance({ palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png' }),
-    { useProfileIcon: true, palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png', headerLabel: '', headerTitle: '', paletteVersions: {green: 'new', yellow: 'new', red: 'new', blue: 'new'} })
+    { useProfileIcon: true, palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png', headerLabel: '', headerTitle: '' })
 })
 test('el recorte cuadrado respeta encuadre y límites con imágenes horizontales, verticales y zoom', () => {
   assert.deepEqual(squareCrop(1200, 800), { size: 800, sx: 200, sy: 0 })
@@ -48,18 +48,13 @@ test('el guardado de apariencia actualiza solo su clave de metadatos y verifica 
   assert.equal(calls, 1)
 })
 
-test('cada estación permite recuperar sus colores anteriores de forma independiente', () => {
-  const settings = normalizeAppearance({ palette: 'seasonal', paletteVersions: { green: 'previous', red: 'invalid' } })
-  assert.deepEqual(paletteColors('green', settings.paletteVersions), LEGACY_PALETTES.green)
-  for (const key of ['yellow', 'red', 'blue']) assert.deepEqual(paletteColors(key, settings.paletteVersions), PALETTES[key])
-  for (const key of Object.keys(PALETTES)) {
-    const saved = normalizeAppearance(JSON.parse(JSON.stringify({ ...settings, paletteVersions: { ...settings.paletteVersions, [key]: 'previous' } })))
-    assert.deepEqual(paletteColors(key, saved.paletteVersions), LEGACY_PALETTES[key])
-    saved.paletteVersions[key] = 'new'
-    assert.deepEqual(paletteColors(key, saved.paletteVersions), PALETTES[key])
-  }
-  assert.equal(paletteColors(resolvePalette('seasonal', new Date(2026, 3, 1)), settings.paletteVersions).accent, '#8bc99a')
-  assert.equal(paletteColors(resolvePalette('seasonal', new Date(2026, 6, 1)), settings.paletteVersions).accent, '#ffd400')
+test('las preferencias antiguas usan la paleta única sin alterar el perfil', () => {
+ const settings = normalizeAppearance({palette:'green', paletteVersions:{green:'previous'}, font:'serif', logoPath:'u/photo.png'})
+ assert.equal(settings.palette,'green')
+ assert.equal(settings.font,'serif')
+ assert.equal(settings.logoPath,'u/photo.png')
+ assert.equal(Object.hasOwn(settings,'paletteVersions'),false)
+ assert.deepEqual(paletteColors(settings.palette),PALETTES.green)
 })
 
 test("la elección del icono se conserva al guardar", () => { assert.equal(normalizeAppearance({useProfileIcon:false}).useProfileIcon,false); assert.equal(normalizeAppearance().useProfileIcon,true) })

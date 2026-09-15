@@ -1,24 +1,17 @@
 export const APPEARANCE_KEY = 'fuente_studio_appearance'
-export const LEGACY_PALETTES = {
-  yellow: { accent: '#ffd400', soft: '#fff3a6', hover: '#e8c000', heading: '#7a1f1f', background: '#f6f5f1' },
-  blue: { accent: '#75b8eb', soft: '#dceefa', hover: '#579dd3', heading: '#17476b', background: '#f1f6fa' },
-  green: { accent: '#8bc99a', soft: '#e0f1e4', hover: '#69af7a', heading: '#245d37', background: '#f2f7f1' },
-  red: { accent: '#e89a91', soft: '#fae2de', hover: '#d88076', heading: '#7a1f1f', background: '#faf3f1' },
-}
 export const PALETTES = {
-  green: { accent: '#42b549', soft: '#a6df72', hover: '#2e8f36', heading: '#2e5a3a', background: '#f4f7f3' },
-  yellow: { accent: '#ffd400', soft: '#ffd400', hover: '#cfa01f', heading: '#6a4b16', background: '#f8f6f0' },
-  red: { accent: '#c58a20', soft: '#e4b650', hover: '#a16b18', heading: '#654321', background: '#f7f3ef' },
-  blue: { accent: '#2196e3', soft: '#85c9f2', hover: '#1776b5', heading: '#2d526a', background: '#f2f6f8' },
+  green: { accent: '#69b96e', soft: '#c5e6a5', hover: '#2e8f36', heading: '#2e5a3a', background: '#f4f7f3' },
+  yellow: { accent: '#f2cc32', soft: '#fff0a0', hover: '#cfa01f', heading: '#6a4b16', background: '#f8f6f0' },
+  red: { accent: '#c99b42', soft: '#ecd092', hover: '#a16b18', heading: '#654321', background: '#f7f3ef' },
+  blue: { accent: '#63addc', soft: '#b5daf2', hover: '#1776b5', heading: '#2d526a', background: '#f2f6f8' },
 }
-export function paletteColors(palette, versions = {}) {
+export function paletteColors(palette) {
   const key = Object.hasOwn(PALETTES, palette) ? palette : 'yellow'
-  return (versions[key] === 'previous' ? LEGACY_PALETTES : PALETTES)[key]
+  return PALETTES[key]
 }
 export function normalizeAppearance(value = {}) {
   return {
     useProfileIcon: value?.useProfileIcon !== false,
-    paletteVersions: Object.fromEntries(Object.keys(PALETTES).map(key => [key, value?.paletteVersions?.[key] === 'previous' ? 'previous' : 'new'])),
     palette: Object.hasOwn(PALETTES, value?.palette) || value?.palette === 'seasonal' ? value.palette : 'yellow',
     font: value?.font === 'serif' ? 'serif' : 'default',
     logoPath: typeof value?.logoPath === 'string' ? value.logoPath : '',
