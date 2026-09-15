@@ -637,6 +637,8 @@ a {
   background: var(--accent-soft);
 }
 
+.card .tasks-open-btn, .card .tag-urgent { color: #7a1f1f; }
+
 /* Ventana independiente de tareas */
 .tasks-modal {
   flex: 0 1 620px;
