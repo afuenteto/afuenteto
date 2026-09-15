@@ -120,12 +120,12 @@ export default function EconomicChartContent({ proyectos }) {
                     key={`cell-${index}`}
                     fill={
                       entrada.nombre === 'Total'
-                        ? '#ffd400'
+                        ? 'var(--accent)'
                         : entrada.nombre === 'Cobrado'
-                        ? '#e8c000'
+                        ? 'var(--accent-hover)'
                         : entrada.nombre === 'Previsto'
-                        ? '#fff3a6'
-                        : '#E59A00'
+                        ? 'var(--accent-soft)'
+                        : 'var(--brand-heading)'
                     }
                   />
 
@@ -183,10 +183,10 @@ export default function EconomicChartContent({ proyectos }) {
                     key={`comision-cell-${index}`}
                     fill={
                       entrada.nombre === 'Generadas'
-                        ? '#B23A48'
+                        ? 'var(--brand-heading)'
                         : entrada.nombre === 'Cobradas'
-                        ? '#D8574E'
-                        : '#F08A7E'
+                        ? 'var(--accent)'
+                        : 'var(--accent-soft)'
                     }
                   />
                 ))}

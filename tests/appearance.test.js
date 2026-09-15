@@ -59,5 +59,5 @@ test('cada estación permite recuperar sus colores anteriores de forma independi
     assert.deepEqual(paletteColors(key, saved.paletteVersions), PALETTES[key])
   }
   assert.equal(paletteColors(resolvePalette('seasonal', new Date(2026, 3, 1)), settings.paletteVersions).accent, '#8bc99a')
-  assert.equal(paletteColors(resolvePalette('seasonal', new Date(2026, 6, 1)), settings.paletteVersions).accent, '#e8b82f')
+  assert.equal(paletteColors(resolvePalette('seasonal', new Date(2026, 6, 1)), settings.paletteVersions).accent, '#ffd400')
 })

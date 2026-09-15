@@ -6,10 +6,10 @@ export const LEGACY_PALETTES = {
   red: { accent: '#e89a91', soft: '#fae2de', hover: '#d88076', heading: '#7a1f1f', background: '#faf3f1' },
 }
 export const PALETTES = {
-  green: { accent: '#7eb58d', soft: '#e5f0e7', hover: '#649a72', heading: '#2e5a3a', background: '#f4f7f3' },
-  yellow: { accent: '#e8b82f', soft: '#faf0cc', hover: '#cfa01f', heading: '#6a4b16', background: '#f8f6f0' },
-  red: { accent: '#c97963', soft: '#ede4da', hover: '#ae604d', heading: '#6e392f', background: '#f7f3ef' },
-  blue: { accent: '#78a7c6', soft: '#e4edf3', hover: '#5d8faf', heading: '#2d526a', background: '#f2f6f8' },
+  green: { accent: '#8bc99a', soft: '#e0f1e4', hover: '#649a72', heading: '#2e5a3a', background: '#f4f7f3' },
+  yellow: { accent: '#ffd400', soft: '#fff3a6', hover: '#cfa01f', heading: '#6a4b16', background: '#f8f6f0' },
+  red: { accent: '#e89a91', soft: '#fae2de', hover: '#ae604d', heading: '#6e392f', background: '#f7f3ef' },
+  blue: { accent: '#75b8eb', soft: '#dceefa', hover: '#5d8faf', heading: '#2d526a', background: '#f2f6f8' },
 }
 export function paletteColors(palette, versions = {}) {
   const key = Object.hasOwn(PALETTES, palette) ? palette : 'yellow'
