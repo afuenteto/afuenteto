@@ -4,7 +4,7 @@ import { APPEARANCE_KEY, normalizeAppearance, imageIcons } from '../appearance.j
 import { guardarMetadatosDeUsuario, notificarCambioModulos } from '../modules/preferences/repository.js'
 import { supabase } from '../supabase.js'
 
-export default function AppearanceSettings({ usuario, settings, logoUrl, onSaved, onBusy }) {
+export default function AppearanceSettings({ usuario, settings, logoUrl, onSaved, onBusy, editing = false }) {
   const [open, setOpen] = useState(false)
   const [draft, setDraft] = useState(settings)
   const [preview, setPreview] = useState(null)
@@ -57,13 +57,13 @@ export default function AppearanceSettings({ usuario, settings, logoUrl, onSaved
   function cancel() { setDraft(settings); setPreview(null); setOpen(false); setImageOpen(false); setError('') }
   return <div className="profile-appearance">
     <div className="personal-card-header">
-      <button type="button" className="personal-photo" disabled={busy} onClick={() => input.current.click()} title={t('Cambiar imagen')} aria-label={t('Cambiar imagen')}>
+      {editing ? <button type="button" className="personal-photo" disabled={busy} onClick={() => input.current.click()} title={t('Cambiar imagen')} aria-label={t('Cambiar imagen')}>
         <img src={preview || logoUrl} alt={t('Imagen del perfil')} width="88" height="88" />
         <span>{t('Cambiar imagen')}</span>
-      </button>
+      </button> : <div className="personal-photo"><img src={preview || logoUrl} alt={t('Imagen del perfil')} width="88" height="88" /></div>}
       <button type="button" className="appearance-trigger" disabled={busy} aria-label={t('Apariencia')} title={t('Apariencia')} aria-expanded={open}
         onClick={() => { if (!open) setDraft(settings); setOpen(value => !value) }}>
-        <img src={import.meta.env.BASE_URL + 'icons/appearance.png'} alt="" width="30" height="30" />
+        <img src={import.meta.env.BASE_URL + 'icons/palette.png'} alt="" width="30" height="30" />
       </button>
     </div>
     <input ref={input} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={chooseImage} />

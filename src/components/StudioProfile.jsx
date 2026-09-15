@@ -151,10 +151,11 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
       {abierto && (
         <div className="profile-panel">
           <button type="button" className="icon-btn personal-card-close" disabled={guardando || appearanceBusy} aria-label={translateUI('Cerrar')} onClick={() => setAbierto(false)}><LineIcon name="close-main" /></button>
-          {appearance && <AppearanceSettings usuario={usuario} settings={appearance.settings} logoUrl={appearance.logoUrl} onSaved={onAppearanceSaved} onBusy={setAppearanceBusy} />}
+          {appearance && <AppearanceSettings usuario={usuario} settings={appearance.settings} logoUrl={appearance.logoUrl} onSaved={onAppearanceSaved} onBusy={setAppearanceBusy} editing={editando} />}
 
           {!editando ? (
             <>
+              <div className="profile-details">
               <h3 className="serif">
                 {perfil.nombre || translateUI("Perfil del estudio")}
               </h3>
@@ -194,14 +195,16 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
                 </p>
               )}
 
+              </div>
               <button
                 type="button"
-                className="btn"
+                className="btn profile-edit-button"
                 onClick={() => setEditando(true)}
               >{translateUI("Editar perfil")}</button>
             </>
           ) : (
             <>
+              <div className="profile-details">
               <input
                 name="nombre"
                 value={perfil.nombre}
@@ -230,6 +233,8 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
                 placeholder={translateUI("Teléfono")}
               />
 
+              </div>
+              <div className="profile-edit-actions">
               <button
                 type="button"
                 className="btn btn-primary"
@@ -245,6 +250,7 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
                 onClick={() => setEditando(false)}
                 disabled={guardando}
               >{translateUI("Cancelar")}</button>
+              </div>
             </>
           )}
 
