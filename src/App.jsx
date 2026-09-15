@@ -1019,7 +1019,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
         >{translateUI("Guardando...")}</p>
       )}
 
-      <HomeModules key={usuarioId} usuarioId={usuarioId} openRequest={openHomeModule} sections={[
+      <HomeModules key={`home-${usuarioId}`} usuarioId={usuarioId} openRequest={openHomeModule} sections={[
         { id: 'today', title: 'Hoy en el estudio', content: (        <StudioToday
           key={usuarioId}
           onSchedule={(proyectoId, tarea) => {
@@ -1283,7 +1283,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 )}
 
 {configurandoModulos && (
-  <ModulesSettings key={usuario.id} modulos={modulos}
+  <ModulesSettings key={`settings-${usuario.id}`} modulos={modulos}
     onSave={guardarConfiguracionModulos} onClose={() => setConfigurandoModulos(false)} />
 )}
 
