@@ -16,7 +16,8 @@
 .module-option-copy { display: flex; flex-direction: column; gap: 4px; }
 .module-option-copy strong { font-size: 14px; color: var(--form-heading); }
 .module-option-copy > span { font-size: 12px; }
-.app .module-option input[type="checkbox"] { flex: 0 0 20px; width: 20px; height: 20px; accent-color: #555550; cursor: pointer; }
+.app .module-option input[type="checkbox"] { appearance: none; -webkit-appearance: none; flex: 0 0 44px; width: 44px; height: 44px; margin: 0; padding: 0; border: 0; border-radius: 4px; background-color: transparent; background-position: center; background-size: contain; background-repeat: no-repeat; cursor: pointer; }
+.app .module-option input[type="checkbox"]:disabled { opacity: .5; cursor: wait; }
 .app .module-option input:focus-visible { outline: 2px solid var(--form-heading); outline-offset: 4px; }
 .modules-settings .modal-actions { flex-wrap: wrap; }
 .modules-error { color: var(--alert); font-size: 13px; }
