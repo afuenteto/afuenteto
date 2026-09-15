@@ -17,6 +17,7 @@ export function paletteColors(palette, versions = {}) {
 }
 export function normalizeAppearance(value = {}) {
   return {
+    useProfileIcon: value?.useProfileIcon !== false,
     paletteVersions: Object.fromEntries(Object.keys(PALETTES).map(key => [key, value?.paletteVersions?.[key] === 'previous' ? 'previous' : 'new'])),
     palette: Object.hasOwn(PALETTES, value?.palette) || value?.palette === 'seasonal' ? value.palette : 'yellow',
     font: value?.font === 'serif' ? 'serif' : 'default',

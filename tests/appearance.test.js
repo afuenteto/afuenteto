@@ -4,10 +4,10 @@ import { normalizeAppearance, resolvePalette, APPEARANCE_KEY, squareCrop, palett
 import { guardarMetadatosDeUsuario } from '../src/modules/preferences/repository.js'
 
 test('la apariencia conserva valores válidos y recupera los predeterminados', () => {
-  assert.deepEqual(normalizeAppearance(null), { palette: 'yellow', font: 'default', logoPath: '', headerLabel: '', headerTitle: '', paletteVersions: {green: 'new', yellow: 'new', red: 'new', blue: 'new'} })
+  assert.deepEqual(normalizeAppearance(null), { useProfileIcon: true, palette: 'yellow', font: 'default', logoPath: '', headerLabel: '', headerTitle: '', paletteVersions: {green: 'new', yellow: 'new', red: 'new', blue: 'new'} })
   assert.equal(normalizeAppearance({ palette: '__proto__', font: 'otro' }).palette, 'yellow')
   assert.deepEqual(normalizeAppearance({ palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png' }),
-    { palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png', headerLabel: '', headerTitle: '', paletteVersions: {green: 'new', yellow: 'new', red: 'new', blue: 'new'} })
+    { useProfileIcon: true, palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png', headerLabel: '', headerTitle: '', paletteVersions: {green: 'new', yellow: 'new', red: 'new', blue: 'new'} })
 })
 test('el recorte cuadrado respeta encuadre y límites con imágenes horizontales, verticales y zoom', () => {
   assert.deepEqual(squareCrop(1200, 800), { size: 800, sx: 200, sy: 0 })
@@ -61,3 +61,5 @@ test('cada estación permite recuperar sus colores anteriores de forma independi
   assert.equal(paletteColors(resolvePalette('seasonal', new Date(2026, 3, 1)), settings.paletteVersions).accent, '#8bc99a')
   assert.equal(paletteColors(resolvePalette('seasonal', new Date(2026, 6, 1)), settings.paletteVersions).accent, '#ffd400')
 })
+
+test("la elección del icono se conserva al guardar", () => { assert.equal(normalizeAppearance({useProfileIcon:false}).useProfileIcon,false); assert.equal(normalizeAppearance().useProfileIcon,true) })

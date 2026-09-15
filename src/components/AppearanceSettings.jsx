@@ -20,7 +20,7 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
   useEffect(() => { if (!editing) { setOpen(false); setPreview(null); setImageOpen(false) } }, [editing])
   useEffect(() => {
     if (!editing) setDraft(normalizeAppearance(settings))
-  }, [settings.palette, settings.font, settings.logoPath, settings.headerLabel, settings.headerTitle, JSON.stringify(settings.paletteVersions), editing])
+  }, [settings.palette, settings.font, settings.logoPath, settings.headerLabel, settings.headerTitle, settings.useProfileIcon, JSON.stringify(settings.paletteVersions), editing])
   useImperativeHandle(ref, () => ({ save, cancel }))
   function setWorking(value) { lock.current = value; setBusy(value); onBusy?.(value) }
   async function chooseImage(event) {
@@ -83,6 +83,7 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
     {cropSource && <ProfileImageCropper key={cropSource} src={cropSource} onCancel={() => { setCropSource(null); setWorking(false) }} onConfirm={data => { setPreview(data); setImageOpen(true); setCropSource(null); setWorking(false) }} />}
     {editing && open && !cropSource && <fieldset className="appearance-options" disabled={busy || saving}>
       <legend>{t('Apariencia')}</legend>
+      <label><span><input type="checkbox" checked={draft.useProfileIcon !== false} onChange={e => setDraft({ ...draft, useProfileIcon: e.target.checked })} /> {t('Usar la imagen del perfil como icono de la app')}</span></label>
       <label>{t('Tipo de letra')}<select value={draft.font} onChange={e => setDraft({ ...draft, font: e.target.value })}>
         <option value="default">{t('Por defecto')} (Inter)</option><option value="serif">{t('Serifa')} (Fraunces)</option>
       </select></label>

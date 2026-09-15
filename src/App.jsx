@@ -833,7 +833,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     return (
       <div className="splash">
         <img
-          src={import.meta.env.BASE_URL + "icon-512.png"}
+          src={appearance.splashUrl}
           className="splash-logo"
           alt=""
         />
@@ -871,7 +871,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
          <div className="login-brand">
 
   <img
-    src={import.meta.env.BASE_URL + "icon-180.png"}
+    src={appearance.logoUrl}
     className="login-logo"
     alt=""
   />
