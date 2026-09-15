@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { t } from '../i18n.js'
-import { APPEARANCE_KEY, normalizeAppearance, imageIcons } from '../appearance.js'
+import { APPEARANCE_KEY, normalizeAppearance } from '../appearance.js'
 import { guardarMetadatosDeUsuario, notificarCambioModulos } from '../modules/preferences/repository.js'
 import { supabase } from '../supabase.js'
+import { createPortal } from 'react-dom'
+import ProfileImageCropper from './ProfileImageCropper.jsx'
 
-export default function AppearanceSettings({ usuario, settings, logoUrl, onSaved, onBusy, editing = false }) {
+export default function AppearanceSettings({ usuario, settings, logoUrl, onSaved, onBusy, editing = false, actionsTarget }) {
   const [open, setOpen] = useState(false)
   const [draft, setDraft] = useState(settings)
   const [preview, setPreview] = useState(null)
@@ -13,6 +15,9 @@ export default function AppearanceSettings({ usuario, settings, logoUrl, onSaved
   const lock = useRef(false)
   const input = useRef(null)
   const [imageOpen, setImageOpen] = useState(false)
+  const [cropSource, setCropSource] = useState(null)
+  useEffect(() => () => { if (cropSource) URL.revokeObjectURL(cropSource) }, [cropSource])
+  useEffect(() => { if (!editing) { setOpen(false); setPreview(null); setImageOpen(false) } }, [editing])
   useEffect(() => {
     if (!open && !imageOpen && !busy) setDraft(normalizeAppearance(settings))
   }, [settings.palette, settings.font, settings.logoPath, open, imageOpen, busy])
@@ -25,10 +30,7 @@ export default function AppearanceSettings({ usuario, settings, logoUrl, onSaved
       setError(t('Elige una imagen PNG, JPG o WebP de hasta 10 MB.')); return
     }
     setWorking(true); setError('')
-    const url = URL.createObjectURL(file)
-    try { setPreview((await imageIcons(url))[512]); setImageOpen(true) }
-    catch { setError(t('No se pudo abrir la imagen.')) }
-    finally { URL.revokeObjectURL(url); setWorking(false) }
+    setCropSource(URL.createObjectURL(file))
   }
   async function save() {
     if (lock.current) return
@@ -61,13 +63,14 @@ export default function AppearanceSettings({ usuario, settings, logoUrl, onSaved
         <img src={preview || logoUrl} alt={t('Imagen del perfil')} width="88" height="88" />
         <span>{t('Cambiar imagen')}</span>
       </button> : <div className="personal-photo"><img src={preview || logoUrl} alt={t('Imagen del perfil')} width="88" height="88" /></div>}
-      <button type="button" className="appearance-trigger" disabled={busy} aria-label={t('Apariencia')} title={t('Apariencia')} aria-expanded={open}
+      {editing && actionsTarget && createPortal(<button type="button" className="appearance-trigger" disabled={busy} aria-label={t('Apariencia')} title={t('Apariencia')} aria-expanded={open}
         onClick={() => { if (!open) setDraft(settings); setOpen(value => !value) }}>
         <img src={import.meta.env.BASE_URL + 'icons/palette.png'} alt="" width="30" height="30" />
-      </button>
+      </button>, actionsTarget)}
     </div>
     <input ref={input} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={chooseImage} />
-    {open && <fieldset className="appearance-options" disabled={busy}>
+    {cropSource && <ProfileImageCropper key={cropSource} src={cropSource} onCancel={() => { setCropSource(null); setWorking(false) }} onConfirm={data => { setPreview(data); setImageOpen(true); setCropSource(null); setWorking(false) }} />}
+    {editing && open && !cropSource && <fieldset className="appearance-options" disabled={busy}>
       <legend>{t('Apariencia')}</legend>
       <label>{t('Tipo de letra')}<select value={draft.font} onChange={e => setDraft({ ...draft, font: e.target.value })}>
         <option value="default">{t('Por defecto')}</option><option value="serif">{t('Serifa')}</option>
@@ -77,7 +80,7 @@ export default function AppearanceSettings({ usuario, settings, logoUrl, onSaved
       </select></label>
       {draft.palette === 'seasonal' && <p>{t('Primavera: verdes · Verano: amarillos · Otoño: rojos · Invierno: azules')}</p>}
     </fieldset>}
-    {(open || imageOpen) && <div className="personal-card-actions">
+    {editing && !cropSource && (open || imageOpen) && <div className="personal-card-actions">
       <button type="button" className="btn btn-primary" disabled={busy} onClick={save}>{t(busy ? 'Guardando...' : 'Guardar')}</button>
       <button type="button" className="btn" disabled={busy} onClick={cancel}>{t('Cancelar')}</button>
     </div>}

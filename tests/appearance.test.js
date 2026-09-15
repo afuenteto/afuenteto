@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { normalizeAppearance, resolvePalette, APPEARANCE_KEY } from '../src/appearance.js'
+import { normalizeAppearance, resolvePalette, APPEARANCE_KEY, squareCrop } from '../src/appearance.js'
 import { guardarMetadatosDeUsuario } from '../src/modules/preferences/repository.js'
 
 test('la apariencia conserva valores válidos y recupera los predeterminados', () => {
@@ -8,6 +8,15 @@ test('la apariencia conserva valores válidos y recupera los predeterminados', (
   assert.equal(normalizeAppearance({ palette: '__proto__', font: 'otro' }).palette, 'yellow')
   assert.deepEqual(normalizeAppearance({ palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png' }),
     { palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png' })
+})
+test('el recorte cuadrado respeta encuadre y límites con imágenes horizontales, verticales y zoom', () => {
+  assert.deepEqual(squareCrop(1200, 800), { size: 800, sx: 200, sy: 0 })
+  assert.deepEqual(squareCrop(800, 1200, 1, 50, 100), { size: 800, sx: 0, sy: 400 })
+  assert.deepEqual(squareCrop(1200, 800, 2, 100, 0), { size: 400, sx: 800, sy: 0 })
+  for (const [w, h] of [[300, 900], [900, 300], [512, 512]]) {
+    const crop = squareCrop(w, h, 4, -20, 150)
+    assert.ok(crop.sx >= 0 && crop.sy >= 0 && crop.sx + crop.size <= w && crop.sy + crop.size <= h)
+  }
 })
 test('las estaciones cambian en marzo, junio, septiembre y diciembre', () => {
   const expected = ['blue', 'blue', 'green', 'green', 'green', 'yellow', 'yellow', 'yellow', 'red', 'red', 'red', 'blue']

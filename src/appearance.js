@@ -29,10 +29,18 @@ export async function imageIcons(source) {
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = size
     const ctx = canvas.getContext('2d')
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
     const scale = Math.min(size / img.naturalWidth, size / img.naturalHeight)
     const width = img.naturalWidth * scale, height = img.naturalHeight * scale
     ctx.drawImage(img, (size - width) / 2, (size - height) / 2, width, height)
     icons[size] = canvas.toDataURL('image/png')
   }
   return icons
+}
+
+export function squareCrop(width, height, zoom = 1, x = 50, y = 50) {
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value))
+  const size = Math.min(width, height) / clamp(zoom, 1, 3)
+  return { size, sx: (width - size) * clamp(x, 0, 100) / 100, sy: (height - size) * clamp(y, 0, 100) / 100 }
 }

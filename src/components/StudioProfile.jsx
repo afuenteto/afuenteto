@@ -10,6 +10,7 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
   const [guardando, setGuardando] = useState(false)
   const perfilRef = useRef(null)
   const [appearanceBusy, setAppearanceBusy] = useState(false)
+  const [appearanceActions, setAppearanceActions] = useState(null)
 
   useEffect(() => {
     if (!abierto) return
@@ -151,7 +152,7 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
       {abierto && (
         <div className="profile-panel">
           <button type="button" className="icon-btn personal-card-close" disabled={guardando || appearanceBusy} aria-label={translateUI('Cerrar')} onClick={() => setAbierto(false)}><LineIcon name="close-main" /></button>
-          {appearance && <AppearanceSettings usuario={usuario} settings={appearance.settings} logoUrl={appearance.logoUrl} onSaved={onAppearanceSaved} onBusy={setAppearanceBusy} editing={editando} />}
+          {appearance && <AppearanceSettings usuario={usuario} settings={appearance.settings} logoUrl={appearance.logoUrl} onSaved={onAppearanceSaved} onBusy={setAppearanceBusy} editing={editando} actionsTarget={appearanceActions} />}
 
           {!editando ? (
             <>
@@ -234,12 +235,12 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
               />
 
               </div>
-              <div className="profile-edit-actions">
+              <div className="profile-edit-actions" ref={setAppearanceActions}>
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={guardarPerfil}
-                disabled={guardando}
+                disabled={guardando || appearanceBusy}
               >
                 {guardando ? translateUI("Guardando...") : translateUI("Guardar")}
               </button>
@@ -248,7 +249,7 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
                 type="button"
                 className="btn"
                 onClick={() => setEditando(false)}
-                disabled={guardando}
+                disabled={guardando || appearanceBusy}
               >{translateUI("Cancelar")}</button>
               </div>
             </>

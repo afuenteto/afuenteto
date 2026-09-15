@@ -12,7 +12,8 @@ html[data-font="serif"] .app :is(h1, h2, h3, h4, h5, h6, .serif, .mono, button, 
 .profile-details h3 { margin-bottom: 10px; }
 .profile-details p { font-size: 13px; }
 .profile-edit-button, .profile-edit-actions { grid-column: 1 / -1; grid-row: 2; justify-self: start; align-self: center; margin-right: 48px; }
-.profile-edit-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.profile-edit-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-right: 0; }
+.profile-edit-actions .appearance-trigger { margin: 0; flex: 0 0 36px; }
 .personal-photo { grid-column: 1; grid-row: 1; align-self: start; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 0; border: 0; background: transparent; color: var(--ink-soft); font: inherit; font-size: 11px; }
 button.personal-photo { cursor: pointer; }
 .personal-photo img { display: block; width: 88px; height: 88px; object-fit: contain; border-radius: 12px; background: var(--surface); }
@@ -28,3 +29,12 @@ button.personal-photo { cursor: pointer; }
 .profile-panel .modules-error { grid-column: 1 / -1; grid-row: 5; }
 .personal-photo:focus-visible, .appearance-trigger:focus-visible { outline: 2px solid var(--brand-heading); outline-offset: 4px; }
 .profile-panel > h3 { overflow-wrap: anywhere; }
+.profile-image-crop { grid-column: 1 / -1; grid-row: 3; min-width: 0; }
+.profile-image-crop h4 { margin: 0 0 8px; }
+.profile-image-crop p { font-size: 12px; }
+.profile-square-frame { position: relative; width: min(100%, 256px); aspect-ratio: 1; margin: 12px auto; overflow: hidden; background: #eee; touch-action: none; cursor: grab; }
+.profile-square-frame:active { cursor: grabbing; }
+.profile-square-frame img { position: absolute; max-width: none; max-height: none; user-select: none; pointer-events: none; }
+.profile-image-crop label { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 8px; align-items: center; }
+.profile-image-crop input[type="range"] { margin: 0; padding: 0; min-width: 0; height: 32px; }
+.profile-crop-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }

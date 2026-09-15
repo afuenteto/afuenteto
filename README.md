@@ -26,7 +26,7 @@ La agenda muestra tareas, citas y entregas sin desplegarla. Permite programar ta
 
 ## Tarjeta personal y apariencia
 
-El icono del perfil abre una tarjeta con la imagen arriba a la izquierda, el nombre y los datos de contacto. En modo «Editar perfil», «Cambiar imagen» permite elegir un PNG, JPG o WebP de hasta 10 MB y guardar una versión PNG de 512 píxeles en la carpeta privada del usuario. La app genera también los tamaños 32, 180 y 192 para el navegador. La paleta, situada junto a «Editar perfil», abre las opciones de tipografía (predeterminada o serifa), paletas amarilla, azul, verde y roja, y modo estacional. Los cambios se aplican al guardar y pertenecen a la cuenta; no cambian la identidad de otras cuentas.
+El icono del perfil abre una tarjeta con la imagen arriba a la izquierda, el nombre y los datos de contacto. En modo «Editar perfil», «Cambiar imagen» permite elegir un PNG, JPG o WebP de hasta 10 MB y ajustar obligatoriamente un recorte cuadrado con arrastre y zoom antes de guardar una versión PNG de 512 × 512 píxeles en la carpeta privada del usuario. La app genera también los tamaños 32, 180 y 192 para el navegador. La paleta, visible solo al editar y situada después de «Guardar» y «Cancelar», abre las opciones de tipografía (predeterminada o serifa), paletas amarilla, azul, verde y roja, y modo estacional. Los cambios se aplican al guardar y pertenecen a la cuenta; no cambian la identidad de otras cuentas.
 
 Las estaciones siguen los meses locales del hemisferio norte: marzo–mayo verde, junio–agosto amarillo, septiembre–noviembre rojo y diciembre–febrero azul. La app revisa la estación al recuperar el foco y cada minuto. La apariencia se guarda en los metadatos de Supabase y no requiere tablas nuevas.
 
