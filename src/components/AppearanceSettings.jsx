@@ -61,10 +61,17 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
     } finally { setWorking(false) }
   }
   function cancel() { setDraft(settings); setPreview(null); setOpen(false); setImageOpen(false); setError('') }
+  function restoreDefaults() {
+    setDraft(normalizeAppearance())
+    setPreview(null)
+    setImageOpen(false)
+    setError('')
+  }
+  const displayedLogo = preview || (draft.logoPath ? logoUrl : import.meta.env.BASE_URL + 'icon-180.png')
   return <div className="profile-appearance">
     <div className="personal-card-header">
       {editing ? <button type="button" className="personal-photo" disabled={busy || saving} onClick={() => input.current.click()} title={t('Cambiar imagen')} aria-label={t('Cambiar imagen')}>
-        <img src={preview || logoUrl} alt={t('Imagen del perfil')} width="88" height="88" />
+        <img src={displayedLogo} alt={t('Imagen del perfil')} width="88" height="88" />
         <span>{t('Cambiar imagen')}</span>
       </button> : <div className="personal-photo"><img src={preview || logoUrl} alt={t('Imagen del perfil')} width="88" height="88" /></div>}
       {editing && actionsTarget && createPortal(<button type="button" className="appearance-trigger" disabled={busy || saving} aria-label={t('Apariencia')} title={t('Apariencia')} aria-expanded={open}
@@ -83,6 +90,8 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
         {[['yellow', 'Amarillos (por defecto)'], ['blue', 'Azules'], ['green', 'Verdes'], ['red', 'Rojos'], ['seasonal', 'Según la estación']].map(([value, label]) => <option key={value} value={value}>{t(label)}</option>)}
       </select></label>
       {draft.palette === 'seasonal' && <p>{t('Primavera: verdes · Verano: amarillos · Otoño: rojos · Invierno: azules')}</p>}
+      <button type="button" className="btn" onClick={restoreDefaults}>{t('Restaurar apariencia inicial')}</button>
+      <p>{t('Recupera la imagen original, los colores amarillos y la letra predeterminada. Pulsa Guardar para aplicar.')}</p>
     </fieldset>}
     {error && <p role="alert" className="modules-error">{error}</p>}
   </div>
