@@ -44,7 +44,7 @@ export default function DeliveryModal({
             onClick={onClose}
             aria-label={translateUI("Cerrar")}
           >
-            <LineIcon name="close" />
+            <LineIcon name="close-main" />
           </button>
         </div>
 

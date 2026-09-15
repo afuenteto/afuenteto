@@ -19,6 +19,7 @@ const paths = {
   bloqueados: 'M7 10V7a5 5 0 0110 0v3 M5 10h14v11H5z',
 }
 const images = {
+  'close-main': 'close-main',
   '📅': 'calendar', '💰': 'money', '📎': 'attachment', '📄': 'document',
   '🗑': 'trash', '👤': 'person', '👥': 'people', '💾': 'save', '⚠': 'warning',
   '✅': 'check', '✓': 'check', '📍': 'location', '🖼': 'image', '🔄': 'refresh', '⏳': 'pending',

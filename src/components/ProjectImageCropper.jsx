@@ -140,7 +140,7 @@ export default function ProjectImageCropper({ src, onCancel, onConfirm }) {
             <p>{translateUI("Arrastra la imagen hasta dejar encuadrada la zona que quieres ver en la ficha.")}</p>
           </div>
           <button type="button" className="icon-btn" onClick={onCancel} aria-label={translateUI("Cerrar")}>
-            <LineIcon name="close" />
+            <LineIcon name="close-main" />
           </button>
         </div>
 

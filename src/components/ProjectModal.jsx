@@ -654,7 +654,7 @@ async function subirPresupuestoComision(id, file) {
   {esNuevo ? translateUI("Nuevo proyecto") : datos.nombre || translateUI("Editar proyecto")}
 </h2>
           <button type="button" className="icon-btn" onClick={onClose} aria-label={translateUI("Cerrar")}>
-            <LineIcon name="close" />
+            <LineIcon name="close-main" />
           </button>
         </div>
 

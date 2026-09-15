@@ -141,7 +141,7 @@ export default function ClientModal({
             onClick={onClose}
             disabled={guardando}
           >
-            <LineIcon name="close" />
+            <LineIcon name="close-main" />
           </button>
 
         </div>

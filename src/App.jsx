@@ -1308,7 +1308,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
           onClick={() => setInformacionAbierta(null)}
           aria-label={translateUI("Cerrar")}
         >
-          <LineIcon name="close" />
+          <LineIcon name="close-main" />
         </button>
       </div>
 

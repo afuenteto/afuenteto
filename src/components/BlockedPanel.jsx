@@ -37,7 +37,7 @@ export default function BlockedPanel({
             className="icon-btn"
             onClick={onClose}
           >
-            <LineIcon name="close" />
+            <LineIcon name="close-main" />
           </button>
 
         </div>
