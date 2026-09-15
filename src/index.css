@@ -1297,6 +1297,9 @@ a {
 .tasks-modal .list-row {
   grid-template-columns: 17px minmax(0, 1fr) auto;
 }
+.tasks-modal .list-row:not(.task-done) { align-items: start; }
+.tasks-modal .list-row:not(.task-done) > input[type='checkbox'] { margin: 9.5px 0 0; }
+.tasks-modal .list-row:not(.task-done) > .icon-btn { align-self: start; }
 
 .task-options {
   display: flex;
@@ -1320,6 +1323,7 @@ a {
 .list-row input[type='checkbox'] {
   width: 17px;
   height: 17px;
+  margin: 0;
 
   accent-color: var(--accent);
 }

@@ -19,6 +19,9 @@ export default function TasksModal({
   const [nuevaTarea, setNuevaTarea] = useState('')
 
 function cambiarEstado(id) {
+  if (guardando) return
+  const tarea = tareas.find(t => t.id === id)
+  if (!tarea || (!tarea.hecha && !window.confirm(`${translateUI('¿Dar por finalizada esta tarea?')}\n\n${tarea.texto}`))) return
 
   setTareas((prev) =>
     prev.map((t) => {
@@ -125,6 +128,8 @@ function cambiarEstado(id) {
             <input
               type="checkbox"
               checked={false}
+              disabled={guardando}
+              aria-label={translateUI('Completar tarea: {0}', { 0: t.texto })}
               onChange={() =>
                 cambiarEstado(t.id)
               }

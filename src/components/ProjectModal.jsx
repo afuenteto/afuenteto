@@ -332,6 +332,8 @@ useEffect(() => {
   }
 
   function alternarTarea(id) {
+    const tarea = datos.tareas.find(t => t.id === id)
+    if (!tarea || (!tarea.hecha && !window.confirm(`${translateUI('¿Dar por finalizada esta tarea?')}\n\n${tarea.texto}`))) return
     set(
       'tareas',
       datos.tareas.map((t) => (t.id === id ? { ...t, hecha: !t.hecha, fechaCompletada: !t.hecha ? fechaLocal() : '' } : t))
