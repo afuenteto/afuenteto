@@ -1,4 +1,5 @@
 import LineIcon, { iconText } from './components/LineIcon.jsx'
+import useAppearance from './useAppearance.js'
 import HomeModules from './components/HomeModules.jsx'
 import { useLiveData } from './useLiveData.js'
 import ModulePreview from './components/ModulePreview.jsx'
@@ -37,6 +38,7 @@ import {
 export default function App() {
   useSyncExternalStore(subscribeLanguage, getLanguage, () => 'es')
   const [usuario, setUsuario] = useState(null)
+  const appearance = useAppearance(usuario)
   const modulos = useMemo(() => modulosDeUsuario(usuario), [usuario])
   const [configurandoModulos, setConfigurandoModulos] = useState(false)
   const [guardandoModulos, setGuardandoModulos] = useState(false)
@@ -962,9 +964,13 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     <div className="app">
      <div className="topbar">
   <div className="brand">
-<StudioProfile key={usuarioId} usuario={usuario}>
+<StudioProfile key={usuarioId} usuario={usuario} appearance={appearance} onAppearanceSaved={updated => {
+  if (usuarioActualRef.current !== updated.id) return
+  ++revisionUsuarioRef.current
+  setUsuario(updated)
+}}>
   <img
-    src={import.meta.env.BASE_URL + "icon-180.png"}
+    src={appearance.logoUrl}
     className="app-logo"
     alt=""
   />

@@ -24,6 +24,14 @@ La carga de proyectos está en `src/modules/projects` y las preferencias en `src
 
 La agenda muestra tareas, citas y entregas sin desplegarla. Permite programar tareas o citas vinculadas a un proyecto y completar tareas. Cada fecha se puede copiar a Google Calendar o descargar como archivo `.ics`; los cambios posteriores no se sincronizan automáticamente. Los gráficos económicos se descargan al abrir su apartado.
 
+## Tarjeta personal y apariencia
+
+El icono del perfil abre una tarjeta con la imagen arriba a la izquierda, el nombre y los datos de contacto. «Cambiar imagen» permite elegir un PNG, JPG o WebP de hasta 10 MB y guardar una versión PNG de 512 píxeles en la carpeta privada del usuario. La app genera también los tamaños 32, 180 y 192 para el navegador. El rodillo abre las opciones de tipografía (predeterminada o serifa), paletas amarilla, azul, verde y roja, y modo estacional. Los cambios se aplican al guardar y pertenecen a la cuenta; no cambian la identidad de otras cuentas.
+
+Las estaciones siguen los meses locales del hemisferio norte: marzo–mayo verde, junio–agosto amarillo, septiembre–noviembre rojo y diciembre–febrero azul. La app revisa la estación al recuperar el foco y cada minuto. La apariencia se guarda en los metadatos de Supabase y no requiere tablas nuevas.
+
+La imagen se aplica a la cabecera, la tarjeta, los iconos del navegador y el manifiesto generado durante la sesión. El sistema operativo y el navegador controlan el icono de una instalación existente: no se garantiza su sustitución inmediata. Antes de iniciar sesión se muestra la identidad predeterminada. Las pruebas de navegador usan servicios simulados; el guardado real requiere las políticas del bucket privado `imagenes-proyectos`.
+
 ## Idiomas
 
 El selector **Idioma / Language**, situado al final de la aplicación a la izquierda, permite cambiar entre 20 idiomas. Con una sesión iniciada, el botón **Salir** aparece a su derecha en la misma fila. El selector también está disponible antes de iniciar sesión. La selección se conserva en este navegador y se sincroniza entre sus pestañas. Español sigue siendo el idioma inicial. Árabe y urdu utilizan escritura de derecha a izquierda; fechas y números se adaptan al idioma. Los importes siguen expresados en euros.

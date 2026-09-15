@@ -1,0 +1,22 @@
+html[data-font="serif"] body,
+html[data-font="serif"] .app :is(h1, h2, h3, h4, h5, h6, .serif, .mono, button, input, select, textarea, .tag-urgent, .module-project-counts, .eyebrow) {
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+}
+.profile-panel { position: fixed; top: 94px; left: max(16px, calc((100vw - 1120px) / 2 + 26px)); }
+[dir="rtl"] .profile-panel { left: auto; right: max(16px, calc((100vw - 1120px) / 2 + 26px)); }
+.project-open-btn:hover { color: var(--brand-heading); border-bottom-color: var(--brand-heading); }
+@media (max-width: 700px) { .profile-panel { top: 78px; left: 16px; max-height: calc(100dvh - 94px); } [dir="rtl"] .profile-panel { left: auto; right: 16px; } }
+.personal-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding-right: 26px; margin-bottom: 18px; }
+.personal-photo { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 0; border: 0; background: transparent; color: var(--ink-soft); font: inherit; font-size: 11px; cursor: pointer; }
+.personal-photo img { display: block; width: 88px; height: 88px; object-fit: contain; border-radius: 12px; background: var(--surface); }
+.appearance-trigger { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: var(--accent-soft); cursor: pointer; }
+.appearance-trigger img { object-fit: contain; }
+.personal-card-close { position: absolute; top: 8px; right: 8px; }
+.appearance-options { border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin: 0 0 14px; min-width: 0; }
+.appearance-options legend { color: var(--brand-heading); font-size: 13px; }
+.appearance-options label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.appearance-options select { width: 100%; }
+.appearance-options p { font-size: 12px; line-height: 1.5; }
+.personal-card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.personal-photo:focus-visible, .appearance-trigger:focus-visible { outline: 2px solid var(--brand-heading); outline-offset: 4px; }
+.profile-panel > h3 { overflow-wrap: anywhere; }

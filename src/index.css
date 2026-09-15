@@ -5,6 +5,7 @@ html { scrollbar-gutter: stable; }
 }
 
 :root {
+  --brand-heading: #7a1f1f;
   --bg: #f6f5f1;
   --surface: #ffffff;
   --surface-soft: #faf9f6;
@@ -93,8 +94,8 @@ html { scrollbar-gutter: stable; }
 [dir="rtl"] .profile-panel { left: auto; right: 0; }
 input[type="email"], input[type="tel"], input[type="url"] { direction: ltr; }
 .btn-primary {
-  background: #7a1f1f;
-  border-color: #7a1f1f;
+  background: var(--brand-heading);
+  border-color: var(--brand-heading);
   color: white;
 }
 
@@ -447,8 +448,8 @@ a {
 }
 
 .btn-logout {
-  background: #7a1f1f;
-  border-color: #7a1f1f;
+  background: var(--brand-heading);
+  border-color: var(--brand-heading);
   color: #fff;
 }
 
@@ -600,18 +601,18 @@ a {
   margin: 0 0 4px;
   font-size: 18px;
   font-weight: 600;
-  color: #7a1f1f;
+  color: var(--brand-heading);
 }
 
 /* Botón que abre la ficha desde el título */
 .project-open-btn {
   border: 0;
-  border-bottom: 2px dotted #7a1f1f;
+  border-bottom: 2px dotted var(--brand-heading);
   background: transparent;
   padding: 0 0 2px;
   margin: 0;
   font: inherit;
-  color: #7a1f1f;
+  color: var(--brand-heading);
   cursor: pointer;
   text-align: start;
   text-decoration: none;
@@ -637,7 +638,7 @@ a {
   background: var(--accent-soft);
 }
 
-.card .tasks-open-btn, .card .tag-urgent { color: #7a1f1f; }
+.card .tasks-open-btn, .card .tag-urgent { color: var(--brand-heading); }
 
 /* Ventana independiente de tareas */
 .tasks-modal {
@@ -1515,7 +1516,9 @@ a {
   left: 0;
   z-index: 50;
 
-  width: 280px;
+  width: min(360px, calc(100vw - 52px));
+  max-height: calc(100dvh - 110px);
+  overflow-y: auto;
 
   padding: 20px;
 
@@ -1533,7 +1536,7 @@ a {
   margin-top: 0;
   margin-bottom: 14px;
 
-  color: #7a1f1f;
+  color: var(--brand-heading);
 }
 
 
@@ -1682,7 +1685,7 @@ a {
 }
 
 .section-label.dashboard-toggle {
-  background: #fff3a6;
+  background: var(--accent-soft);
   width: 100%;
   box-sizing: border-box;
   padding: 10px 14px;
@@ -1696,7 +1699,7 @@ a {
 
 /* Botones desplegables del dashboard */
 .dashboard-toggle {
-  background: #fff3a6;
+  background: var(--accent-soft);
   width: 100%;
   box-sizing: border-box;
   padding: 10px 14px;

@@ -6,6 +6,13 @@ export async function guardarModulosDeUsuario(usuarioId, modulos, {
   cliente = supabase,
   solicitar = globalThis.fetch,
 } = {}) {
+  return guardarMetadatosDeUsuario(usuarioId, { [CLAVE_MODULOS]: normalizarModulos(modulos) }, { cliente, solicitar })
+}
+
+export async function guardarMetadatosDeUsuario(usuarioId, metadatos, {
+  cliente = supabase,
+  solicitar = globalThis.fetch,
+} = {}) {
   if (!usuarioId) throw new Error('Se necesita una sesión para guardar los módulos.')
   const { data: { session } = {}, error: errorSesion } = await cliente.auth.getSession()
   if (errorSesion) throw errorSesion
@@ -20,7 +27,7 @@ export async function guardarModulosDeUsuario(usuarioId, modulos, {
   const respuesta = await solicitar(`${supabaseUrl}/auth/v1/user`, {
     method: 'PUT',
     headers: { apikey: supabaseKey, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ data: { [CLAVE_MODULOS]: normalizarModulos(modulos) } }),
+    body: JSON.stringify({ data: metadatos }),
     signal: AbortSignal.timeout(20000),
   })
   if (!respuesta.ok) throw new Error('No se pudo guardar la configuración de la cuenta.')

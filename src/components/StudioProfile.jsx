@@ -1,19 +1,24 @@
 import { t as translateUI } from '../i18n.js'
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '../supabase.js'
+import AppearanceSettings from './AppearanceSettings.jsx'
+import LineIcon from './LineIcon.jsx'
 
-export default function StudioProfile({ children, usuario }) {
+export default function StudioProfile({ children, usuario, appearance, onAppearanceSaved }) {
   const [abierto, setAbierto] = useState(false)
   const [editando, setEditando] = useState(false)
   const [guardando, setGuardando] = useState(false)
   const perfilRef = useRef(null)
+  const [appearanceBusy, setAppearanceBusy] = useState(false)
 
   useEffect(() => {
     if (!abierto) return
     function cerrarFuera(event) {
+      if (guardando || appearanceBusy) return
       if (perfilRef.current && !perfilRef.current.contains(event.target)) setAbierto(false)
     }
     function cerrarConEscape(event) {
+      if (guardando || appearanceBusy) return
       if (event.key === 'Escape') setAbierto(false)
     }
     document.addEventListener('pointerdown', cerrarFuera)
@@ -22,7 +27,7 @@ export default function StudioProfile({ children, usuario }) {
       document.removeEventListener('pointerdown', cerrarFuera)
       document.removeEventListener('keydown', cerrarConEscape)
     }
-  }, [abierto])
+  }, [abierto, guardando, appearanceBusy])
 
   const [perfil, setPerfil] = useState({
     id: null,
@@ -137,6 +142,7 @@ export default function StudioProfile({ children, usuario }) {
         className="profile-trigger"
         aria-expanded={abierto}
         onClick={() => setAbierto((a) => !a)}
+        disabled={guardando || appearanceBusy}
         aria-label={translateUI("Abrir perfil del estudio")}
       >
         {children}
@@ -144,12 +150,15 @@ export default function StudioProfile({ children, usuario }) {
 
       {abierto && (
         <div className="profile-panel">
+          <button type="button" className="icon-btn personal-card-close" disabled={guardando || appearanceBusy} aria-label={translateUI('Cerrar')} onClick={() => setAbierto(false)}><LineIcon name="close-main" /></button>
+          {appearance && <AppearanceSettings usuario={usuario} settings={appearance.settings} logoUrl={appearance.logoUrl} onSaved={onAppearanceSaved} onBusy={setAppearanceBusy} />}
 
           {!editando ? (
             <>
               <h3 className="serif">
                 {perfil.nombre || translateUI("Perfil del estudio")}
               </h3>
+              {usuario.email && <p className="personal-email">{usuario.email}</p>}
 
               {perfil.web && (
                 <p>
