@@ -1,3 +1,4 @@
+import ProjectName from './ProjectName.jsx'
 import { iconText } from './LineIcon.jsx'
 import FlatStatus from './FlatStatus.jsx'
 import { t, getLocale, formatRelativeDays } from '../i18n.js'
@@ -107,7 +108,7 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
           </div>
           <button type="button" className="daily-main" onClick={() => item.type === 'task' ? onOpenTasks(item.project) : onOpen(item.project)}>
             <span className="daily-kind">{t(item.type === 'task' ? (item.task.tipo === 'cita' ? 'Cita' : 'Tareas') : 'Entregas')}{item.task?.prioridad === 'alta' ? <> · <FlatStatus label="🔴 Alta" /></> : ''}</span>
-            <strong>{item.title}</strong>
+            <strong><ProjectName proyecto={item.project} enabled={modulos.documentos}>{item.title}</ProjectName></strong>
             <span>{item.type === 'task' ? item.project.nombre : item.project.cliente}</span>
           </button>
           <div className="daily-actions">
@@ -115,7 +116,7 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
               title: item.type === 'task' ? `${item.title} · ${item.project.nombre}` : `${t('Entregas')} · ${item.title}`,
               description: item.project.nombre,
             }} />}
-            {item.type === 'task' && onCompleteTask && <button type="button" className="chip" disabled={guardando}
+            {item.type === 'task' && onCompleteTask && <button type="button" className="chip complete-task-button" disabled={guardando}
               aria-label={t('Completar tarea: {0}', { 0: item.title })}
               onClick={() => onCompleteTask(item.project.id, item.task.id)}>{t('Completar')}</button>}
           </div>

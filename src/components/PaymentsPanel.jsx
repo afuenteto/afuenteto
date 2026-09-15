@@ -1,4 +1,5 @@
-import LineIcon, { iconText } from './LineIcon.jsx'
+import ProjectName from './ProjectName.jsx'
+import LineIcon, { plainIconLabel } from './LineIcon.jsx'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { formatearFecha } from '../storage.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
@@ -48,9 +49,9 @@ export default function PaymentsPanel({
       <div className="panel">
 
 
-        <div className="panel-head">
+        <div className="panel-head window-title-bar">
 
-          <h2 className="serif">{iconText("💰 Cobros pendientes")}</h2>
+          <h2 className="serif">{plainIconLabel('💰 Cobros pendientes')}</h2>
 
           <button
             className="icon-btn"
@@ -82,7 +83,7 @@ export default function PaymentsPanel({
           >
 
             <strong>
-              {item.proyecto.nombre}
+              <ProjectName proyecto={item.proyecto} enabled={modulos.documentos} />
             </strong>
 
 

@@ -1,5 +1,5 @@
+import ProjectName from './ProjectName.jsx'
 import LineIcon, { iconText } from './LineIcon.jsx'
-import FlatStatus from './FlatStatus.jsx'
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { useState } from 'react'
 import { diasHasta } from '../storage.js'
@@ -64,9 +64,9 @@ export default function TasksPanel({
       <div className="panel">
 
 
-        <div className="panel-head">
+        <div className="panel-head window-title-bar">
 
-          <h2 className="serif"><FlatStatus label="🔴 Tareas pendientes" /></h2>
+          <h2 className="serif">{translateUI('Tareas')}</h2>
 
 
           <button
@@ -108,7 +108,7 @@ export default function TasksPanel({
             >
 
               <strong>
-                {tarea.proyecto.nombre}
+                <ProjectName proyecto={tarea.proyecto} enabled={modulos.documentos} />
               </strong>
 
 
@@ -152,7 +152,7 @@ export default function TasksPanel({
 
 
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-primary complete-task-button"
                     disabled={guardando}
                     onClick={() =>
                       completar(tarea)

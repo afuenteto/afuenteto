@@ -1,15 +1,18 @@
+import ProjectName from './ProjectName.jsx'
 import LineIcon from './LineIcon.jsx'
 import { StatusSelect, statusLabel } from './FlatStatus.jsx'
 import { t as translateUI, getLocale } from '../i18n.js'
 import { useState } from 'react'
 import { fechaLocal } from '../projectUtils.js'
 import { uid } from '../storage.js'
+import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
 export default function TasksModal({
   proyecto,
   onSave,
   onClose,
-  guardando
+  guardando,
+  modulos = MODULOS_PREDETERMINADOS
 }) {
 
   const [tareas, setTareas] = useState(
@@ -96,7 +99,7 @@ function cambiarEstado(id) {
         <fieldset className="modal-fields" disabled={guardando}>
 
 
-        <div className="modal-head">
+        <div className="modal-head window-title-bar">
 
           <h2 className="serif">{translateUI("Tareas")}</h2>
 
@@ -111,7 +114,7 @@ function cambiarEstado(id) {
 
 
         <p className="mono">
-          {proyecto.nombre}
+          <ProjectName proyecto={proyecto} enabled={modulos.documentos} />
         </p>
 
 

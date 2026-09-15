@@ -1,5 +1,6 @@
+import ProjectName from './ProjectName.jsx'
 import LineIcon from './LineIcon.jsx'
-import { iconText } from './LineIcon.jsx'
+import { iconText, plainIconLabel } from './LineIcon.jsx'
 import { t as translateUI, formatRelativeDays } from '../i18n.js'
 import { diasHasta, formatearFecha } from '../storage.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
@@ -40,9 +41,9 @@ export default function DeliveriesPanel({
       <div className="panel">
 
 
-        <div className="panel-head">
+        <div className="panel-head window-title-bar">
 
-          <h2 className="serif">{iconText("📅 Entregas próximas")}</h2>
+          <h2 className="serif">{plainIconLabel('📅 Entregas próximas')}</h2>
 
           <button
             className="icon-btn"
@@ -74,7 +75,7 @@ export default function DeliveriesPanel({
           >
 
             <strong>
-              {proyecto.nombre}
+              <ProjectName proyecto={proyecto} enabled={modulos.documentos} />
             </strong>
 
 

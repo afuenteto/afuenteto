@@ -1,4 +1,5 @@
 import LineIcon, { iconText } from './components/LineIcon.jsx'
+import FooterLinks from './components/FooterLinks.jsx'
 import useAppearance from './useAppearance.js'
 import HomeModules from './components/HomeModules.jsx'
 import { useLiveData } from './useLiveData.js'
@@ -1262,6 +1263,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 
 {modulos.tareas && tareasAbiertas && (
   <TasksModal
+    modulos={modulos}
     key={tareasAbiertas.id}
     proyecto={tareasAbiertas}
     onSave={guardarTareas}
@@ -1417,7 +1419,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 
 <footer className="app-footer">
 
-  <div className="app-footer-links">
+  <FooterLinks>
     <button type="button" onClick={() => setInformacionAbierta('legal')}>{translateUI("Aviso legal")}</button>
 
     <button type="button" onClick={() => setInformacionAbierta('privacidad')}>{translateUI("Privacidad")}</button>
@@ -1425,7 +1427,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     <button type="button" onClick={() => setInformacionAbierta('condiciones')}>{translateUI("Condiciones de uso")}</button>
 
     <button type="button" onClick={() => setInformacionAbierta('contacto')}>{translateUI("Contacto")}</button>
-  </div>
+  </FooterLinks>
 
   <div className="app-footer-copy">{translateUI("© 2026 Fuente Studio · Gestión de proyectos ·")}{' '}
     <a

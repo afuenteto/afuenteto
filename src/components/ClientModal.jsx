@@ -1,3 +1,4 @@
+import ProjectName from './ProjectName.jsx'
 import LineIcon, { iconText } from './LineIcon.jsx'
 import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale } from '../i18n.js'
@@ -372,7 +373,7 @@ export default function ClientModal({
           >
 
             <strong>
-              {p.nombre}
+              <ProjectName proyecto={p} enabled={modulos.documentos} />
             </strong>
 
             <span>

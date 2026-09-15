@@ -1,3 +1,4 @@
+import ProjectName from './ProjectName.jsx'
 import LineIcon from './LineIcon.jsx'
 import FlatStatus from './FlatStatus.jsx'
 import { t as translateUI } from '../i18n.js'
@@ -63,7 +64,7 @@ export default function BlockedPanel({
           >
 
             <strong>
-              {proyecto.nombre}
+              <ProjectName proyecto={proyecto} enabled={modulos.documentos} />
             </strong>
 
 
