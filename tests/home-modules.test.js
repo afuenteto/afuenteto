@@ -5,16 +5,18 @@ import { renderToString } from 'react-dom/server'
 import { createServer } from 'vite'
 import { createServer as createHttpServer } from 'node:http'
 
-test('la entrada muestra los cinco módulos cerrados con asas independientes del título', async () => {
+test('la entrada abre Hoy en el estudio y conserva los demás módulos cerrados', async () => {
   const server = await createServer({ server: { middlewareMode: true, hmr: { server: createHttpServer() } }, appType: 'custom' })
   try {
     const { default: HomeModules } = await server.ssrLoadModule('/src/components/HomeModules.jsx')
     const sections = [['today', 'Hoy en el estudio'], ['projects', 'Proyectos'], ['debts', 'Deudas'], ['economy', 'Economía general'], ['summary', 'Resumen del estudio']]
-      .map(([id, title]) => ({ id, title, content: React.createElement('p', null, 'CONTENIDO_INTERNO') }))
+      .map(([id, title]) => ({ id, title, content: React.createElement('p', null, `CONTENIDO_${id}`) }))
     const html = renderToString(React.createElement(HomeModules, { usuarioId: 'u1', sections }))
-    assert.equal((html.match(/aria-expanded="false"/g) || []).length, 5)
+    assert.equal((html.match(/aria-expanded="false"/g) || []).length, 4)
+    assert.equal((html.match(/aria-expanded="true"/g) || []).length, 1)
     assert.equal((html.match(/class="home-module-handle"/g) || []).length, 5)
-    assert.ok(!html.includes('CONTENIDO_INTERNO'))
+    assert.ok(html.includes('CONTENIDO_today'))
+    for (const id of ['projects', 'debts', 'economy', 'summary']) assert.ok(!html.includes(`CONTENIDO_${id}`))
     for (const section of sections) assert.ok(html.includes(section.title))
     for (const name of ['StudioDashboard', 'EconomicChart']) {
       const { default: Component } = await server.ssrLoadModule(`/src/components/${name}.jsx`)

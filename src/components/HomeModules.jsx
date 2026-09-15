@@ -32,7 +32,7 @@ export default function HomeModules({ usuarioId, sections, openRequest }) {
   const [order, setOrder] = useState(() => {
     try { return JSON.parse(localStorage.getItem(key)) } catch { return [] }
   })
-  const [opened, setOpened] = useState({})
+  const [opened, setOpened] = useState({ today: true })
   useEffect(() => { if (openRequest) setOpened(prev => ({ ...prev, [openRequest.id]: true })) }, [openRequest])
   const sorted = normalizeHomeOrder(order).filter(id => ids.includes(id))
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }))
