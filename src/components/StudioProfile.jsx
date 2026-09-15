@@ -9,6 +9,9 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
   const [editando, setEditando] = useState(false)
   const [guardando, setGuardando] = useState(false)
   const perfilRef = useRef(null)
+  const appearanceRef = useRef(null)
+  const savedProfile = useRef(null)
+  const saveLock = useRef(false)
   const [appearanceBusy, setAppearanceBusy] = useState(false)
   const [appearanceActions, setAppearanceActions] = useState(null)
 
@@ -55,6 +58,7 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
       }
 
       if (activo && data) {
+        savedProfile.current = data
         setPerfil({
           id: data.id,
           nombre: data.nombre || '',
@@ -77,7 +81,8 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
   }
 
   async function guardarPerfil() {
-    if (!usuario || guardando) return
+    if (!usuario || saveLock.current || appearanceBusy) return
+    saveLock.current = true
 
     setGuardando(true)
 
@@ -101,6 +106,7 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
     if (error) throw error
 
     if (data) {
+      savedProfile.current = data
       setPerfil({
         id: data.id,
         nombre: data.nombre || '',
@@ -109,12 +115,14 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
         telefono: data.telefono || '',
       })
 
+      if (appearanceRef.current && !await appearanceRef.current.save()) return
       setEditando(false)
     }
 
     } catch (error) {
       alert(translateUI("No se pudo guardar el perfil.\n\n{0}", { 0: error.message }))
     } finally {
+      saveLock.current = false
       setGuardando(false)
     }
   }
@@ -152,7 +160,7 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
       {abierto && (
         <div className="profile-panel">
           <button type="button" className="icon-btn personal-card-close" disabled={guardando || appearanceBusy} aria-label={translateUI('Cerrar')} onClick={() => setAbierto(false)}><LineIcon name="close-main" /></button>
-          {appearance && <AppearanceSettings usuario={usuario} settings={appearance.settings} logoUrl={appearance.logoUrl} onSaved={onAppearanceSaved} onBusy={setAppearanceBusy} editing={editando} actionsTarget={appearanceActions} />}
+          {appearance && <AppearanceSettings ref={appearanceRef} usuario={usuario} settings={appearance.settings} logoUrl={appearance.logoUrl} onSaved={onAppearanceSaved} onBusy={setAppearanceBusy} editing={editando} actionsTarget={appearanceActions} saving={guardando} />}
 
           {!editando ? (
             <>
@@ -248,7 +256,12 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
               <button
                 type="button"
                 className="btn"
-                onClick={() => setEditando(false)}
+                onClick={() => {
+                  appearanceRef.current?.cancel()
+                  const saved = savedProfile.current
+                  setPerfil({ id: saved?.id || null, nombre: saved?.nombre || '', web: saved?.web || '', instagram: saved?.instagram || '', telefono: saved?.telefono || '' })
+                  setEditando(false)
+                }}
                 disabled={guardando || appearanceBusy}
               >{translateUI("Cancelar")}</button>
               </div>
