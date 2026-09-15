@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './supabase.js'
-import { APPEARANCE_KEY, normalizeAppearance, PALETTES, resolvePalette, imageIcons } from './appearance.js'
+import { APPEARANCE_KEY, normalizeAppearance, paletteColors, resolvePalette, imageIcons } from './appearance.js'
 
 export default function useAppearance(usuario) {
   const settings = normalizeAppearance(usuario?.user_metadata?.[APPEARANCE_KEY])
   const [logo, setLogo] = useState(null)
   const [palette, setPalette] = useState(() => resolvePalette(settings.palette))
   const base = import.meta.env.BASE_URL
+  const colors = paletteColors(palette, settings.paletteVersions)
   useEffect(() => {
     const refresh = () => setPalette(resolvePalette(settings.palette))
     refresh()
@@ -15,7 +16,6 @@ export default function useAppearance(usuario) {
     return () => { clearInterval(timer); window.removeEventListener('focus', refresh) }
   }, [settings.palette])
   useEffect(() => {
-    const colors = PALETTES[palette]
     const root = document.documentElement
     for (const [key, value] of Object.entries({ '--accent': colors.accent, '--accent-soft': colors.soft,
       '--accent-hover': colors.hover, '--brand-heading': colors.heading, '--bg': colors.background })) root.style.setProperty(key, value)
@@ -26,7 +26,7 @@ export default function useAppearance(usuario) {
       for (const key of ['--accent', '--accent-soft', '--accent-hover', '--brand-heading', '--bg']) root.style.removeProperty(key)
       delete root.dataset.font
     }
-  }, [palette, settings.font])
+  }, [colors, settings.font])
   useEffect(() => {
     let active = true
     setLogo(null)
@@ -52,8 +52,8 @@ export default function useAppearance(usuario) {
     const original = manifestLink?.getAttribute('href')
     const appUrl = new URL(base, location.href).href
     const manifest = { id: appUrl, name: 'Proyectos de Interiorismo', short_name: 'Proyectos',
-      start_url: appUrl, scope: appUrl, display: 'standalone', background_color: PALETTES[palette].background,
-      theme_color: PALETTES[palette].accent,
+      start_url: appUrl, scope: appUrl, display: 'standalone', background_color: colors.background,
+      theme_color: colors.accent,
       icons: [180, 192, 512].map(size => ({ src: icons?.[size] || new URL(`icon-${size}.png`, appUrl).href, sizes: `${size}x${size}`, type: 'image/png' })) }
     const url = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' }))
     if (manifestLink) manifestLink.href = url
@@ -62,6 +62,6 @@ export default function useAppearance(usuario) {
       if (manifestLink) manifestLink.setAttribute('href', original)
       URL.revokeObjectURL(url)
     }
-  }, [icons, palette, base])
+  }, [icons, colors, base])
   return { settings, logoUrl: icons?.[180] || base + 'icon-180.png' }
 }

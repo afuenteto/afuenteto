@@ -5,8 +5,8 @@ html { scrollbar-gutter: stable; }
 }
 
 :root {
-  --brand-heading: #7a1f1f;
-  --bg: #f6f5f1;
+  --brand-heading: #6a4b16;
+  --bg: #f8f6f0;
   --surface: #ffffff;
   --surface-soft: #faf9f6;
 
@@ -15,9 +15,9 @@ html { scrollbar-gutter: stable; }
   --ink-faint: #a2a29c;
 
   /* Amarillo del icono */
-  --accent: #ffd400;
-  --accent-soft: #fff3a6;
-  --accent-hover: #e8c000;
+  --accent: #e8b82f;
+  --accent-soft: #faf0cc;
+  --accent-hover: #cfa01f;
 
   --line: #e4e3de;
 

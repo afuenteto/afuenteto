@@ -20,7 +20,7 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
   useEffect(() => { if (!editing) { setOpen(false); setPreview(null); setImageOpen(false) } }, [editing])
   useEffect(() => {
     if (!editing) setDraft(normalizeAppearance(settings))
-  }, [settings.palette, settings.font, settings.logoPath, settings.headerLabel, settings.headerTitle, editing])
+  }, [settings.palette, settings.font, settings.logoPath, settings.headerLabel, settings.headerTitle, JSON.stringify(settings.paletteVersions), editing])
   useImperativeHandle(ref, () => ({ save, cancel }))
   function setWorking(value) { lock.current = value; setBusy(value); onBusy?.(value) }
   async function chooseImage(event) {
@@ -90,6 +90,14 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
         {[['green', 'Primavera'], ['yellow', 'Verano (por defecto)'], ['red', 'Otoño'], ['blue', 'Invierno'], ['seasonal', 'Según la estación']].map(([value, label]) => <option key={value} value={value}>{t(label)}</option>)}
       </select></label>
       {draft.palette === 'seasonal' && <p>{t('Primavera: verdes · Verano: amarillos · Otoño: rojos · Invierno: azules')}</p>}
+      {[['green', 'Primavera'], ['yellow', 'Verano (por defecto)'], ['red', 'Otoño'], ['blue', 'Invierno']]
+        .filter(([key]) => draft.palette === 'seasonal' || draft.palette === key)
+        .map(([key, label]) => <label key={key}>{t(label)} · {t('Versión de colores')}
+          <select value={draft.paletteVersions?.[key] || 'new'} onChange={e => setDraft({ ...draft, paletteVersions: { ...draft.paletteVersions, [key]: e.target.value } })}>
+            <option value="new">{t('Nueva paleta')}</option>
+            <option value="previous">{t('Paleta anterior')}</option>
+          </select>
+        </label>)}
       <button type="button" className="btn" onClick={restoreDefaults}>{t('Restaurar apariencia inicial')}</button>
       <p>{t('Recupera la imagen original, los colores amarillos y la letra predeterminada. Pulsa Guardar para aplicar.')}</p>
     </fieldset>}

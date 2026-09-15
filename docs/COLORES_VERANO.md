@@ -1,4 +1,6 @@
-# Colores de Verano (configuración amarilla)
+# Colores de Verano (paleta anterior)
+
+Este documento conserva el inventario anterior. Consulta las paletas actuales y las opciones de recuperación en [Paletas estacionales](PALETAS_ESTACIONALES.md).
 
 ## Paleta principal y colores compartidos
 
@@ -109,3 +111,4 @@ Incluye colores auxiliares, estados, gráficos y transparencias. Las otras tres 
 | rgba(255,255,255,0.65) | — | src/index.css:1963<br>src/index.css:2049<br>src/index.css:2107 |
 
 Los nombres CSS `white`, `black` y `transparent` equivalen a #FFFFFF, #000000 y rgba(0, 0, 0, 0). Las sombras principales usan rgba(0, 0, 0, 0.03) y rgba(0, 0, 0, 0.05).
+

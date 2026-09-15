@@ -1,13 +1,13 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { normalizeAppearance, resolvePalette, APPEARANCE_KEY, squareCrop } from '../src/appearance.js'
+import { normalizeAppearance, resolvePalette, APPEARANCE_KEY, squareCrop, paletteColors, PALETTES, LEGACY_PALETTES } from '../src/appearance.js'
 import { guardarMetadatosDeUsuario } from '../src/modules/preferences/repository.js'
 
 test('la apariencia conserva valores válidos y recupera los predeterminados', () => {
-  assert.deepEqual(normalizeAppearance(null), { palette: 'yellow', font: 'default', logoPath: '', headerLabel: '', headerTitle: '' })
+  assert.deepEqual(normalizeAppearance(null), { palette: 'yellow', font: 'default', logoPath: '', headerLabel: '', headerTitle: '', paletteVersions: {green: 'new', yellow: 'new', red: 'new', blue: 'new'} })
   assert.equal(normalizeAppearance({ palette: '__proto__', font: 'otro' }).palette, 'yellow')
   assert.deepEqual(normalizeAppearance({ palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png' }),
-    { palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png', headerLabel: '', headerTitle: '' })
+    { palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png', headerLabel: '', headerTitle: '', paletteVersions: {green: 'new', yellow: 'new', red: 'new', blue: 'new'} })
 })
 test('el recorte cuadrado respeta encuadre y límites con imágenes horizontales, verticales y zoom', () => {
   assert.deepEqual(squareCrop(1200, 800), { size: 800, sx: 200, sy: 0 })
@@ -46,4 +46,18 @@ test('el guardado de apariencia actualiza solo su clave de metadatos y verifica 
   await guardarMetadatosDeUsuario('u1', { [APPEARANCE_KEY]: settings }, { cliente, solicitar })
   await assert.rejects(guardarMetadatosDeUsuario('u2', { [APPEARANCE_KEY]: settings }, { cliente, solicitar }))
   assert.equal(calls, 1)
+})
+
+test('cada estación permite recuperar sus colores anteriores de forma independiente', () => {
+  const settings = normalizeAppearance({ palette: 'seasonal', paletteVersions: { green: 'previous', red: 'invalid' } })
+  assert.deepEqual(paletteColors('green', settings.paletteVersions), LEGACY_PALETTES.green)
+  for (const key of ['yellow', 'red', 'blue']) assert.deepEqual(paletteColors(key, settings.paletteVersions), PALETTES[key])
+  for (const key of Object.keys(PALETTES)) {
+    const saved = normalizeAppearance(JSON.parse(JSON.stringify({ ...settings, paletteVersions: { ...settings.paletteVersions, [key]: 'previous' } })))
+    assert.deepEqual(paletteColors(key, saved.paletteVersions), LEGACY_PALETTES[key])
+    saved.paletteVersions[key] = 'new'
+    assert.deepEqual(paletteColors(key, saved.paletteVersions), PALETTES[key])
+  }
+  assert.equal(paletteColors(resolvePalette('seasonal', new Date(2026, 3, 1)), settings.paletteVersions).accent, '#8bc99a')
+  assert.equal(paletteColors(resolvePalette('seasonal', new Date(2026, 6, 1)), settings.paletteVersions).accent, '#e8b82f')
 })

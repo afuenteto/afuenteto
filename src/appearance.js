@@ -1,12 +1,23 @@
 export const APPEARANCE_KEY = 'fuente_studio_appearance'
-export const PALETTES = {
+export const LEGACY_PALETTES = {
   yellow: { accent: '#ffd400', soft: '#fff3a6', hover: '#e8c000', heading: '#7a1f1f', background: '#f6f5f1' },
   blue: { accent: '#75b8eb', soft: '#dceefa', hover: '#579dd3', heading: '#17476b', background: '#f1f6fa' },
   green: { accent: '#8bc99a', soft: '#e0f1e4', hover: '#69af7a', heading: '#245d37', background: '#f2f7f1' },
   red: { accent: '#e89a91', soft: '#fae2de', hover: '#d88076', heading: '#7a1f1f', background: '#faf3f1' },
 }
+export const PALETTES = {
+  green: { accent: '#7eb58d', soft: '#e5f0e7', hover: '#649a72', heading: '#2e5a3a', background: '#f4f7f3' },
+  yellow: { accent: '#e8b82f', soft: '#faf0cc', hover: '#cfa01f', heading: '#6a4b16', background: '#f8f6f0' },
+  red: { accent: '#c97963', soft: '#ede4da', hover: '#ae604d', heading: '#6e392f', background: '#f7f3ef' },
+  blue: { accent: '#78a7c6', soft: '#e4edf3', hover: '#5d8faf', heading: '#2d526a', background: '#f2f6f8' },
+}
+export function paletteColors(palette, versions = {}) {
+  const key = Object.hasOwn(PALETTES, palette) ? palette : 'yellow'
+  return (versions[key] === 'previous' ? LEGACY_PALETTES : PALETTES)[key]
+}
 export function normalizeAppearance(value = {}) {
   return {
+    paletteVersions: Object.fromEntries(Object.keys(PALETTES).map(key => [key, value?.paletteVersions?.[key] === 'previous' ? 'previous' : 'new'])),
     palette: Object.hasOwn(PALETTES, value?.palette) || value?.palette === 'seasonal' ? value.palette : 'yellow',
     font: value?.font === 'serif' ? 'serif' : 'default',
     logoPath: typeof value?.logoPath === 'string' ? value.logoPath : '',

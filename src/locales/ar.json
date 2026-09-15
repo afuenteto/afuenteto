@@ -396,5 +396,8 @@
   "Zoom": "تكبير",
   "Horizontal": "أفقي",
   "Vertical": "رَأسِيّ",
-  "Imagen cuadrada de 512 × 512 píxeles.": "صورة مربعة بأبعاد 512 × 512 بكسل."
+  "Imagen cuadrada de 512 × 512 píxeles.": "صورة مربعة بأبعاد 512 × 512 بكسل.",
+  "Versión de colores": "إصدار الألوان",
+  "Nueva paleta": "لوحة الألوان الجديدة",
+  "Paleta anterior": "لوحة الألوان السابقة"
 }

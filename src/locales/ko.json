@@ -396,5 +396,8 @@
   "Zoom": "줌",
   "Horizontal": "수평의",
   "Vertical": "수직의",
-  "Imagen cuadrada de 512 × 512 píxeles.": "512 × 512 픽셀의 정사각형 이미지."
+  "Imagen cuadrada de 512 × 512 píxeles.": "512 × 512 픽셀의 정사각형 이미지.",
+  "Versión de colores": "색상 버전",
+  "Nueva paleta": "새 팔레트",
+  "Paleta anterior": "이전 팔레트"
 }
