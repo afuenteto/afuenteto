@@ -1,6 +1,7 @@
 import { supabase } from '../../supabase.js'
 import { proyectoDesdeBD } from '../../projectModel.js'
 import { urlsFirmadas } from '../../storageFiles.js'
+import { guardarTareasVencidas } from '../../autoCompleteTasks.js'
 
 // El módulo entrega proyectos listos para mostrar; la pantalla no conoce
 // el formato de Supabase ni cómo resolver los archivos privados.
@@ -17,7 +18,8 @@ export async function cargarProyectosDeUsuario(
 
   if (error) throw error
 
-  const proyectos = (data || []).map(fila => proyectoDesdeBD(fila))
+  const filas = await guardarTareasVencidas(cliente, usuarioId, data || [])
+  const proyectos = filas.map(fila => proyectoDesdeBD(fila))
   const imagenes = [...new Set(proyectos.map(p => p.imagenProyectoPath).filter(Boolean))]
   const pdfs = [...new Set(proyectos.flatMap(p => [p.presupuestoPdfPath,
     ...p.comisiones.map(c => c.presupuestoPdfPath)]).filter(Boolean))]
