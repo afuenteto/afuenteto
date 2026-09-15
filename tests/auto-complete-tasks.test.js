@@ -9,15 +9,17 @@ test('termina solo las tareas de días anteriores y conserva sus datos',()=>{
  assert.equal(tareas[0].hecha,undefined)
  assert.equal(completarTareasVencidas(next,'2026-09-16'),next)
 })
-test('guarda con usuario y comparación de tareas; respeta conflictos y errores',async()=>{
+
+test('compara instantáneas de texto y no bloquea la carga si falla el guardado',async()=>{
  const fila={id:'p',tareas:[{fecha:'2026-09-15'}]};const filters=[];let payload;let conflict=false;let failure=false
- const query={update(value){payload=value;return this},eq(...args){filters.push(args);return this},async select(){return {data:conflict?[]:[{...fila,...payload}],error:failure?new Error('sin conexión'):null}}}
- const client={from:()=>query}
+ const snapshot='{ "fecha": "2026-09-15" }'
+ const client={from(){let write=false;const query={update(value){write=true;payload=value;return this},eq(...args){if(write)filters.push(args);return this},is(...args){if(write)filters.push(args);return this},select(){return this},then(resolve){return Promise.resolve(write?{data:conflict?[]:[{...fila,...payload}],error:failure?new Error('sin conexión'):null}:{data:[{...fila,snapshot_0:snapshot}]}).then(resolve)}};return query}}
  const saved=await guardarTareasVencidas(client,'u',[fila],'2026-09-16')
  assert.equal(saved[0].tareas[0].hecha,true)
- assert.deepEqual(filters,[['user_id','u'],['id','p'],['tareas',JSON.stringify(fila.tareas)]])
+ assert.deepEqual(filters,[['user_id','u'],['id','p'],['tareas->>0',snapshot],['tareas->1',null]])
  conflict=true
- assert.equal((await guardarTareasVencidas(client,'u',[fila],'2026-09-16'))[0],fila)
+ assert.equal((await guardarTareasVencidas(client,'u',[fila],'2026-09-16'))[0].tareas[0].hecha,undefined)
  failure=true
- await assert.rejects(guardarTareasVencidas(client,'u',[fila],'2026-09-16'),/sin conexión/)
+ const original=console.error;console.error=()=>{}
+ try { assert.equal((await guardarTareasVencidas(client,'u',[fila],'2026-09-16'))[0],fila) } finally {console.error=original}
 })
