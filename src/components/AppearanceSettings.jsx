@@ -76,7 +76,7 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
       </button> : <div className="personal-photo"><img src={preview || logoUrl} alt={t('Imagen del perfil')} width="88" height="88" /></div>}
       {editing && actionsTarget && createPortal(<button type="button" className="appearance-trigger" disabled={busy || saving} aria-label={t('Apariencia')} title={t('Apariencia')} aria-expanded={open}
         onClick={() => setOpen(value => !value)}>
-        <img src={import.meta.env.BASE_URL + 'icons/palette.png'} alt="" width="30" height="30" />
+        <img src={import.meta.env.BASE_URL + 'icons/color-type.png'} alt="" width="55" height="30" />
       </button>, actionsTarget)}
     </div>
     <input ref={input} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={chooseImage} />

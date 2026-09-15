@@ -13,7 +13,7 @@ html[data-font="serif"] .app :is(h1, h2, h3, h4, h5, h6, .serif, .mono, button, 
 .profile-details p { font-size: 13px; }
 .profile-edit-button, .profile-edit-actions { grid-column: 1 / -1; grid-row: 2; justify-self: start; align-self: center; margin-right: 48px; }
 .profile-edit-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-right: 0; }
-.profile-edit-actions .appearance-trigger { margin: 0; flex: 0 0 36px; }
+.profile-edit-actions .appearance-trigger { margin: 0; flex: 0 0 55px; width: 55px; justify-items: start; }
 .personal-photo { grid-column: 1; grid-row: 1; align-self: start; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 0; border: 0; background: transparent; color: var(--ink-soft); font: inherit; font-size: 11px; }
 button.personal-photo { cursor: pointer; }
 .personal-photo img { display: block; width: 88px; height: 88px; object-fit: contain; border-radius: 12px; background: var(--surface); }
