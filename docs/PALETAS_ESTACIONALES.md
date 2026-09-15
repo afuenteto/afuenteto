@@ -4,10 +4,10 @@ Las paletas nuevas son las predeterminadas. En Editar perfil → Paleta, el sele
 
 | Estación | Principal | Franja | Hover | Títulos y marca | Fondo |
 |---|---|---|---|---|---|
-| Primavera | #8BC99A | #E0F1E4 | #649A72 | #2E5A3A | #F4F7F3 |
-| Verano | #FFD400 | #FFF3A6 | #CFA01F | #6A4B16 | #F8F6F0 |
-| Otoño | #E89A91 | #FAE2DE | #AE604D | #6E392F | #F7F3EF |
-| Invierno | #75B8EB | #DCEEFA | #5D8FAF | #2D526A | #F2F6F8 |
+| Primavera | #42B549 | #A6DF72 | #2E8F36 | #2E5A3A | #F4F7F3 |
+| Verano | #FFD400 | #FFD400 | #CFA01F | #6A4B16 | #F8F6F0 |
+| Otoño | #C58A20 | #E4B650 | #A16B18 | #654321 | #F7F3EF |
+| Invierno | #2196E3 | #85C9F2 | #1776B5 | #2D526A | #F2F6F8 |
 
 ## Paletas anteriores disponibles
 

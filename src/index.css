@@ -16,7 +16,7 @@ html { scrollbar-gutter: stable; }
 
   /* Amarillo del icono */
   --accent: #ffd400;
-  --accent-soft: #fff3a6;
+  --accent-soft: #ffd400;
   --accent-hover: #cfa01f;
 
   --line: #e4e3de;
