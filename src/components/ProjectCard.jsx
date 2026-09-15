@@ -215,9 +215,9 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
       e.stopPropagation()
       onOpenTasks(proyecto)
     }}
-  >{translateUI("Tareas")}{tareasPendientes > 0
-      ? translateUI(" · Tareas pendientes: {0}", { 0: tareasPendientes.toLocaleString(getLocale()) })
-      : translateUI(" · completadas")}
+  >{tareasPendientes > 0
+      ? translateUI(" · Tareas pendientes: {0}", { 0: tareasPendientes.toLocaleString(getLocale()) }).replace(/^\s*·\s*/u, '')
+      : <>{translateUI("Tareas")}{translateUI(" · completadas")}</>}
   </button>
 )}
       </div>
