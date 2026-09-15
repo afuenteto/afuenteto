@@ -11,7 +11,7 @@ test('renderiza los componentes con proyectos nuevos y con datos', async () => {
   try {
     const cliente = { id: 'c1', nombre: 'Ana' }
     const ejemplos = [proyectoDesdeBD({ id: 'nuevo' }), proyectoDesdeBD({
-      id: 'p1', nombre: 'Reforma', cliente: 'Ana', estado: 'finalizado',
+      id: 'p1', nombre: 'Reforma', cliente: 'Ana', estado: 'finalizado', prioridad: 'bloqueado',
       tareas: [{ id: 't1', texto: 'Medir', hecha: false }, { id: 't2', texto: 'Plano', hecha: true }],
       cobros: [{ id: 'c1', concepto: 'Anticipo', estado: 'previsto', importe: 100 }],
       comisiones: [{ id: 'co1', presupuesto: 100, porcentaje: 10 }],

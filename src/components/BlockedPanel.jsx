@@ -1,4 +1,5 @@
 import ProjectName from './ProjectName.jsx'
+import FlatStatus from './FlatStatus.jsx'
 import LineIcon from './LineIcon.jsx'
 import { plainIconLabel } from './LineIcon.jsx'
 import { t as translateUI } from '../i18n.js'
