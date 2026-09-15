@@ -4,10 +4,10 @@ import { normalizeAppearance, resolvePalette, APPEARANCE_KEY, squareCrop } from 
 import { guardarMetadatosDeUsuario } from '../src/modules/preferences/repository.js'
 
 test('la apariencia conserva valores válidos y recupera los predeterminados', () => {
-  assert.deepEqual(normalizeAppearance(null), { palette: 'yellow', font: 'default', logoPath: '' })
+  assert.deepEqual(normalizeAppearance(null), { palette: 'yellow', font: 'default', logoPath: '', headerLabel: '', headerTitle: '' })
   assert.equal(normalizeAppearance({ palette: '__proto__', font: 'otro' }).palette, 'yellow')
   assert.deepEqual(normalizeAppearance({ palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png' }),
-    { palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png' })
+    { palette: 'blue', font: 'serif', logoPath: 'u/perfil/logo.png', headerLabel: '', headerTitle: '' })
 })
 test('el recorte cuadrado respeta encuadre y límites con imágenes horizontales, verticales y zoom', () => {
   assert.deepEqual(squareCrop(1200, 800), { size: 800, sx: 200, sy: 0 })
@@ -17,6 +17,13 @@ test('el recorte cuadrado respeta encuadre y límites con imágenes horizontales
     const crop = squareCrop(w, h, 4, -20, 150)
     assert.ok(crop.sx >= 0 && crop.sy >= 0 && crop.sx + crop.size <= w && crop.sy + crop.size <= h)
   }
+})
+test('la cabecera personalizada se conserva y los campos vacíos recuperan las traducciones predeterminadas', () => {
+  const settings = normalizeAppearance({ headerLabel: '  Mi estudio  ', headerTitle: 'Obras' })
+  assert.equal(settings.headerLabel, 'Mi estudio')
+  assert.equal(settings.headerTitle, 'Obras')
+  assert.equal(normalizeAppearance({ headerTitle: ' '.repeat(20) }).headerTitle, '')
+  assert.equal(normalizeAppearance({ headerTitle: 'a'.repeat(150) }).headerTitle.length, 100)
 })
 test('las estaciones cambian en marzo, junio, septiembre y diciembre', () => {
   const expected = ['blue', 'blue', 'green', 'green', 'green', 'yellow', 'yellow', 'yellow', 'red', 'red', 'red', 'blue']

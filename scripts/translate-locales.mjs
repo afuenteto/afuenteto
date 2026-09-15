@@ -6,8 +6,9 @@ const languages = ['fr', 'de', 'it', 'pt', 'zh-CN', 'zh-TW', 'ja', 'ko', 'ar', '
 const unchanged = new Set(['Antonio Fuente', 'Beusual', 'Instagram', 'v1.0'])
 const placeholders = text => [...text.matchAll(/\{\d+\}/g)].map(m => m[0]).sort().join(',')
 async function translate(language) {
-  const output = {}
-  const keys = Object.keys(source)
+  const missingOnly = process.argv.includes('--missing-only')
+  const output = missingOnly ? JSON.parse(await fs.readFile(`src/locales/${language}.json`, 'utf8')) : {}
+  const keys = Object.keys(source).filter(key => !missingOnly || !Object.hasOwn(output, key))
   for (let start = 0; start < keys.length; start += 10) {
     const batch = keys.slice(start, start + 10)
     const url = new URL('https://translate.googleapis.com/translate_a/t')
@@ -26,20 +27,29 @@ async function translate(language) {
         await new Promise(resolve => setTimeout(resolve, 1500 * (attempt + 1)))
       }
     }
-    batch.forEach((key, index) => {
-      let value = unchanged.has(key) ? key : result[index]
+    for (const [index, key] of batch.entries()) {
+      let value = unchanged.has(key) ? key : (Array.isArray(result[index]) ? result[index][0] : result[index])
+      if (typeof value !== 'string' || !value.trim()) {
+        const fallback = new URL('https://translate.googleapis.com/translate_a/single')
+        fallback.search = new URLSearchParams({ client: 'gtx', sl: 'en', tl: language, dt: 't', q: source[key] })
+        const response = await fetch(fallback, { signal: AbortSignal.timeout(20000) })
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        const translated = await response.json()
+        value = translated[0]?.map(segment => segment[0]).join('')
+      }
       if (typeof value !== 'string' || !value.trim()) throw new Error(`Invalid translation: ${language} ${key}`)
       // Restore boundary whitespace used next to React expressions.
       value = (key.match(/^\s*/)[0]) + value.trim() + (key.match(/\s*$/)[0])
       value = value.replace(/\{\s*(\d+)\s*\}/g, '{$1}')
       if (placeholders(key) !== placeholders(value)) throw new Error(`Lost placeholders: ${language} ${key}: ${value}`)
       output[key] = value
-    })
+    }
   }
   await fs.writeFile(`src/locales/${language}.json`, JSON.stringify(output, null, 2) + '\n')
   console.log(`Generated ${language}: ${keys.length} messages`)
 }
-const queue = process.argv.length > 2 ? languages.filter(language => process.argv.slice(2).includes(language)) : [...languages]
+const requested = process.argv.slice(2).filter(value => !value.startsWith('--'))
+const queue = requested.length ? languages.filter(language => requested.includes(language)) : [...languages]
 await Promise.all(Array.from({ length: 2 }, async () => {
   while (queue.length) await translate(queue.shift())
 }))

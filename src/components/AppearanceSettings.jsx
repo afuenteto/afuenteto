@@ -20,7 +20,7 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
   useEffect(() => { if (!editing) { setOpen(false); setPreview(null); setImageOpen(false) } }, [editing])
   useEffect(() => {
     if (!editing) setDraft(normalizeAppearance(settings))
-  }, [settings.palette, settings.font, settings.logoPath, editing])
+  }, [settings.palette, settings.font, settings.logoPath, settings.headerLabel, settings.headerTitle, editing])
   useImperativeHandle(ref, () => ({ save, cancel }))
   function setWorking(value) { lock.current = value; setBusy(value); onBusy?.(value) }
   async function chooseImage(event) {
@@ -62,7 +62,7 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
   }
   function cancel() { setDraft(settings); setPreview(null); setOpen(false); setImageOpen(false); setError('') }
   function restoreDefaults() {
-    setDraft(normalizeAppearance())
+    setDraft({ ...normalizeAppearance(), headerLabel: draft.headerLabel, headerTitle: draft.headerTitle })
     setPreview(null)
     setImageOpen(false)
     setError('')
@@ -84,14 +84,19 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
     {editing && open && !cropSource && <fieldset className="appearance-options" disabled={busy || saving}>
       <legend>{t('Apariencia')}</legend>
       <label>{t('Tipo de letra')}<select value={draft.font} onChange={e => setDraft({ ...draft, font: e.target.value })}>
-        <option value="default">{t('Por defecto')}</option><option value="serif">{t('Serifa')}</option>
+        <option value="default">{t('Por defecto')} (Inter)</option><option value="serif">{t('Serifa')} (Fraunces)</option>
       </select></label>
       <label>{t('Colores')}<select value={draft.palette} onChange={e => setDraft({ ...draft, palette: e.target.value })}>
-        {[['yellow', 'Amarillos (por defecto)'], ['blue', 'Azules'], ['green', 'Verdes'], ['red', 'Rojos'], ['seasonal', 'Según la estación']].map(([value, label]) => <option key={value} value={value}>{t(label)}</option>)}
+        {[['green', 'Primavera'], ['yellow', 'Verano (por defecto)'], ['red', 'Otoño'], ['blue', 'Invierno'], ['seasonal', 'Según la estación']].map(([value, label]) => <option key={value} value={value}>{t(label)}</option>)}
       </select></label>
       {draft.palette === 'seasonal' && <p>{t('Primavera: verdes · Verano: amarillos · Otoño: rojos · Invierno: azules')}</p>}
       <button type="button" className="btn" onClick={restoreDefaults}>{t('Restaurar apariencia inicial')}</button>
       <p>{t('Recupera la imagen original, los colores amarillos y la letra predeterminada. Pulsa Guardar para aplicar.')}</p>
+    </fieldset>}
+    {editing && !cropSource && <fieldset className="profile-heading-options" disabled={busy || saving}>
+      <legend>{t('Cabecera de la app')}</legend>
+      <label>{t('Texto superior')}<input maxLength={100} value={draft.headerLabel || ''} placeholder={t('Panel de estudio')} onChange={e => setDraft({ ...draft, headerLabel: e.target.value })} /></label>
+      <label>{t('Título principal')}<input maxLength={100} value={draft.headerTitle || ''} placeholder={t('Proyectos')} onChange={e => setDraft({ ...draft, headerTitle: e.target.value })} /></label>
     </fieldset>}
     {error && <p role="alert" className="modules-error">{error}</p>}
   </div>

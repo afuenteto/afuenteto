@@ -10,6 +10,8 @@ export function normalizeAppearance(value = {}) {
     palette: Object.hasOwn(PALETTES, value?.palette) || value?.palette === 'seasonal' ? value.palette : 'yellow',
     font: value?.font === 'serif' ? 'serif' : 'default',
     logoPath: typeof value?.logoPath === 'string' ? value.logoPath : '',
+    headerLabel: typeof value?.headerLabel === 'string' ? value.headerLabel.trim().slice(0, 100) : '',
+    headerTitle: typeof value?.headerTitle === 'string' ? value.headerTitle.trim().slice(0, 100) : '',
   }
 }
 // Estaciones meteorológicas del hemisferio norte, según el mes local.

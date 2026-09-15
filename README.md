@@ -26,7 +26,7 @@ La agenda muestra tareas, citas y entregas sin desplegarla. Permite programar ta
 
 ## Tarjeta personal y apariencia
 
-El icono del perfil abre una tarjeta con la imagen arriba a la izquierda, el nombre y los datos de contacto. En modo «Editar perfil», «Cambiar imagen» permite elegir un PNG, JPG o WebP de hasta 10 MB y ajustar obligatoriamente un recorte cuadrado con arrastre y zoom antes de guardar una versión PNG de 512 × 512 píxeles en la carpeta privada del usuario. La app genera también los tamaños 32, 180 y 192 para el navegador. La paleta, visible solo al editar y situada después de «Guardar» y «Cancelar», abre las opciones de tipografía (predeterminada o serifa), paletas amarilla, azul, verde y roja, y modo estacional. Los cambios se aplican al guardar y pertenecen a la cuenta; no cambian la identidad de otras cuentas.
+El icono del perfil abre una tarjeta con la imagen arriba a la izquierda, el nombre y los datos de contacto. En modo «Editar perfil», «Cambiar imagen» permite elegir un PNG, JPG o WebP de hasta 10 MB y ajustar obligatoriamente un recorte cuadrado con arrastre y zoom antes de guardar una versión PNG de 512 × 512 píxeles en la carpeta privada del usuario. La app genera también los tamaños 32, 180 y 192 para el navegador. La paleta, visible solo al editar y situada después de «Guardar» y «Cancelar», abre las opciones de tipografía (predeterminada: Inter; serifa: Fraunces), paletas Primavera (verde), Verano (amarilla, predeterminada), Otoño (roja) e Invierno (azul), y modo estacional. Los cambios se aplican al guardar y pertenecen a la cuenta; no cambian la identidad de otras cuentas.
 
 Las estaciones siguen los meses locales del hemisferio norte: marzo–mayo verde, junio–agosto amarillo, septiembre–noviembre rojo y diciembre–febrero azul. La app revisa la estación al recuperar el foco y cada minuto. La apariencia se guarda en los metadatos de Supabase y no requiere tablas nuevas.
 
@@ -61,3 +61,5 @@ Las operaciones que cambian el nombre de un cliente y sus proyectos utilizan var
 Los botones del pie abren información legal y el formulario de contacto. El formulario guarda el mensaje en `mensajes_contacto` e invoca `send-contact-email`; el envío necesita que esa función y sus secretos estén configurados en Supabase.
 
 La revisión de rendimiento, sus mediciones y sus límites están en [docs/REVISION_CODIGO.md](docs/REVISION_CODIGO.md).
+
+Los campos «Texto superior» y «Título principal» de la edición del perfil personalizan la cabecera. Vacíos, muestran «Panel de estudio» y «Proyectos» traducidos; los textos personalizados se conservan literalmente. Los colores de Verano están documentados en [COLORES_VERANO.md](docs/COLORES_VERANO.md).
