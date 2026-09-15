@@ -78,7 +78,7 @@ export default function ModulesSettings({ modulos, onSave, onClose }) {
                 <input id={`${id}-${modulo.id}`} type="checkbox" role="switch"
                   aria-describedby={`${id}-${modulo.id}-description`}
                   checked={seleccion[modulo.id]}
-                  style={{ backgroundImage: `url("${import.meta.env.BASE_URL}icons/${seleccion[modulo.id] ? 'active' : 'inactive'}.png")` }}
+                  style={{ backgroundImage: `url("${import.meta.env.BASE_URL}icons/${seleccion[modulo.id] ? 'active-v2' : 'inactive-v2'}.png")` }}
                   onChange={event => setSeleccion(actual => ({ ...actual, [modulo.id]: event.target.checked }))} />
               </label>
             ))}
