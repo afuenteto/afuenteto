@@ -1,3 +1,9 @@
+/* Reserva el ancho de la barra vertical al desplegar o cerrar módulos. */
+html { scrollbar-gutter: stable; }
+@supports not (scrollbar-gutter: stable) {
+  html { overflow-y: scroll; }
+}
+
 :root {
   --bg: #f6f5f1;
   --surface: #ffffff;
