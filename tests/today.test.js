@@ -18,10 +18,10 @@ const projects = [{ id: 'p1', nombre: 'Casa', fechaEntrega: '2026-09-17', tareas
   tareas: [{ id: '6', texto: 'Antigua' }] }]
 
 test('ordena la agenda y distingue fechas reales, tareas terminadas y proyectos finalizados', () => {
-  const agenda = buildAgenda(projects, modules, '2026-09-14')
-  assert.deepEqual(agenda.map(i => i.title), ['Plano pendiente', 'Visita', 'Casa', 'Más adelante', 'Sin programar'])
-  assert.deepEqual(filterAgenda(agenda, 'today').map(i => i.days), [-2, 0])
-  assert.deepEqual(filterAgenda(agenda, 'week').map(i => i.days), [-2, 0, 3])
+  const agenda = buildAgenda(projects, modules, '2026-09-14', new Date('2026-09-14T09:00:00'))
+  assert.deepEqual(agenda.map(i => i.title), ['Visita', 'Casa', 'Más adelante', 'Plano pendiente', 'Sin programar'])
+  assert.deepEqual(filterAgenda(agenda, 'today').map(i => i.days), [0, -2])
+  assert.deepEqual(filterAgenda(agenda, 'week').map(i => i.days), [0, 3, -2])
   assert.equal(filterAgenda(agenda, 'undated')[0].date, '')
   assert.equal(filterAgenda(agenda, 'all').length, 5)
   assert.deepEqual(buildAgenda(projects, {}, '2026-09-14'), [])
@@ -60,4 +60,9 @@ test('muestra agenda y acciones sin abrir la ficha, respeta módulos y estados v
     const empty = renderToString(React.createElement(StudioToday, { proyectos: [] }))
     assert.ok(empty.includes('No hay pendientes en esta vista.'))
   } finally { await server.close() }
+})
+
+test('lo próximo va primero por hora, después lo vencido y al final lo que no tiene fecha',()=>{
+ const tareas=[{texto:'Sin hora',fecha:'2026-09-16'},{texto:'Tarde',fecha:'2026-09-16',hora:'16:00'},{texto:'Próxima',fecha:'2026-09-16',hora:'11:00',tipo:'cita'},{texto:'Pasada',fecha:'2026-09-16',hora:'08:00'},{texto:'Sin fecha'}]
+ assert.deepEqual(buildAgenda([{id:'p',tareas}],{tareas:true},'2026-09-16',new Date('2026-09-16T10:00:00')).map(i=>i.title),['Próxima','Tarde','Sin hora','Pasada','Sin fecha'])
 })

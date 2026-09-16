@@ -65,7 +65,7 @@ export default function StudioDashboard({
       (total, p) =>
         total +
         (p.tareas || [])
-          .filter(t => !t.hecha)
+          .filter(t => !t.hecha && t.tipo !== 'cita')
           .length,
       0
     )

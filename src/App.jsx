@@ -58,6 +58,7 @@ export default function App() {
   const [clienteAbierto, setClienteAbierto] = useState(null)
   const [editando, setEditando] = useState(null)
   const [tareasAbiertas, setTareasAbiertas] = useState(null)
+  const [tipoAgenda, setTipoAgenda] = useState('tarea')
   const [entregaAbierta, setEntregaAbierta] = useState(null)
   const [seccionInicial, setSeccionInicial] = useState(null)
   const [filtro, setFiltro] = useState('Todos')
@@ -378,7 +379,8 @@ function abrirExistente(proyecto, seccion = null) {
   setEditando(proyecto)
 }
 
-  function abrirTareas(proyecto) {
+  function abrirTareas(proyecto, tipo = 'tarea') {
+    setTipoAgenda(tipo)
     if (!modulos.tareas) return
     setPanelAbierto(null)
     setTareasAbiertas(proyecto)
@@ -1039,8 +1041,9 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
           proyectos={proyectosActivos}
           onOpen={abrirExistente}
           onOpenTasks={abrirTareas}
-          setPanelAbierto={setPanelAbierto}
+          setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({id:'appointments'}) : setPanelAbierto(panel)}
         />) },
+        ...(modulos.tareas ? [{id: 'appointments', title: 'Citas', content: <StudioToday citasOnly proyectos={proyectosActivos} modulos={modulos} guardando={guardando} onOpen={abrirExistente} onOpenTasks={abrirTareas} onCompleteTask={completarTareaDesdePanel} onSchedule={(id,tarea) => {const p=proyectos.find(p=>p.id===id);return p ? guardarTareas(id,[...p.tareas,tarea]) : Promise.resolve(false)}} />}]:[]),
         { id: 'projects', title: 'Proyectos', content: (<>      <div className="filters">
         <div className="filter-row filter-row-categories">
         <button
@@ -1263,6 +1266,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 
 {modulos.tareas && tareasAbiertas && (
   <TasksModal
+    tipo={tipoAgenda}
     modulos={modulos}
     key={tareasAbiertas.id}
     proyecto={tareasAbiertas}

@@ -1,4 +1,4 @@
-export const HOME_MODULE_IDS = ['today', 'projects', 'debts', 'economy', 'summary']
+export const HOME_MODULE_IDS = ['today', 'appointments', 'projects', 'debts', 'economy', 'summary']
 export function normalizeHomeOrder(saved, ids = HOME_MODULE_IDS) {
   return [...new Set([...(Array.isArray(saved) ? saved.filter(id => ids.includes(id)) : []), ...ids])]
 }

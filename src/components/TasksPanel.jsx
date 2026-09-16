@@ -21,7 +21,7 @@ export default function TasksPanel({
 
     ;(proyecto.tareas || []).forEach((tarea) => {
 
-      if (!tarea.hecha) {
+      if (!tarea.hecha && tarea.tipo !== 'cita') {
 
         tareas.push({
           ...tarea,

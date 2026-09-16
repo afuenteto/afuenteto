@@ -13,7 +13,7 @@ export default function ModulePreview({ proyectos, modulos, onOpenTasks, onOpenD
     return () => { clearInterval(timer); window.removeEventListener('focus', refresh) }
   }, [])
   const agenda = useMemo(() => buildAgenda(proyectos, modulos, today), [proyectos, modulos, today])
-  const tasks = agenda.filter(item => item.type === 'task' && ((item.days !== null && item.days <= 0) || item.task.prioridad === 'alta'))
+  const tasks = agenda.filter(item => item.type === 'task' && item.task.tipo !== 'cita' && ((item.days !== null && item.days <= 0) || item.task.prioridad === 'alta'))
   const deliveries = agenda.filter(item => item.type === 'delivery' && item.days <= 7)
   const payments = modulos.economia ? proyectos.flatMap(p => (p.cobros || []).filter(c => c.estado === 'previsto')) : []
   const actions = [

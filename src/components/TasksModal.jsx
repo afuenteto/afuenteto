@@ -9,6 +9,7 @@ import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
 export default function TasksModal({
   proyecto,
+  tipo = 'tarea',
   onSave,
   onClose,
   guardando,
@@ -58,7 +59,8 @@ function cambiarEstado(id) {
   id: uid(),
   texto,
   hecha: false,
-  fechaCompletada: ''
+  fechaCompletada: '',
+  tipo
 }
     ])
 
@@ -78,12 +80,12 @@ function cambiarEstado(id) {
 
   const pendientes =
     tareas.filter(
-      (t) => !t.hecha
+      (t) => !t.hecha && (t.tipo || 'tarea') === tipo
     )
 
   const terminadas =
     tareas.filter(
-      (t) => t.hecha
+      (t) => t.hecha && (t.tipo || 'tarea') === tipo
     )
 
   return (
@@ -101,7 +103,7 @@ function cambiarEstado(id) {
 
         <div className="modal-head window-title-bar">
 
-          <h2 className="serif">{translateUI("Tareas")}</h2>
+          <h2 className="serif">{translateUI(tipo === 'cita' ? 'Citas' : 'Tareas')}</h2>
 
           <button
             className="icon-btn"
@@ -233,7 +235,7 @@ function cambiarEstado(id) {
 
   <input
     value={nuevaTarea}
-    placeholder={translateUI("Nueva tarea...")}
+    placeholder={translateUI(tipo === 'cita' ? 'Nueva cita' : 'Nueva tarea...')}
     onChange={(e) =>
       setNuevaTarea(e.target.value)
     }

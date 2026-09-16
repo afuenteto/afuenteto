@@ -44,9 +44,9 @@ test('no permite pagar más del saldo ni fechas inválidas; propaga errores de p
 })
 
 test('el orden de los módulos tolera preferencias antiguas y mantiene módulos ocultos', () => {
-  assert.deepEqual(normalizeHomeOrder(['debts', 'debts', 'desconocido']), ['debts', 'today', 'projects', 'economy', 'summary'])
+  assert.deepEqual(normalizeHomeOrder(['debts', 'debts', 'desconocido']), ['debts', 'today', 'appointments', 'projects', 'economy', 'summary'])
   const order = ['today', 'economy', 'projects', 'debts', 'summary']
   const next = moveHomeModule(order, ['today', 'projects', 'debts', 'summary'], 'debts', 'today')
-  assert.deepEqual(next, ['debts', 'economy', 'today', 'projects', 'summary'])
-  assert.deepEqual(moveHomeModule(order, order, 'no-existe', 'today'), order)
+  assert.deepEqual(next, ['debts', 'economy', 'today', 'projects', 'summary', 'appointments'])
+  assert.deepEqual(moveHomeModule(order, order, 'no-existe', 'today'), [...order, 'appointments'])
 })

@@ -6,7 +6,7 @@ import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 
 export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDelivery, modulos = MODULOS_PREDETERMINADOS }) {
   const tareas = Array.isArray(proyecto.tareas) ? proyecto.tareas : []
-  const tareasPendientes = tareas.filter((t) => !t.hecha).length
+  const tareasPendientes = tareas.filter((t) => !t.hecha && t.tipo !== 'cita').length
 
   const valorProyecto = valorContratado(proyecto)
 
