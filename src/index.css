@@ -3131,3 +3131,13 @@ input[type='date'] {
   overflow-wrap: anywhere;
   text-align: center;
 }
+
+.home-module { scroll-margin-top: 20px; }
+.daily-row.delivery-past .daily-when strong,
+.daily-row.delivery-past .daily-when span,
+.panel-item.delivery-past > b { color: var(--ink-soft); }
+.daily-row.delivery-upcoming .daily-when strong,
+.daily-row.delivery-upcoming .daily-when span,
+.panel-item.delivery-upcoming > b { color: var(--alert); }
+.card .tag-urgent.delivery-past { color: var(--ink-soft); background: var(--surface-soft); }
+.card .tag-urgent.delivery-upcoming { color: var(--alert); background: var(--alert-soft); }

@@ -127,12 +127,12 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
         </p>}
 
         {modulos.entregas && !finalizado && vencido && (
-          <span className="tag-urgent">{translateUI("Entrega vencida")}</span>
+          <span className="tag-urgent delivery-past">{translateUI("Entrega vencida")}</span>
         )}
 
 {modulos.entregas && !finalizado && !vencido && urgente && (
   <button
-    className="tag-urgent"
+    className="tag-urgent delivery-upcoming"
     aria-label={`${translateUI("Entrega")}: ${formatRelativeDays(dias)}`}
     onClick={(e) => {
       e.stopPropagation()

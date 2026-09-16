@@ -108,7 +108,7 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
       {(filter === 'today' || filter === 'week') && overdue > 0 &&
         <p className="daily-hint">{t('Incluye los vencimientos pendientes.')}</p>}
       <div className="daily-list">
-        {visible.slice(0, limit).map(item => <article key={item.id} className={'daily-row' + (item.days !== null && item.days < 0 ? ' is-overdue' : '')}>
+        {visible.slice(0, limit).map(item => <article key={item.id} className={'daily-row' + (item.type === 'delivery' ? (item.days < 0 ? ' delivery-past' : ' delivery-upcoming') : (item.days !== null && item.days < 0 ? ' is-overdue' : ''))}>
           <div className="daily-when">
             <strong>{item.days === null ? t('Sin fecha') : dateLabel(item.date)}</strong>
             <span>{item.days === null ? t('Por programar') : formatRelativeDays(item.days)}</span>

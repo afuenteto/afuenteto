@@ -68,7 +68,7 @@ export default function DeliveriesPanel({
 
           <button
             key={proyecto.id}
-            className="panel-item"
+            className={'panel-item ' + (diasHasta(proyecto.fechaEntrega) < 0 ? 'delivery-past' : 'delivery-upcoming')}
             onClick={() =>
               onOpen(proyecto)
             }

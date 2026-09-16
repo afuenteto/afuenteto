@@ -1,5 +1,5 @@
 import LineIcon from './LineIcon.jsx'
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useState, useRef } from 'react'
 import { DndContext, PointerSensor, KeyboardSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, useSortable, verticalListSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -12,7 +12,7 @@ function Module({ section, open, toggle }) {
 
   useEffect(() => { if (open) setVisited(true) }, [open])
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({ id: section.id })
-  return <section ref={setNodeRef} className="home-module" style={{ transform: CSS.Transform.toString(transform), transition, position: 'relative', zIndex: isDragging ? 20 : undefined }}>
+  return <section ref={setNodeRef} data-module-id={section.id} className="home-module" style={{ transform: CSS.Transform.toString(transform), transition, position: 'relative', zIndex: isDragging ? 20 : undefined }}>
     <header className="home-module-heading">
       <button type="button" className="home-module-toggle serif" aria-expanded={open} aria-controls={panelId} onClick={toggle}>
         <span>{t(section.title)}</span>
@@ -27,6 +27,7 @@ function Module({ section, open, toggle }) {
 }
 
 export default function HomeModules({ usuarioId, sections, openRequest }) {
+  const root = useRef(null)
   const key = `fuente-studio.home-order.${usuarioId}`
   const ids = sections.map(s => s.id)
   const [order, setOrder] = useState(() => {
@@ -34,6 +35,15 @@ export default function HomeModules({ usuarioId, sections, openRequest }) {
   })
   const [opened, setOpened] = useState({ today: true })
   useEffect(() => { if (openRequest) setOpened(prev => ({ ...prev, [openRequest.id]: true })) }, [openRequest])
+  useEffect(() => {
+    if (!openRequest || !opened[openRequest.id]) return
+    const frame = requestAnimationFrame(() => {
+      const section = [...(root.current?.querySelectorAll('[data-module-id]') || [])].find(node => node.dataset.moduleId === openRequest.id)
+      section?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      section?.querySelector('.home-module-toggle')?.focus({ preventScroll: true })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [openRequest, opened[openRequest?.id]])
   const sorted = normalizeHomeOrder(order).filter(id => ids.includes(id))
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }))
   function move({ active, over }) {
@@ -44,7 +54,7 @@ export default function HomeModules({ usuarioId, sections, openRequest }) {
   }
   return <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={move}>
     <SortableContext items={sorted} strategy={verticalListSortingStrategy}>
-      <div className="home-modules">{sorted.map(id => <Module key={id} section={sections.find(s => s.id === id)} open={Boolean(opened[id])}
+      <div className="home-modules" ref={root}>{sorted.map(id => <Module key={id} section={sections.find(s => s.id === id)} open={Boolean(opened[id])}
         toggle={() => setOpened(prev => ({ ...prev, [id]: !prev[id] }))} />)}</div>
     </SortableContext>
   </DndContext>
