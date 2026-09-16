@@ -7,6 +7,7 @@ import { fechaLocal } from '../projectUtils.js'
 import { buildAgenda, filterAgenda, remainingTime } from '../todayModel.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 import CalendarAction from './CalendarAction.jsx'
+import FlipClock from './FlipClock.jsx'
 
 export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCompleteTask, onSchedule,
   guardando, setPanelAbierto, citasOnly = false, modulos = MODULOS_PREDETERMINADOS }) {
@@ -57,7 +58,7 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
       <div>
         <p className="daily-date">{new Date(today + 'T12:00:00').toLocaleDateString(getLocale(), {
           weekday: 'long', day: 'numeric', month: 'long',
-        })} <time className="daily-clock" dateTime={now.toISOString()}>{[now.getHours(), now.getMinutes(), now.getSeconds()].map(value => String(value).padStart(2, '0')).join(' : ')}</time></p>
+        })} <FlipClock now={now} /></p>
       </div>
       {modulos.tareas && <div className="daily-actions">
         {onSchedule && <button type="button" className="btn" disabled={guardando || proyectos.length === 0}
