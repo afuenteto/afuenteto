@@ -62,7 +62,6 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
       {modulos.tareas && <div className="daily-actions">
         {onSchedule && <button type="button" className="btn" disabled={guardando || proyectos.length === 0}
           aria-expanded={scheduling} onClick={() => setScheduling(value => !value)}>{t(citasOnly ? 'Nueva cita' : 'Programar tarea o cita')}</button>}
-        {!citasOnly && <><button type="button" className="chip" onClick={() => setPanelAbierto('tareas')}>{t('Tareas')}</button><button type="button" className="chip" onClick={() => setPanelAbierto('citas')}>{t('Citas')}</button></>}
       </div>}
     </header>
     {modulos.tareas && scheduling && <form className="daily-schedule" onSubmit={schedule}>

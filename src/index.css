@@ -1625,6 +1625,7 @@ a {
 .daily-schedule input, .daily-schedule select { box-sizing: border-box; width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); font: inherit; }
 .daily-schedule-title, .daily-schedule .daily-actions { grid-column: 1 / -1; }
 .daily-header { padding: 24px 26px 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.daily-header > .daily-actions { margin-inline-start: auto; justify-content: flex-end; }
 .daily-header h2 { margin: 4px 0 8px; font-size: clamp(25px, 4vw, 34px); }
 .daily-date { margin: 0; color: var(--ink-soft); font-size: 12px; text-transform: capitalize; }
 .daily-intro { margin: 0; color: var(--ink-soft); font-size: 14px; }
