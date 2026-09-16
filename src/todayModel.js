@@ -1,6 +1,14 @@
 import { fechaLocal, diasEntreFechas as daysFrom } from './projectUtils.js'
 export { diasEntreFechas as daysFrom } from './projectUtils.js'
 
+export function remainingTime(item, now = new Date()) {
+  if (!item.date || !item.time) return null
+  const milliseconds = new Date(`${item.date}T${item.time}:00`).getTime() - now.getTime()
+  if (!Number.isFinite(milliseconds) || milliseconds <= 0) return null
+  const minutes = Math.ceil(milliseconds / 60000)
+  return { days: Math.floor(minutes / 1440), hours: Math.floor(minutes % 1440 / 60), minutes: minutes % 60 }
+}
+
 export function buildAgenda(projects, modules, today = fechaLocal(), now = new Date()) {
   const agenda = []
   for (const project of projects.filter(p => p.estado !== 'finalizado')) {
@@ -27,6 +35,8 @@ export function buildAgenda(projects, modules, today = fechaLocal(), now = new D
 
 export function filterAgenda(agenda, filter) {
   return agenda.filter(item => filter === 'all' ||
+    (filter === 'immediate' && (item.days === 0 || item.days === 1)) ||
+    (filter === 'overdue' && item.days !== null && item.days < 0) ||
     (filter === 'today' && item.days !== null && item.days <= 0) ||
     (filter === 'week' && item.days !== null && item.days <= 7) ||
     (filter === 'undated' && item.days === null))

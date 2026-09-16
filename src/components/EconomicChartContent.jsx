@@ -1,4 +1,5 @@
 import { valorContratado } from '../projectFinance.js'
+import IncomeReport from './IncomeReport.jsx'
 import { t as translateUI, getLocale } from '../i18n.js'
 
 import {
@@ -97,6 +98,7 @@ export default function EconomicChartContent({ proyectos }) {
 
   return (
         <>
+          <IncomeReport proyectos={proyectos} />
           <ResponsiveContainer width="100%" height={250}>
 
             <BarChart data={datos}>

@@ -3141,3 +3141,46 @@ input[type='date'] {
 .panel-item.delivery-upcoming > b { color: var(--alert); }
 .card .tag-urgent.delivery-past { color: var(--ink-soft); background: var(--surface-soft); }
 .card .tag-urgent.delivery-upcoming { color: var(--alert); background: var(--alert-soft); }
+
+/* Agenda y contactos del estudio */
+.daily-clock { display: inline-block; margin-inline-start: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); }
+.daily-row.is-today { background: #fff2d8; border-inline-start: 3px solid #aa6800; padding-inline: 12px; border-radius: 8px; }
+.daily-row.is-tomorrow { background: #eaf3fb; border-inline-start: 3px solid #3574a5; padding-inline: 12px; border-radius: 8px; }
+.daily-when .daily-countdown { color: var(--ink); font-weight: 600; }
+.debt-card progress { appearance: none; height: 7px; border: 0; border-radius: 8px; overflow: hidden; background: #e0e0de; color: #92928e; }
+.debt-card progress::-webkit-progress-bar { background: #e0e0de; }
+.debt-card progress::-webkit-progress-value { background: #92928e; }
+.debt-card progress::-moz-progress-bar { background: #92928e; }
+.supplier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; margin-top: 20px; }
+.supplier-card { display: flex; align-items: flex-start; gap: 16px; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow-wrap: anywhere; }
+.supplier-card > div { min-width: 0; }
+.supplier-card h3 { margin: 0 0 8px; }
+.supplier-card p { margin: 6px 0; font-size: 13px; white-space: pre-wrap; }
+.supplier-card a { color: var(--ink); }
+.supplier-avatar { display: inline-flex; width: 64px; height: 64px; flex-shrink: 0; border-radius: 50%; object-fit: cover; align-items: center; justify-content: center; background: var(--surface-soft); border: 1px solid var(--line); font-weight: 600; }
+.supplier-form { margin: 20px 0; padding: 16px; background: var(--surface-soft); border-radius: 12px; }
+.supplier-form fieldset { border: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 14px; }
+.supplier-form label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.supplier-form input, .suppliers-panel input[type=search] { width: 100%; min-width: 0; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); font: inherit; }
+.suppliers-panel input[type=search] { flex: 1 1 220px; }
+.profile-panel { max-height: min(82dvh, 850px); overflow-y: auto; overscroll-behavior: contain; }
+.profile-panel input:focus-visible { outline: 2px solid var(--accent-hover); outline-offset: 2px; }
+
+.profile-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; font-size: 12px; color: var(--ink-soft); }
+.profile-field input { margin: 0; }
+
+.module-quick-action.is-due-soon { background: #ffe3aa; border-radius: 8px; color: #704700; }
+
+.daily-agenda .daily-stats { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 12px; }
+.daily-agenda .daily-stat { flex: 1 1 125px; flex-direction: row; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; background: var(--surface-soft); }
+.daily-agenda .daily-stat strong { font-size: 18px; color: var(--alert); }
+.daily-agenda .daily-stat span { font-size: 10px; color: var(--ink-soft); }
+.income-report { margin-bottom: 24px; }
+.income-report label { display: inline-flex; align-items: center; gap: 8px; }
+.income-report select { padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); }
+.income-table-wrap { overflow-x: auto; margin-top: 16px; }
+.income-report table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.income-report th, .income-report td { padding: 10px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.income-report th:first-child, .income-report td:first-child { text-align: left; }
+.income-report tfoot { font-weight: 700; background: var(--surface-soft); }
+.income-report p { font-size: 12px; color: var(--ink-soft); }

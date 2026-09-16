@@ -4,7 +4,7 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { createServer } from 'vite'
 import { createServer as createHttpServer } from 'node:http'
-import { buildAgenda, filterAgenda, daysFrom } from '../src/todayModel.js'
+import { buildAgenda, filterAgenda, daysFrom, remainingTime } from '../src/todayModel.js'
 import { proyectoDesdeBD, proyectoParaBD } from '../src/projectModel.js'
 
 const modules = { tareas: true, entregas: true, economia: true }
@@ -23,6 +23,8 @@ test('ordena la agenda y distingue fechas reales, tareas terminadas y proyectos 
   assert.deepEqual(filterAgenda(agenda, 'today').map(i => i.days), [0, -2])
   assert.deepEqual(filterAgenda(agenda, 'week').map(i => i.days), [0, 3, -2])
   assert.equal(filterAgenda(agenda, 'undated')[0].date, '')
+  assert.deepEqual(filterAgenda(agenda, 'immediate').map(i => i.days), [0])
+  assert.deepEqual(filterAgenda(agenda, 'overdue').map(i => i.days), [-2])
   assert.equal(filterAgenda(agenda, 'all').length, 5)
   assert.deepEqual(buildAgenda(projects, {}, '2026-09-14'), [])
   assert.equal(buildAgenda(projects, { entregas: true }, '2026-09-14').length, 1)
@@ -54,6 +56,13 @@ test('muestra agenda y acciones sin abrir la ficha, respeta módulos y estados v
     assert.ok(html.includes('Añadir al calendario'))
     assert.ok(html.includes('Completar tarea: Visita de obra'))
     assert.ok(html.includes('Programar tarea o cita'))
+    assert.ok(html.includes('Ampliar · todos los pendientes'))
+    assert.ok(!html.includes('Tu agenda, de un vistazo.'))
+    assert.match(html, /\d{2} : \d{2} : \d{2}/)
+    const { default: ModulePreview } = await server.ssrLoadModule('/src/components/ModulePreview.jsx')
+    const preview = renderToString(React.createElement(ModulePreview, { proyectos: [], modulos: modules }))
+    assert.ok(preview.includes('aria-label="Citas: 0"'))
+    assert.ok(preview.includes('aria-label="Tareas: 0"'))
     const disabled = renderToString(React.createElement(StudioToday, { ...props, modulos: {} }))
     assert.ok(!disabled.includes('Visita de obra'))
     assert.ok(!disabled.includes('Cobros previstos'))
@@ -66,3 +75,12 @@ test('lo próximo va primero por hora, después lo vencido y al final lo que no 
  const tareas=[{texto:'Sin hora',fecha:'2026-09-16'},{texto:'Tarde',fecha:'2026-09-16',hora:'16:00'},{texto:'Próxima',fecha:'2026-09-16',hora:'11:00',tipo:'cita'},{texto:'Pasada',fecha:'2026-09-16',hora:'08:00'},{texto:'Sin fecha'}]
  assert.deepEqual(buildAgenda([{id:'p',tareas}],{tareas:true},'2026-09-16',new Date('2026-09-16T10:00:00')).map(i=>i.title),['Próxima','Tarde','Sin hora','Pasada','Sin fecha'])
 })
+
+
+test('el tiempo restante cruza medianoche y omite citas pasadas o sin hora', () => {
+  const now = new Date('2026-09-16T23:30:00');
+  assert.deepEqual(remainingTime({ date: '2026-09-17', time: '01:00' }, now), { days: 0, hours: 1, minutes: 30 });
+  assert.deepEqual(remainingTime({ date: '2026-09-18', time: '01:00' }, now), { days: 1, hours: 1, minutes: 30 });
+  assert.equal(remainingTime({ date: '2026-09-16', time: '20:00' }, now), null);
+  assert.equal(remainingTime({ date: '2026-09-17', time: '' }, now), null);
+});

@@ -4,13 +4,13 @@ import FlatStatus from './FlatStatus.jsx'
 import { t, getLocale, formatRelativeDays } from '../i18n.js'
 import { useEffect, useMemo, useState } from 'react'
 import { fechaLocal } from '../projectUtils.js'
-import { buildAgenda, filterAgenda } from '../todayModel.js'
+import { buildAgenda, filterAgenda, remainingTime } from '../todayModel.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 import CalendarAction from './CalendarAction.jsx'
 
 export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCompleteTask, onSchedule,
   guardando, setPanelAbierto, citasOnly = false, modulos = MODULOS_PREDETERMINADOS }) {
-  const [filter, setFilter] = useState(citasOnly ? 'all' : 'week')
+  const [filter, setFilter] = useState('immediate')
   const [kind, setKind] = useState(citasOnly ? 'cita' : 'all')
   const [now, setNow] = useState(() => new Date())
   const [completed, setCompleted] = useState(false)
@@ -35,7 +35,7 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
   }
   useEffect(() => {
     const refresh = () => { setToday(fechaLocal()); setNow(new Date()) }
-    const timer = setInterval(refresh, 60000)
+    const timer = setInterval(refresh, 1000)
     window.addEventListener('focus', refresh)
     return () => { clearInterval(timer); window.removeEventListener('focus', refresh) }
   }, [])
@@ -57,9 +57,7 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
       <div>
         <p className="daily-date">{new Date(today + 'T12:00:00').toLocaleDateString(getLocale(), {
           weekday: 'long', day: 'numeric', month: 'long',
-        })}</p>
-        <h2 className="serif">{t(citasOnly ? 'Citas' : 'Hoy en el estudio')}</h2>
-        <p className="daily-intro">{t('Tu agenda, de un vistazo.')}</p>
+        })} <time className="daily-clock" dateTime={now.toISOString()}>{[now.getHours(), now.getMinutes(), now.getSeconds()].map(value => String(value).padStart(2, '0')).join(' : ')}</time></p>
       </div>
       {modulos.tareas && <div className="daily-actions">
         {onSchedule && <button type="button" className="btn" disabled={guardando || proyectos.length === 0}
@@ -91,7 +89,7 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
       </div>
       <div className="daily-stats">
         {[
-          [t('Vencimientos pendientes'), overdue, 'today', overdue > 0 ? 'is-overdue' : ''],
+          [t('Vencimientos pendientes'), overdue, 'overdue', overdue > 0 ? 'is-overdue' : ''],
           [t('Para hoy'), dueToday, 'today', ''],
           [t('Próximos 7 días'), upcoming, 'week', ''],
           [t('Sin fecha'), undated, 'undated', ''],
@@ -101,18 +99,19 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
         </button>)}
       </div>
       <div className="daily-filters" aria-label={t('Agenda')}>
-        {[[ 'today', 'Para hoy' ], [ 'week', 'Próximos 7 días' ], [ 'undated', 'Sin fecha' ], [ 'all', 'Todos' ]]
+        {[[ 'immediate', 'Hoy y mañana' ], [ 'today', 'Para hoy' ], [ 'week', 'Próximos 7 días' ], [ 'undated', 'Sin fecha' ], [ 'all', 'Todos' ]]
           .map(([value, label]) => <button type="button" key={value} className={'chip' + (filter === value ? ' active' : '')}
             aria-pressed={filter === value} onClick={() => changeFilter(value)}>{t(label)}</button>)}
       </div>
       {(filter === 'today' || filter === 'week') && overdue > 0 &&
         <p className="daily-hint">{t('Incluye los vencimientos pendientes.')}</p>}
       <div className="daily-list">
-        {visible.slice(0, limit).map(item => <article key={item.id} className={'daily-row' + (item.type === 'delivery' ? (item.days < 0 ? ' delivery-past' : ' delivery-upcoming') : (item.days !== null && item.days < 0 ? ' is-overdue' : ''))}>
+        {visible.slice(0, limit).map(item => <article key={item.id} className={'daily-row' + (!completed && item.type === 'task' && item.days === 0 ? ' is-today' : !completed && item.type === 'task' && item.days === 1 ? ' is-tomorrow' : '') + (item.type === 'delivery' ? (item.days < 0 ? ' delivery-past' : ' delivery-upcoming') : (item.days !== null && item.days < 0 ? ' is-overdue' : ''))}>
           <div className="daily-when">
             <strong>{item.days === null ? t('Sin fecha') : dateLabel(item.date)}</strong>
             <span>{item.days === null ? t('Por programar') : formatRelativeDays(item.days)}</span>
             {item.time && <span>{item.time}</span>}
+            {!completed && (() => { const left = remainingTime(item, now); return left && <span className="daily-countdown">{t('Quedan')} {left.days > 0 ? left.days + ' d · ' : ''}{left.hours} h · {left.minutes} min</span> })()}
           </div>
           <button type="button" className="daily-main" onClick={() => item.type === 'task' ? onOpenTasks(item.project, item.task.tipo === 'cita' ? 'cita' : 'tarea') : onOpen(item.project)}>
             <span className="daily-kind">{t(item.type === 'task' ? (item.task.tipo === 'cita' ? 'Cita' : 'Tareas') : 'Entregas')}{item.task?.prioridad === 'alta' ? <> · <FlatStatus label="🔴 Alta" /></> : ''}</span>
@@ -131,6 +130,8 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
         </article>)}
         {visible.length === 0 && <p className="daily-empty">{t('No hay pendientes en esta vista.')}</p>}
       </div>
+      {filter === 'immediate' && <button type="button" className="chip daily-more" onClick={() => { setFilter('all'); setLimit(agenda.length) }}>{t('Ampliar · todos los pendientes')} ({agenda.length})</button>}
+      {filter !== 'immediate' && <button type="button" className="chip daily-more" onClick={() => changeFilter('immediate')}>{t('Ver solo lo inmediato')}</button>}
       {visible.length > limit && <button type="button" className="chip daily-more" onClick={() => setLimit(n => n + 6)}>
         {t('Ver más ({0})', { 0: visible.length - limit })}</button>}
     </>}

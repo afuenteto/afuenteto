@@ -22,6 +22,7 @@ import ProjectModal from './components/ProjectModal.jsx'
 import TasksModal from './components/TasksModal.jsx'
 import DeliveryModal from './components/DeliveryModal.jsx'
 import StudioProfile from './components/StudioProfile.jsx'
+import SuppliersPanel from './components/SuppliersPanel.jsx'
 import FooterActions from './components/FooterActions.jsx'
 import TasksPanel from './components/TasksPanel.jsx'
 import DeliveriesPanel from './components/DeliveriesPanel.jsx'
@@ -1138,8 +1139,9 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     </div>
   )}
 </>) },
+        ...(modulos.proveedores ? [{ id: 'suppliers', title: 'Proveedores', content: <SuppliersPanel key={usuarioId} usuarioId={usuarioId} /> }] : []),
         ...(modulos.deudas ? [{ id: 'debts', title: 'Deudas', content: <DebtsPanel key={usuarioId} usuarioId={usuarioId} /> }] : []),
-        ...(modulos.economia ? [{ id: 'economy', title: 'Economía general', content: <EconomicChart embedded proyectos={proyectosActivos} /> }] : []),
+        ...(modulos.economia ? [{ id: 'economy', title: 'Economía general', content: <EconomicChart embedded proyectos={proyectos} /> }] : []),
         { id: 'summary', title: 'Resumen del estudio', content: <StudioDashboard embedded modulos={modulos} proyectos={proyectosActivos} clientes={clientes}
           onOpenTasks={() => setPanelAbierto('tareas')} onOpenDeliveries={() => setPanelAbierto('entregas')} onOpenPayments={() => setPanelAbierto('cobros')}
           onFilterPhase={mostrarProyectos} onShowAll={() => mostrarProyectos()} /> },
@@ -1155,7 +1157,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
             <LineIcon name="bloqueados" /><span>{proyectosActivos.filter(p => p.prioridad === 'bloqueado').length}</span>
           </button>
         </div> : section.id !== 'today' ? null :
-        <ModulePreview proyectos={proyectosActivos} modulos={modulos} onOpenTasks={abrirTareas} onOpenDelivery={abrirEntrega} setPanelAbierto={setPanelAbierto} /> }))} />
+        <ModulePreview proyectos={proyectosActivos} modulos={modulos} onOpenTasks={abrirTareas} onOpenDelivery={abrirEntrega} setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({ id: 'appointments' }) : setPanelAbierto(panel)} /> }))} />
 
  {editando && (
   <>

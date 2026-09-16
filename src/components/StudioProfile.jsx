@@ -214,33 +214,41 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
           ) : (
             <>
               <div className="profile-details">
+              <label className="profile-field">{translateUI("Nombre y apellidos")}
               <input
                 name="nombre"
                 value={perfil.nombre}
                 onChange={cambiarCampo}
                 placeholder={translateUI("Nombre y apellidos")}
               />
+              </label>
 
+              <label className="profile-field">{translateUI("Web")}
               <input
                 name="web"
                 value={perfil.web}
                 onChange={cambiarCampo}
                 placeholder={translateUI("Web")}
               />
+              </label>
 
+              <label className="profile-field">{translateUI("Instagram")}
               <input
                 name="instagram"
                 value={perfil.instagram}
                 onChange={cambiarCampo}
                 placeholder={translateUI("Instagram")}
               />
+              </label>
 
+              <label className="profile-field">{translateUI("Teléfono")}
               <input
-                name="telefono"
+                name="telefono" type="tel" autoComplete="tel"
                 value={perfil.telefono}
                 onChange={cambiarCampo}
                 placeholder={translateUI("Teléfono")}
               />
+              </label>
 
               </div>
               <div className="profile-edit-actions" ref={setAppearanceActions}>

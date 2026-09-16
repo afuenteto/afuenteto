@@ -13,17 +13,19 @@ export default function ModulePreview({ proyectos, modulos, onOpenTasks, onOpenD
     return () => { clearInterval(timer); window.removeEventListener('focus', refresh) }
   }, [])
   const agenda = useMemo(() => buildAgenda(proyectos, modulos, today), [proyectos, modulos, today])
-  const tasks = agenda.filter(item => item.type === 'task' && item.task.tipo !== 'cita' && ((item.days !== null && item.days <= 0) || item.task.prioridad === 'alta'))
+  const tasks = agenda.filter(item => item.type === 'task' && item.task.tipo !== 'cita')
+  const appointments = agenda.filter(item => item.type === 'task' && item.task.tipo === 'cita')
   const deliveries = agenda.filter(item => item.type === 'delivery' && item.days <= 7)
   const payments = modulos.economia ? proyectos.flatMap(p => (p.cobros || []).filter(c => c.estado === 'previsto')) : []
   const actions = [
+    ['📅', 'Citas', appointments.length, () => setPanelAbierto('citas')],
     ['tareas', 'Tareas', tasks.length, () => tasks.length === 1 ? onOpenTasks(tasks[0].project) : setPanelAbierto('tareas')],
     ['entregas', 'Entregas', deliveries.length, () => deliveries.length === 1 ? onOpenDelivery(deliveries[0].project) : setPanelAbierto('entregas')],
     ['cobros', 'Cobros pendientes', payments.length, () => setPanelAbierto('cobros')],
-  ].filter(([, , count]) => count > 0)
+  ].filter(([id, , count]) => id === '📅' || id === 'tareas' ? modulos.tareas : count > 0)
   if (!actions.length) return null
   return <div className="module-quick-actions">{actions.map(([id, label, count, onClick]) =>
-    <button type="button" key={id} className="module-quick-action" onClick={onClick} title={`${t(label)}: ${count}`} aria-label={`${t(label)}: ${count}`}>
+    <button type="button" key={id} className={'module-quick-action' + ((id === '📅' || id === 'tareas') && agenda.some(item => item.type === 'task' && (id === '📅' ? item.task.tipo === 'cita' : item.task.tipo !== 'cita') && (item.days === 0 || item.days === 1)) ? ' is-due-soon' : '')} onClick={onClick} title={`${t(label)}: ${count}`} aria-label={`${t(label)}: ${count}`}>
       <LineIcon name={id} />
       <span>{count}</span>
     </button>)}</div>
