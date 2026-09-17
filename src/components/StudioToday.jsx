@@ -7,7 +7,6 @@ import { fechaLocal } from '../projectUtils.js'
 import { buildAgenda, filterAgenda, remainingTime } from '../todayModel.js'
 import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 import CalendarAction from './CalendarAction.jsx'
-import FlipClock from './FlipClock.jsx'
 
 export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCompleteTask, onSchedule,
   guardando, setPanelAbierto, citasOnly = false, modulos = MODULOS_PREDETERMINADOS }) {
@@ -25,8 +24,8 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
     if (guardando || !draft.texto.trim()) return
     setScheduleError(false)
     try {
-      const saved = await onSchedule(draft.project, { id: crypto.randomUUID(), texto: draft.texto.trim(),
-        fecha: draft.fecha, hora: draft.hora, tipo: draft.tipo, hecha: false, prioridad: 'normal', fechaCompletada: '' })
+      const saved = await onSchedule(draft.project, { id: draft.id || crypto.randomUUID(), texto: draft.texto.trim(),
+        fecha: draft.fecha, hora: draft.hora, tipo: draft.project === 'generic' ? 'cita' : draft.tipo, hecha: Boolean(draft.hecha), prioridad: 'normal', fechaCompletada: draft.fechaCompletada || '' })
       if (!saved) { setScheduleError(true); return }
       setDraft({ project: '', texto: '', fecha: '', hora: '', tipo: citasOnly ? 'cita' : 'tarea' })
       setScheduling(false)
@@ -56,22 +55,23 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
   return <section className="studio-today daily-agenda" aria-label={t(citasOnly ? 'Citas' : 'Hoy en el estudio')}>
     <header className="daily-header">
       <div>
-        <p className="daily-date">{new Date(today + 'T12:00:00').toLocaleDateString(getLocale(), {
+        <p className="daily-date"><span>{new Date(today + 'T12:00:00').toLocaleDateString(getLocale(), {
           weekday: 'long', day: 'numeric', month: 'long',
-        })} <FlipClock now={now} /></p>
+        })}</span><span aria-hidden="true">|</span><time dateTime={now.toISOString()}>{[now.getHours(), now.getMinutes()].map(value => String(value).padStart(2, '0')).join(' : ')}</time></p>
       </div>
-      {modulos.tareas && <div className="daily-actions">
-        {onSchedule && <button type="button" className="btn" disabled={guardando || proyectos.length === 0}
-          aria-expanded={scheduling} onClick={() => setScheduling(value => !value)}>{t(citasOnly ? 'Nueva cita' : 'Programar tarea o cita')}</button>}
+      {modulos.tareas && <div className="daily-actions"><span aria-hidden="true">|</span>
+        {onSchedule && <button type="button" className="daily-add" title={t('Programar tarea o cita')} aria-label={t('Programar tarea o cita')} disabled={guardando}
+          aria-expanded={scheduling} onClick={() => { if (!scheduling) setDraft({ project: '', texto: '', fecha: '', hora: '', tipo: citasOnly ? 'cita' : 'tarea' }); setScheduling(value => !value) }}><span aria-hidden="true">+</span></button>}
       </div>}
     </header>
     {modulos.tareas && scheduling && <form className="daily-schedule" onSubmit={schedule}>
       <fieldset disabled={guardando}>
-        <label>{t('Proyecto')}<select required value={draft.project} onChange={e => setDraft({ ...draft, project: e.target.value })}>
+        <label>{t('Proyecto')}<select required disabled={Boolean(draft.id)} value={draft.project} onChange={e => setDraft({ ...draft, project: e.target.value, tipo: e.target.value === 'generic' ? 'cita' : draft.tipo })}>
           <option value="">{t('Selecciona un proyecto')}</option>
-          {proyectos.filter(p => p.estado !== 'finalizado').map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
+          <option value="generic">{t('Genérico')}</option>
+          {proyectos.filter(p => p.estado !== 'finalizado' && p.id !== 'generic').map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
         </select></label>
-        {!citasOnly && <label>{t('Tipo')}<select value={draft.tipo} onChange={e => setDraft({ ...draft, tipo: e.target.value })}>
+        {!citasOnly && draft.project !== 'generic' && <label>{t('Tipo')}<select value={draft.tipo} onChange={e => setDraft({ ...draft, tipo: e.target.value })}>
           <option value="tarea">{t('Tareas')}</option><option value="cita">{t('Cita')}</option>
         </select></label>}
         <label className="daily-schedule-title">{t('Descripción')}<input required maxLength={300} value={draft.texto}
@@ -113,7 +113,7 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
             {item.time && <span>{item.time}</span>}
             {!completed && (() => { const left = remainingTime(item, now); return left && <span className="daily-countdown">{t('Quedan')} {left.days > 0 ? left.days + ' d · ' : ''}{left.hours} h · {left.minutes} min</span> })()}
           </div>
-          <button type="button" className="daily-main" onClick={() => item.type === 'task' ? onOpenTasks(item.project, item.task.tipo === 'cita' ? 'cita' : 'tarea') : onOpen(item.project)}>
+          <button type="button" className="daily-main" onClick={() => item.project.id === 'generic' ? (setDraft({ ...(proyectos.find(p => p.id === 'generic')?.tareas.find(task => task.id === item.task.id) || item.task), project: 'generic' }), setScheduling(true)) : item.type === 'task' ? onOpenTasks(item.project, item.task.tipo === 'cita' ? 'cita' : 'tarea') : onOpen(item.project)}>
             <span className="daily-kind">{t(item.type === 'task' ? (item.task.tipo === 'cita' ? 'Cita' : 'Tareas') : 'Entregas')}{item.task?.prioridad === 'alta' ? <> · <FlatStatus label="🔴 Alta" /></> : ''}</span>
             <strong><ProjectName proyecto={item.project} enabled={modulos.documentos}>{item.title}</ProjectName></strong>
             <span>{item.type === 'task' ? item.project.nombre : item.project.cliente}</span>

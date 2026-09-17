@@ -1,3 +1,5 @@
+import CommissionsPanel from './components/CommissionsPanel.jsx'
+import useGenericAppointments from './useGenericAppointments.js'
 import LineIcon, { iconText } from './components/LineIcon.jsx'
 import FooterLinks from './components/FooterLinks.jsx'
 import useAppearance from './useAppearance.js'
@@ -40,6 +42,7 @@ import {
 export default function App() {
   useSyncExternalStore(subscribeLanguage, getLanguage, () => 'es')
   const [usuario, setUsuario] = useState(null)
+  const genericAppointments = useGenericAppointments(usuario?.id)
   const appearance = useAppearance(usuario)
   const modulos = useMemo(() => modulosDeUsuario(usuario), [usuario])
   const [configurandoModulos, setConfigurandoModulos] = useState(false)
@@ -393,6 +396,11 @@ function abrirExistente(proyecto, seccion = null) {
     setEntregaAbierta(proyecto)
   }
 
+async function programarAgenda(id, tarea) {
+  if (id === 'generic') return genericAppointments.save(tarea)
+  const project = proyectos.find(p => p.id === id)
+  return project ? guardarTareas(id, [...project.tareas, tarea]) : false
+}
 async function guardarTareas(proyectoId, tareas) {
   if (!usuario || !modulos.tareas || operacionRef.current) return false
   operacionRef.current = true
@@ -484,6 +492,10 @@ async function guardarTareas(proyectoId, tareas) {
   }
 }
   async function completarTareaDesdePanel(proyectoId, tareaId) {
+    if (proyectoId === 'generic') {
+      const task = genericAppointments.items.find(item => item.id === tareaId)
+      return task ? genericAppointments.save({ ...task, hecha: true, fechaCompletada: fechaLocal() }) : false
+    }
     if (!usuario || !modulos.tareas || operacionRef.current) return false
     const proyecto = proyectos.find(p => p.id === proyectoId)
     const tarea = proyecto?.tareas.find(t => t.id === tareaId)
@@ -642,10 +654,11 @@ if (modulos.clientes && datos.cliente) {
       }
     }
     const fila = proyectoParaBD(datos, usuario.id)
+    const existente = proyectos.some(p => p.id === datos.id)
+    if (existente) delete fila.comisiones
+    const solicitud = existente ? supabase.from('proyectos').update(fila).eq('id', datos.id).eq('user_id', usuario.id) : supabase.from('proyectos').insert(fila)
 
-      const { data, error } = await supabase
-        .from('proyectos')
-        .upsert(fila)
+      const { data, error } = await solicitud
         .select()
         .single()
 
@@ -1029,22 +1042,20 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
         >{translateUI("Guardando...")}</p>
       )}
 
+      {modulos.tareas && genericAppointments.error && <p role="alert">{translateUI(genericAppointments.error)}</p>}
       <HomeModules key={`home-${usuarioId}`} usuarioId={usuarioId} openRequest={openHomeModule} sections={[
         { id: 'today', title: 'Hoy en el estudio', content: (        <StudioToday
           key={usuarioId}
-          onSchedule={(proyectoId, tarea) => {
-            const proyecto = proyectos.find(p => p.id === proyectoId)
-            return proyecto ? guardarTareas(proyectoId, [...proyecto.tareas, tarea]) : Promise.resolve(false)
-          }}
+          onSchedule={programarAgenda}
           onCompleteTask={completarTareaDesdePanel}
-          guardando={guardando}
+          guardando={guardando || genericAppointments.busy}
           modulos={modulos}
-          proyectos={proyectosActivos}
+          proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items }]}
           onOpen={abrirExistente}
           onOpenTasks={abrirTareas}
           setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({id:'appointments'}) : setPanelAbierto(panel)}
         />) },
-        ...(modulos.tareas ? [{id: 'appointments', title: 'Citas', content: <StudioToday citasOnly proyectos={proyectosActivos} modulos={modulos} guardando={guardando} onOpen={abrirExistente} onOpenTasks={abrirTareas} onCompleteTask={completarTareaDesdePanel} onSchedule={(id,tarea) => {const p=proyectos.find(p=>p.id===id);return p ? guardarTareas(id,[...p.tareas,tarea]) : Promise.resolve(false)}} />}]:[]),
+        ...(modulos.tareas ? [{id: 'appointments', title: 'Citas', content: <StudioToday citasOnly proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items }]} modulos={modulos} guardando={guardando || genericAppointments.busy} onOpen={abrirExistente} onOpenTasks={abrirTareas} onCompleteTask={completarTareaDesdePanel} onSchedule={programarAgenda} />}]:[]),
         { id: 'projects', title: 'Proyectos', content: (<>      <div className="filters">
         <div className="filter-row filter-row-categories">
         <button
@@ -1139,6 +1150,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     </div>
   )}
 </>) },
+        ...(modulos.comisiones ? [{ id: 'commissions', title: 'Comisiones', content: <CommissionsPanel proyectos={proyectos} usuario={usuario} modulos={modulos} onSaved={updated => { if (usuarioActualRef.current === usuario.id) setProyectos(previous => previous.map(p => p.id === updated.id ? { ...p, comisiones: updated.comisiones } : p)) }} /> }] : []),
         ...(modulos.proveedores ? [{ id: 'suppliers', title: 'Proveedores', content: <SuppliersPanel key={usuarioId} usuarioId={usuarioId} /> }] : []),
         ...(modulos.deudas ? [{ id: 'debts', title: 'Deudas', content: <DebtsPanel key={usuarioId} usuarioId={usuarioId} /> }] : []),
         ...(modulos.economia ? [{ id: 'economy', title: 'Economía general', content: <EconomicChart embedded proyectos={proyectos} /> }] : []),
@@ -1157,7 +1169,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
             <LineIcon name="bloqueados" /><span>{proyectosActivos.filter(p => p.prioridad === 'bloqueado').length}</span>
           </button>
         </div> : section.id !== 'today' ? null :
-        <ModulePreview proyectos={proyectosActivos} modulos={modulos} onOpenTasks={abrirTareas} onOpenDelivery={abrirEntrega} setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({ id: 'appointments' }) : setPanelAbierto(panel)} /> }))} />
+        <ModulePreview proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items }]} modulos={modulos} onOpenTasks={abrirTareas} onOpenDelivery={abrirEntrega} setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({ id: 'appointments' }) : setPanelAbierto(panel)} /> }))} />
 
  {editando && (
   <>

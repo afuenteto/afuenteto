@@ -174,7 +174,7 @@ export default function StudioDashboard({
           />
         </div>}
 
-        {modulos.economia && <>
+        {modulos.comisiones && <>
         <div className="field">
           <label>{translateUI("Comisiones generadas")}</label>
           <input

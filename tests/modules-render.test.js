@@ -52,7 +52,7 @@ test('los módulos controlan los formularios y tarjetas sin quitar el proyecto b
         'id="cliente"', 'id="telefono"', 'id="email"', 'id="fechaEntrega"',
         'id="presupuestoTotal"', 'id="presupuestoGastado"', 'Honorarios diseño (€)',
         'Horas estimadas', 'Economía del proyecto', 'Resumen económico',
-        'Comisiones de colaboradores', 'Eliminar comisión', 'Eliminar cobro',
+        'Eliminar cobro',
         'Añadir tarea y pulsar Enter', 'Eliminar tarea', 'Añadir proveedor y pulsar Enter',
         'Eliminar proveedor', 'Ver ficha cliente', 'Importar contacto',
         'Imagen de la ficha', 'type="file"', proyecto.presupuestoPdf,
@@ -82,12 +82,22 @@ test('los módulos controlan los formularios y tarjetas sin quitar el proyecto b
           const contexto = `economía=${economia}, documentos=${documentos}`
           assert.equal(html.includes(`href="${proyecto.presupuestoPdf}"`), documentos, `PDF general: ${contexto}`)
           assert.equal(html.includes('id="pdfPresupuesto"'), documentos, `Subida PDF general: ${contexto}`)
-          assert.equal(html.includes(`href="${proyecto.comisiones[0].presupuestoPdf}"`), economia && documentos, `PDF comisión: ${contexto}`)
-          assert.equal(html.includes('Cambiar PDF'), economia && documentos, `Subida PDF comisión: ${contexto}`)
-          assert.equal(html.includes('Comisiones de colaboradores'), economia, `Economía independiente del PDF: ${contexto}`)
+          assert.equal(html.includes(`href="${proyecto.comisiones[0].presupuestoPdf}"`), false, `PDF comisión: ${contexto}`)
+          assert.equal(html.includes('Cambiar PDF'), false, `Subida PDF comisión: ${contexto}`)
+          assert.equal(html.includes('Comisiones de colaboradores'), false, `Comisiones fuera del proyecto: ${contexto}`)
           assert.equal(html.includes(`src="${proyecto.imagenProyecto}"`), documentos, `Imagen de proyecto: ${contexto}`)
         }
       }
+    })
+
+    await context.test('el editor independiente de comisiones funciona sin economía y conserva PDF', () => {
+      const html = render('ProjectModal', { ...desactivados, comisiones: true, documentos: true }, { commissionsOnly: true })
+      assert.ok(html.includes('Comisiones de colaboradores'))
+      assert.ok(html.includes('href="' + proyecto.comisiones[0].presupuestoPdf + '"'))
+      assert.ok(!html.includes('id="nombre"'))
+      assert.ok(!html.includes('Eliminar proyecto'))
+      assert.ok(!html.includes('id="presupuestoTotal"'))
+      assert.ok(!render('ProjectModal', desactivados, { commissionsOnly: true }).includes('Eliminar comisión'))
     })
 
     await context.test('ProjectCard muestra cada módulo de forma independiente y mantiene nombre y fases', () => {
@@ -95,7 +105,8 @@ test('los módulos controlan los formularios y tarjetas sin quitar el proyecto b
         clientes: [proyecto.cliente, 'card-client'],
         tareas: ['tasks-open-btn', 'Tareas pendientes'],
         entregas: ['tag-urgent', 'aria-label="Entrega:'],
-        economia: ['budget-bar', 'Total proyecto:', 'Comisiones'],
+        economia: ['budget-bar', 'Total proyecto:'],
+        comisiones: ['Comisiones'],
         documentos: [`src="${proyecto.imagenProyecto}"`, 'has-project-image'],
       }
       const combinaciones = [desactivados, MODULOS_PREDETERMINADOS,
@@ -128,11 +139,11 @@ test('los módulos controlan los formularios y tarjetas sin quitar el proyecto b
       }
     })
 
-    await context.test('ModulesSettings presenta siete switches y Proyectos siempre activo', () => {
+    await context.test('ModulesSettings presenta los switches configurables y Proyectos siempre activo', () => {
       for (const modulos of [desactivados, MODULOS_PREDETERMINADOS, { ...desactivados, tareas: true }]) {
         const html = render('ModulesSettings', modulos)
         const switches = html.match(/<input\b[^>]*role="switch"[^>]*>/g) || []
-        assert.equal(switches.length, 7, 'Deben existir siete módulos configurables')
+        assert.equal(switches.length, MODULOS_CONFIGURABLES.length, 'Debe existir un control por módulo')
         for (const { id, nombre } of MODULOS_CONFIGURABLES) {
           const control = switches.find(input => input.includes(`-${id}"`))
           assert.ok(control, `Debe existir el switch de ${id}`)

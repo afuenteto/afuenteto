@@ -3145,21 +3145,6 @@ input[type='date'] {
 
 /* Agenda y contactos del estudio */
 .daily-clock { display: inline-block; margin-inline-start: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); }
-.flip-clock { display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; }
-.flip-card { position: relative; display: inline-block; width: 34px; height: 38px; perspective: 180px; border-radius: 5px; background: #30302e; color: #fffdf4; font: 600 23px/38px ui-monospace, monospace; text-align: center; box-shadow: 0 2px 3px #0002; }
-.flip-half { position: absolute; left: 0; width: 100%; height: 50%; overflow: hidden; backface-visibility: hidden; }
-.flip-half > span { display: block; height: 38px; line-height: 38px; }
-.flip-top { top: 0; background: #30302e; border-radius: 5px 5px 0 0; transform-origin: bottom; }
-.flip-bottom { bottom: 0; background: #3d3d39; border-radius: 0 0 5px 5px; transform-origin: top; }
-.flip-bottom > span { transform: translateY(-50%); }
-.flip-card::after { content: ''; position: absolute; top: 50%; left: 0; right: 0; border-top: 1px solid #171716; z-index: 3; pointer-events: none; }
-.flip-motion { position: absolute; inset: 0; }
-.flip-out { animation: clock-flip-out .3s ease-in both; z-index: 2; }
-.flip-in { animation: clock-flip-in .3s .3s ease-out both; z-index: 2; }
-.flip-separator { color: var(--ink-soft); font: 600 18px ui-monospace, monospace; }
-@keyframes clock-flip-out { from { transform: rotateX(0); } to { transform: rotateX(-90deg); } }
-@keyframes clock-flip-in { from { transform: rotateX(90deg); } to { transform: rotateX(0); } }
-@media (prefers-reduced-motion: reduce) { .flip-out, .flip-in { animation: none; } .flip-out { visibility: hidden; } }
 .daily-row.is-today { background: #fff2d8; border-inline-start: 3px solid #aa6800; padding-inline: 12px; border-radius: 8px; }
 .daily-row.is-tomorrow { background: #eaf3fb; border-inline-start: 3px solid #3574a5; padding-inline: 12px; border-radius: 8px; }
 .daily-when .daily-countdown { color: var(--ink); font-weight: 600; }
@@ -3200,3 +3185,11 @@ input[type='date'] {
 .income-report th:first-child, .income-report td:first-child { text-align: left; }
 .income-report tfoot { font-weight: 700; background: var(--surface-soft); }
 .income-report p { font-size: 12px; color: var(--ink-soft); }
+
+.daily-agenda .daily-header { justify-content: flex-start; flex-wrap: nowrap; gap: 8px; overflow-x: auto; }
+.daily-header > div { flex-shrink: 0; }
+.daily-header .daily-date { display: flex; align-items: center; gap: 8px; color: #000; white-space: nowrap; font-size: clamp(10px, 2.7vw, 12px); }
+.daily-header time { color: #000; font-variant-numeric: tabular-nums; }
+.daily-header > .daily-actions { margin-inline-start: 0; flex-wrap: nowrap; color: #000; }
+.daily-add { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 3px; background: #000; color: #fff; font: 24px/1 sans-serif; cursor: pointer; }
+.daily-add:disabled { opacity: .5; cursor: wait; }

@@ -182,7 +182,7 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
         </div>
       )}
 
-      {modulos.economia && comisiones.length > 0 && (
+      {modulos.comisiones && comisiones.length > 0 && (
         <div className="card-finance-section">
           <div className="section-label">{translateUI("Comisiones")}</div>
 

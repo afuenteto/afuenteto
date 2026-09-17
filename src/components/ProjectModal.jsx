@@ -14,6 +14,8 @@ import ProjectImageCropper from './ProjectImageCropper.jsx'
 
 export default function ProjectModal({
   proyecto,
+  commissionsOnly = false,
+  saveError = '',
   clientes = [],
   usuario,
   setClientes,
@@ -539,7 +541,7 @@ function borrarComision(id) {
 }
 
 async function subirPresupuestoComision(id, file) {
-  if (!modulosActivos.economia || !modulosActivos.documentos || !file) return
+  if (!modulosActivos.comisiones || !modulosActivos.documentos || !file) return
 
   if (file.type !== 'application/pdf') {
     alert(translateUI("Selecciona un archivo PDF"))
@@ -651,13 +653,14 @@ async function subirPresupuestoComision(id, file) {
         )}
         <div className="modal-head">
         <h2 className="serif">
-  {esNuevo ? translateUI("Nuevo proyecto") : datos.nombre || translateUI("Editar proyecto")}
+  {commissionsOnly ? translateUI("Comisiones") + " · " + datos.nombre : esNuevo ? translateUI("Nuevo proyecto") : datos.nombre || translateUI("Editar proyecto")}
 </h2>
           <button type="button" className="icon-btn" onClick={onClose} aria-label={translateUI("Cerrar")}>
             <LineIcon name="close-main" />
           </button>
         </div>
 
+        {!commissionsOnly && <>
         <div className="field">
           <label htmlFor="nombre">{translateUI("Nombre del proyecto")}</label>
           <input
@@ -1352,6 +1355,9 @@ if (clienteExiste) {
 >{translateUI("Añadir")}</button>
 
 </div>
+</>)}
+        </>}
+        {commissionsOnly && modulosActivos.comisiones && (<>
         <div className="section-label dashboard-section-heading">{translateUI("Comisiones de colaboradores")}</div>
 
 <div className="commission-summary">
@@ -1612,6 +1618,7 @@ if (clienteExiste) {
 )}
 
 
+{!commissionsOnly && <>
 {modulosActivos.tareas && (
 <>
 <div ref={tareasRef} className="section-label">{translateUI("Tareas")}</div>
@@ -1711,9 +1718,11 @@ if (clienteExiste) {
         />
       </div>
 
+        </>}
+        {saveError && <p role="alert">{saveError}</p>}
         <div className="modal-actions">
           <div>
-            {!esNuevo && (
+            {!commissionsOnly && !esNuevo && (
               <>
                 {datos.estado === 'finalizado' ? (
                   <button type="button" className="btn btn-ghost" disabled={guardando || subiendoImagen} onClick={onReopen}>{translateUI("↩ Reabrir proyecto")}</button>

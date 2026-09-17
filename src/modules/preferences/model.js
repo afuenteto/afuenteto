@@ -2,7 +2,8 @@ export const MODULOS_CONFIGURABLES = Object.freeze([
   { id: 'clientes', nombre: 'Clientes', descripcion: 'Fichas y contactos de clientes.' },
   { id: 'tareas', nombre: 'Tareas', descripcion: 'Listas de tareas y prioridades.' },
   { id: 'entregas', nombre: 'Entregas', descripcion: 'Fechas y avisos de entrega.' },
-  { id: 'economia', nombre: 'Economía', descripcion: 'Presupuestos, cobros y comisiones.' },
+  { id: 'economia', nombre: 'Economía', descripcion: 'Presupuestos y cobros de proyectos.' },
+  { id: 'comisiones', nombre: 'Comisiones', descripcion: 'Comisiones de colaboradores, cobros y presupuestos PDF.' },
   { id: 'deudas', nombre: 'Deudas', descripcion: 'Historial de pagos' },
   { id: 'documentos', nombre: 'Documentos', descripcion: 'Imágenes y archivos PDF.' },
   { id: 'proveedores', nombre: 'Proveedores', descripcion: 'Contactos de proveedores.' },
@@ -30,7 +31,8 @@ const CAMPOS_POR_MODULO = {
   tareas: ['tareas'],
   entregas: ['fechaEntrega'],
   economia: ['presupuestoTotal', 'presupuestoGastado', 'honorariosDiseno', 'honorariosGestion',
-    'otrosImportes', 'cobros', 'comisiones', 'horasEstimadas', 'horasReales'],
+    'otrosImportes', 'cobros', 'horasEstimadas', 'horasReales'],
+  comisiones: ['comisiones'],
   documentos: ['imagenProyecto', 'imagenProyectoPath', 'presupuestoPdf', 'presupuestoPdfPath'],
   proveedores: ['proveedores'],
 }
@@ -45,7 +47,7 @@ export function conservarDatosDesactivados(datos, original, configuracion) {
     if (modulos[modulo]) continue
     for (const campo of campos) resultado[campo] = original[campo]
   }
-  if (!modulos.documentos && modulos.economia && Array.isArray(resultado.comisiones)) {
+  if (!modulos.documentos && modulos.comisiones && Array.isArray(resultado.comisiones)) {
     resultado.comisiones = resultado.comisiones.map(comision => {
       const anterior = original.comisiones?.find(item => item.id === comision.id)
       return {
