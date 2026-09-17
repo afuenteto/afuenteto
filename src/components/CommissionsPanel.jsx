@@ -1,3 +1,4 @@
+import { normalizeCommissions } from '../commissionNumbers.js'
 import { useRef, useState } from 'react'
 import ProjectModal from './ProjectModal.jsx'
 import { supabase } from '../supabase.js'
@@ -18,7 +19,7 @@ export default function CommissionsPanel({ proyectos, usuario, modulos, onSaved 
     lock.current = true; setBusy(true); setError('')
     try {
       // Actualiza solo comisiones, sin sobrescribir otros cambios del proyecto.
-      const comisiones = project.comisiones.map(item => ({ ...item, presupuestoPdf: item.presupuestoPdfPath ? '' : item.presupuestoPdf || '' }))
+      const comisiones = normalizeCommissions(project.comisiones).map(item => ({ ...item, presupuestoPdf: item.presupuestoPdfPath ? '' : item.presupuestoPdf || '' }))
       const { error } = await supabase.from('proyectos').update({ comisiones })
         .eq('id', project.id).eq('user_id', usuario.id).select('id').single()
       if (error) throw error

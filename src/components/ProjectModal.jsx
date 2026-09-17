@@ -1,3 +1,4 @@
+import { commissionNumber, normalizeCommissions } from '../commissionNumbers.js'
 import LineIcon from './LineIcon.jsx'
 import { iconText, plainIconLabel } from './LineIcon.jsx'
 import { StatusSelect, statusLabel } from './FlatStatus.jsx'
@@ -109,10 +110,10 @@ const pendienteCobro = totalProyecto - totalCobrado
 const comisiones = Array.isArray(datos.comisiones) ? datos.comisiones : []
 
 const calcularImporteComision = (comision) =>
-  Number(comision.presupuesto || 0) * Number(comision.porcentaje || 0) / 100
+  (commissionNumber(comision.presupuesto) || 0) * (commissionNumber(comision.porcentaje) || 0) / 100
 
 const totalPresupuestosColaboradores = comisiones.reduce(
-  (total, comision) => total + Number(comision.presupuesto || 0),
+  (total, comision) => total + (commissionNumber(comision.presupuesto) || 0),
   0
 )
 
@@ -432,10 +433,10 @@ function agregarCobro() {
 
 function agregarComision() {
   const colaborador = nuevaComision.colaborador.trim()
-  const presupuesto = Number(nuevaComision.presupuesto || 0)
-  const porcentaje = Number(nuevaComision.porcentaje || 0)
+  const presupuesto = commissionNumber(nuevaComision.presupuesto)
+  const porcentaje = commissionNumber(nuevaComision.porcentaje)
 
-  if (!colaborador || presupuesto <= 0 || porcentaje <= 0) {
+  if (!colaborador || !Number.isFinite(presupuesto) || !Number.isFinite(porcentaje) || presupuesto <= 0 || porcentaje <= 0) {
     alert(translateUI("Indica colaborador, presupuesto aceptado y porcentaje de comisión."))
     return
   }
@@ -611,6 +612,7 @@ async function subirPresupuestoComision(id, file) {
 
     try {
       let datosAGuardar = { ...datos }
+      if (commissionsOnly) datosAGuardar.comisiones = normalizeCommissions(datos.comisiones || [])
 
       if (modulosActivos.documentos && imagenPendiente) {
         const imagenSubida = await subirImagenProyecto(imagenPendiente)
@@ -1364,42 +1366,27 @@ if (clienteExiste) {
   <div className="field-row">
     <div className="field">
       <label>{translateUI("Presupuestos aceptados")}</label>
-      <input
-        type="text"
-        value={`${totalPresupuestosColaboradores.toLocaleString(getLocale())} €`}
-        readOnly
-      />
+      <output className="commission-total">{`${totalPresupuestosColaboradores.toLocaleString(getLocale())} €`}</output>
     </div>
     <div className="field">
       <label>{translateUI("Comisiones generadas")}</label>
-      <input
-        type="text"
-        value={`${totalComisiones.toLocaleString(getLocale())} €`}
-        readOnly
-      />
+      <output className="commission-total">{`${totalComisiones.toLocaleString(getLocale())} €`}</output>
     </div>
   </div>
 
   <div className="field-row">
     <div className="field">
       <label>{translateUI("Comisiones cobradas")}</label>
-      <input
-        type="text"
-        value={`${totalComisionesCobradas.toLocaleString(getLocale())} €`}
-        readOnly
-      />
+      <output className="commission-total">{`${totalComisionesCobradas.toLocaleString(getLocale())} €`}</output>
     </div>
     <div className="field">
       <label>{translateUI("Pendiente de cobrar")}</label>
-      <input
-        type="text"
-        value={`${totalComisionesPendientes.toLocaleString(getLocale())} €`}
-        readOnly
-      />
+      <output className="commission-total">{`${totalComisionesPendientes.toLocaleString(getLocale())} €`}</output>
     </div>
   </div>
 </div>
 
+<p className="daily-hint">{translateUI("Los totales se calculan automáticamente. Introduce el presupuesto y el porcentaje en cada comisión.")}</p>
 <div className="commission-new">
   <div className="commission-new-title">{translateUI("+ Añadir nueva comisión")}</div>
   <div className="commission-grid">
@@ -1426,9 +1413,9 @@ if (clienteExiste) {
     <div className="field">
       <label>{translateUI("Presupuesto aceptado (€)")}</label>
       <input
-        type="number"
-        min="0"
-        step="0.01"
+        type="text"
+        inputMode="decimal"
+        pattern="[0-9]+([.,][0-9]{1,2})?"
         placeholder="0,00"
         value={nuevaComision.presupuesto}
         onChange={(e) => setNuevaComision({ ...nuevaComision, presupuesto: e.target.value })}
@@ -1438,9 +1425,9 @@ if (clienteExiste) {
     <div className="field">
       <label>{translateUI("Comisión acordada (%)")}</label>
       <input
-        type="number"
-        min="0"
-        step="0.01"
+        type="text"
+        inputMode="decimal"
+        pattern="[0-9]+([.,][0-9]{1,2})?"
         placeholder="10"
         value={nuevaComision.porcentaje}
         onChange={(e) => setNuevaComision({ ...nuevaComision, porcentaje: e.target.value })}
@@ -1515,9 +1502,9 @@ if (clienteExiste) {
         <div className="field">
           <label>{translateUI("Presupuesto aceptado (€)")}</label>
           <input
-            type="number"
-            min="0"
-            step="0.01"
+            type="text"
+        inputMode="decimal"
+        pattern="[0-9]+([.,][0-9]{1,2})?"
             value={comision.presupuesto ?? ''}
             onChange={(e) => actualizarComision(comision.id, 'presupuesto', e.target.value)}
           />
@@ -1526,9 +1513,9 @@ if (clienteExiste) {
         <div className="field">
           <label>{translateUI("Comisión acordada (%)")}</label>
           <input
-            type="number"
-            min="0"
-            step="0.01"
+            type="text"
+        inputMode="decimal"
+        pattern="[0-9]+([.,][0-9]{1,2})?"
             value={comision.porcentaje ?? ''}
             onChange={(e) => actualizarComision(comision.id, 'porcentaje', e.target.value)}
           />
@@ -1536,11 +1523,7 @@ if (clienteExiste) {
 
         <div className="field">
           <label>{translateUI("Comisión (€)")}</label>
-          <input
-            type="text"
-            value={`${importeComision.toLocaleString(getLocale())} €`}
-            readOnly
-          />
+          <output className="commission-total">{`${importeComision.toLocaleString(getLocale())} €`}</output>
         </div>
 
         <div className="field">
