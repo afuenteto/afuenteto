@@ -1,3 +1,4 @@
+import { commissionAmount } from '../commissions.js'
 import { valorContratado } from '../projectFinance.js'
 import IncomeReport from './IncomeReport.jsx'
 import { t as translateUI, getLocale } from '../i18n.js'
@@ -45,8 +46,7 @@ export default function EconomicChartContent({ proyectos }) {
 
       lista.forEach((comision) => {
         const importe =
-          Number(comision.presupuesto || 0) *
-          Number(comision.porcentaje || 0) / 100
+          commissionAmount(comision)
 
         acc.total += importe
 

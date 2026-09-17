@@ -1,3 +1,4 @@
+import { commissionAmount } from '../commissions.js'
 import { valorContratado } from '../projectFinance.js'
 import { t as translateUI, getLocale, formatRelativeDays } from '../i18n.js'
 import PhaseRail from './PhaseRail.jsx'
@@ -33,7 +34,7 @@ export default function ProjectCard({ proyecto, onOpen, onOpenTasks, onOpenDeliv
     : []
 
   const importeComision = (comision) =>
-    Number(comision.presupuesto || 0) * Number(comision.porcentaje || 0) / 100
+    commissionAmount(comision)
 
   const totalComisiones = comisiones.reduce(
     (total, comision) => total + importeComision(comision),

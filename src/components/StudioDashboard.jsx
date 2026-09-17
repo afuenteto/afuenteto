@@ -1,3 +1,4 @@
+import { commissionAmount } from '../commissions.js'
 import { iconText } from './LineIcon.jsx'
 import FlatStatus from './FlatStatus.jsx'
 import { valorContratado } from '../projectFinance.js'
@@ -43,8 +44,7 @@ export default function StudioDashboard({
 
       comisiones.forEach((comision) => {
         const importe =
-          Number(comision.presupuesto || 0) *
-          Number(comision.porcentaje || 0) / 100
+          commissionAmount(comision)
 
         acc.generadas += importe
 

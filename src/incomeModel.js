@@ -1,3 +1,4 @@
+import { commissionAmount } from './commissions.js'
 import { diasEntreFechas } from './projectUtils.js'
 
 const cents = value => Number.isFinite(Number(value)) ? Math.round(Number(value) * 100) : 0
@@ -9,7 +10,7 @@ export function incomeEntries(projects) {
       kind: 'general', cents: cents(item.importe), date: validDate(item.fecha) ? item.fecha : '',
     })),
     ...(project.comisiones || []).filter(item => item.estado === 'cobrada').map(item => ({
-      kind: 'commission', cents: cents(Number(item.presupuesto || 0) * Number(item.porcentaje || 0) / 100),
+      kind: 'commission', cents: cents(commissionAmount(item)),
       date: validDate(item.fechaCobro) ? item.fechaCobro : '',
     })),
   ])
