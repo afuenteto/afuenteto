@@ -3193,3 +3193,6 @@ input[type='date'] {
 .daily-header > .daily-actions { margin-inline-start: 0; flex-wrap: nowrap; color: #000; }
 .daily-add { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 3px; background: #000; color: #fff; font: 24px/1 sans-serif; cursor: pointer; }
 .daily-add:disabled { opacity: .5; cursor: wait; }
+
+.daily-schedule select.generic-label, .daily-schedule option.generic-label, .daily-main > .generic-label { color: #800020; }
+.daily-schedule option:not(.generic-label) { color: var(--ink); }

@@ -66,9 +66,9 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
     </header>
     {modulos.tareas && scheduling && <form className="daily-schedule" onSubmit={schedule}>
       <fieldset disabled={guardando}>
-        <label>{t('Proyecto')}<select required disabled={Boolean(draft.id)} value={draft.project} onChange={e => setDraft({ ...draft, project: e.target.value, tipo: e.target.value === 'generic' ? 'cita' : draft.tipo })}>
+        <label>{t('Proyecto')}<select className={draft.project === 'generic' ? 'generic-label' : undefined} required disabled={Boolean(draft.id)} value={draft.project} onChange={e => setDraft({ ...draft, project: e.target.value, tipo: e.target.value === 'generic' ? 'cita' : draft.tipo })}>
           <option value="">{t('Selecciona un proyecto')}</option>
-          <option value="generic">{t('Genérico')}</option>
+          <option value="generic" className="generic-label">{t('Genérico')}</option>
           {proyectos.filter(p => p.estado !== 'finalizado' && p.id !== 'generic').map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
         </select></label>
         {!citasOnly && draft.project !== 'generic' && <label>{t('Tipo')}<select value={draft.tipo} onChange={e => setDraft({ ...draft, tipo: e.target.value })}>
@@ -116,7 +116,7 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
           <button type="button" className="daily-main" onClick={() => item.project.id === 'generic' ? (setDraft({ ...(proyectos.find(p => p.id === 'generic')?.tareas.find(task => task.id === item.task.id) || item.task), project: 'generic' }), setScheduling(true)) : item.type === 'task' ? onOpenTasks(item.project, item.task.tipo === 'cita' ? 'cita' : 'tarea') : onOpen(item.project)}>
             <span className="daily-kind">{t(item.type === 'task' ? (item.task.tipo === 'cita' ? 'Cita' : 'Tareas') : 'Entregas')}{item.task?.prioridad === 'alta' ? <> · <FlatStatus label="🔴 Alta" /></> : ''}</span>
             <strong><ProjectName proyecto={item.project} enabled={modulos.documentos}>{item.title}</ProjectName></strong>
-            <span>{item.type === 'task' ? item.project.nombre : item.project.cliente}</span>
+            <span className={item.project.id === 'generic' ? 'generic-label' : undefined}>{item.type === 'task' ? item.project.nombre : item.project.cliente}</span>
           </button>
           <div className="daily-actions">
             {item.days !== null && <CalendarAction event={{ id: item.id, date: item.date, time: item.time,
