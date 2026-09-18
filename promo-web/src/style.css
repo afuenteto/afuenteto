@@ -52,6 +52,7 @@ h1, h2, h3, h4, p { margin: 0; }
   z-index: 999;
 }
 .skip-link:focus { top: 16px; }
+.top-anchor { display: block; height: 0; }
 .site-header-bar {
   position: sticky;
   top: 0;
@@ -603,6 +604,13 @@ h1, h2, h3, h4, p { margin: 0; }
   border-radius: 22px;
   padding: 24px 22px 20px;
 }
+.platform-illustration {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  object-position: bottom;
+  margin-bottom: 4px;
+}
 .index {
   display: inline-flex;
   align-items: center;
@@ -835,6 +843,7 @@ h1, h2, h3, h4, p { margin: 0; }
 }
 .platform-cta { margin-top: 28px; }
 .download-actions { margin-top: 30px; }
+.download-subhead { margin: 46px 0 0; }
 .store-grid {
   display: flex;
   flex-wrap: wrap;

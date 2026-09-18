@@ -13,6 +13,9 @@ function setLocale(nextLocale) {
 }
 
 const logoSrc = `${import.meta.env.BASE_URL}header-photo.png`
+const APP_URL = 'https://afuenteto.github.io/afuenteto/'
+const appleGlyph = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.9c0-2.1 1.7-3.1 1.8-3.2-1-1.4-2.5-1.6-3-1.6-1.3-.1-2.5.7-3.1.7-.6 0-1.6-.7-2.7-.7-1.4 0-2.6.8-3.3 2-1.4 2.5-.4 6.1 1 8.1.7 1 1.5 2.1 2.6 2 1-.1 1.4-.7 2.7-.7s1.6.7 2.7.6c1.1 0 1.8-1 2.5-2 .8-1.1 1.1-2.2 1.1-2.3-.1 0-2.2-.9-2.3-3.2Z" fill="currentColor"/><path d="M14.2 6.3c.6-.7 1-1.7.9-2.7-.8 0-1.9.6-2.5 1.3-.5.6-1 1.7-.9 2.6.9.1 1.9-.5 2.5-1.2Z" fill="currentColor"/></svg>'
+const playGlyph = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.6c0-.5.5-.8 1-.6l12.4 8.4c.4.3.4.9 0 1.2L6 20.9c-.5.2-1-.1-1-.6Z" fill="currentColor"/></svg>'
 
 function render(locale = defaultLocale) {
   const content = getContent(locale)
@@ -20,7 +23,7 @@ function render(locale = defaultLocale) {
   document.title = `${BRAND.name} — Gestión creativa`
 
   const navItems = content.nav.map(item => `
-    <a href="${item.href.startsWith('#') ? item.href : `${item.href}?lang=${locale}`}">${item.label}</a>
+    <a href="${item.href}">${item.label}</a>
   `).join('')
 
   const featureTabs = content.functions.tabs.map((tab, index) => `
@@ -92,11 +95,39 @@ function render(locale = defaultLocale) {
     </article>
   `).join('')
 
-  const platformCards = content.platforms.cards.map(card => `
+  const platformImages = ['escritorio.png', 'tablet.png', 'movil.png']
+  const platformCards = content.platforms.cards.map((card, index) => `
     <article class="platform-card">
-      <div class="platform-icon" aria-hidden="true">✦</div>
+      <img class="platform-illustration" src="${import.meta.env.BASE_URL}${platformImages[index]}" alt="" aria-hidden="true" />
       <h3>${card.title}</h3>
       <p>${card.text}</p>
+    </article>
+  `).join('')
+
+  const storeBadges = content.download.stores.map(store => `
+    <div class="store-badge">
+      <span class="store-icon" aria-hidden="true">${store.name === 'App Store' ? appleGlyph : playGlyph}</span>
+      <span class="store-copy"><strong>${store.name}</strong><small>${store.caption}</small></span>
+    </div>
+  `).join('')
+
+  const formatCards = content.download.formats.items.map((item, index) => `
+    <article class="value-card">
+      <span class="index">0${index + 1}</span>
+      <h3>${item.title}</h3>
+      <p>${item.text}</p>
+      <span class="format-tag${index === content.download.formats.items.length - 1 ? ' is-soon' : ''}">${item.tag}</span>
+    </article>
+  `).join('')
+
+  const pricingCards = content.download.pricing.plans.map(plan => `
+    <article class="price-card${plan.highlighted ? ' is-highlighted' : ''}">
+      <h3>${plan.name}</h3>
+      <p class="price-value">${plan.price}<span>${plan.period}</span></p>
+      <ul class="price-features">
+        ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+      </ul>
+      <a class="button ${plan.highlighted ? 'button-dark' : 'button-light'}" href="${APP_URL}">${plan.cta}</a>
     </article>
   `).join('')
 
@@ -112,7 +143,8 @@ function render(locale = defaultLocale) {
 
   app.innerHTML = `
     <a class="skip-link" href="#contenido">Ir al contenido</a>
-    <div class="site-header-bar" id="inicio">
+    <span id="inicio" class="top-anchor" aria-hidden="true"></span>
+    <div class="site-header-bar">
     <header class="site-header wrap">
       <a class="wordmark" href="#inicio" aria-label="${BRAND.name}, inicio">
         <img class="brand-mark" src="${logoSrc}" alt="" aria-hidden="true" />
@@ -129,7 +161,7 @@ function render(locale = defaultLocale) {
           <button class="locale-button ${locale === 'es' ? 'is-active' : ''}" type="button" data-locale="es">ES</button>
           <button class="locale-button ${locale === 'en' ? 'is-active' : ''}" type="button" data-locale="en">EN</button>
         </div>
-        <a class="nav-cta" href="descarga.html?lang=${locale}">${content.header.cta}<span aria-hidden="true">↗</span></a>
+        <a class="nav-cta" href="#descarga">${content.header.cta}<span aria-hidden="true">↗</span></a>
       </nav>
     </header>
     </div>
@@ -143,7 +175,7 @@ function render(locale = defaultLocale) {
           </h1>
           <p class="hero-subtitle">${content.hero.text}</p>
           <div class="hero-actions">
-            <a class="button button-dark" href="descarga.html?lang=${locale}">${content.hero.primary}<span aria-hidden="true">↗</span></a>
+            <a class="button button-dark" href="#descarga">${content.hero.primary}<span aria-hidden="true">↗</span></a>
             <a class="text-link" href="#funciones">${content.hero.secondary}<span aria-hidden="true">↓</span></a>
           </div>
           <p class="small-note">${content.hero.note}</p>
@@ -304,7 +336,30 @@ function render(locale = defaultLocale) {
           ${platformCards}
         </div>
         <div class="platform-cta">
-          <a class="button button-dark" href="descarga.html?lang=${locale}">${content.platforms.cta}<span aria-hidden="true">↗</span></a>
+          <a class="button button-dark" href="#descarga">${content.platforms.cta}<span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+
+      <section id="descarga" class="intro-section wrap">
+        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> ${content.download.eyebrow}</p>
+        <div class="section-intro">
+          <h2>${content.download.title}</h2>
+          <p>${content.download.text}</p>
+        </div>
+        <div class="download-actions">
+          <a class="button button-dark" href="${APP_URL}">${content.download.openApp}<span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="store-grid">
+          ${storeBadges}
+        </div>
+        <p class="small-note">${content.download.storesNote}</p>
+        <p class="eyebrow download-subhead">${content.download.formats.eyebrow}</p>
+        <div class="value-grid download-formats">
+          ${formatCards}
+        </div>
+        <p class="eyebrow download-subhead">${content.download.pricing.eyebrow}</p>
+        <div class="pricing-grid">
+          ${pricingCards}
         </div>
       </section>
 
@@ -323,7 +378,7 @@ function render(locale = defaultLocale) {
         <h2>${content.cta.title}</h2>
         <p class="closing-description">${content.cta.text}</p>
         <div class="closing-actions">
-          <a class="button button-dark" href="descarga.html?lang=${locale}">${content.cta.primary}<span aria-hidden="true">↗</span></a>
+          <a class="button button-dark" href="#descarga">${content.cta.primary}<span aria-hidden="true">↗</span></a>
           <a class="button button-light" href="#inicio">${content.cta.secondary}</a>
         </div>
         <span class="closing-mark" aria-hidden="true">m.</span>

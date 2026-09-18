@@ -7,7 +7,7 @@ export const contentES = {
     { label: 'Cómo funciona', href: '#como-funciona' },
     { label: 'Origen', href: '#origen' },
     { label: 'Preguntas', href: '#faq' },
-    { label: 'Descargar', href: 'descarga.html' },
+    { label: 'Descargar', href: '#descarga' },
   ],
   brand: {
     name: 'Marca',

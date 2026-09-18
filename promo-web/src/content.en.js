@@ -7,7 +7,7 @@ export const contentEN = {
     { label: 'How it works', href: '#como-funciona' },
     { label: 'Origin', href: '#origen' },
     { label: 'FAQ', href: '#faq' },
-    { label: 'Download', href: 'descarga.html' },
+    { label: 'Download', href: '#descarga' },
   ],
   brand: {
     name: 'Brand',
