@@ -1057,6 +1057,19 @@ a {
   background: rgba(255, 255, 255, 0.35);
 }
 
+.empty-illustration {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 18px;
+  display: block;
+  fill: none;
+  stroke: var(--accent-hover);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.85;
+}
+
 .empty h3 {
   margin: 0 0 7px;
 

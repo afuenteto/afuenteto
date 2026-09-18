@@ -1107,6 +1107,11 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 
       {proyectosOrdenados.length === 0 ? (
         <div className="empty">
+          <svg className="empty-illustration" viewBox="0 0 96 96" aria-hidden="true">
+            <path d="M20 34 H76 A4 4 0 0 1 80 38 V70 A4 4 0 0 1 76 74 H20 A4 4 0 0 1 16 70 V38 A4 4 0 0 1 20 34 Z" />
+            <path d="M16 38 L26 22 H50 L58 34" />
+            <path d="M40 50 V62 M34 56 H46" />
+          </svg>
           <h3 className="serif">
             {proyectos.length === 0
               ? translateUI("Todavía no hay proyectos")

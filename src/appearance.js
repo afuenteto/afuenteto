@@ -13,7 +13,7 @@ export function normalizeAppearance(value = {}) {
   return {
     useProfileIcon: value?.useProfileIcon !== false,
     palette: Object.hasOwn(PALETTES, value?.palette) || value?.palette === 'seasonal' ? value.palette : 'yellow',
-    font: value?.font === 'serif' ? 'serif' : 'default',
+    font: ['serif', 'hand'].includes(value?.font) ? value.font : 'default',
     logoPath: typeof value?.logoPath === 'string' ? value.logoPath : '',
     headerLabel: typeof value?.headerLabel === 'string' ? value.headerLabel.trim().slice(0, 100) : '',
     headerTitle: typeof value?.headerTitle === 'string' ? value.headerTitle.trim().slice(0, 100) : '',

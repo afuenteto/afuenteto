@@ -2,6 +2,11 @@ html[data-font="serif"] body,
 html[data-font="serif"] .app :is(h1, h2, h3, h4, h5, h6, .serif, .mono, button, input, select, textarea, .tag-urgent, .module-project-counts, .eyebrow) {
   font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
 }
+html[data-font="hand"] .app :is(h1, h2, h3, .eyebrow, .splash-title, .tag-urgent) {
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
 .app .profile-panel { background: #fff; }
 .profile-panel { position: fixed; top: 94px; left: max(16px, calc((100vw - 1120px) / 2 + 26px)); width: min(480px, calc(100vw - 32px)); display: grid; grid-template-columns: 88px minmax(0, 1fr); column-gap: 18px; row-gap: 16px; padding: 20px; }
 [dir="rtl"] .profile-panel { left: auto; right: max(16px, calc((100vw - 1120px) / 2 + 26px)); }

@@ -85,7 +85,7 @@ export default forwardRef(function AppearanceSettings({ usuario, settings, logoU
       <legend>{t('Apariencia')}</legend>
       <label><span><input type="checkbox" checked={draft.useProfileIcon !== false} onChange={e => setDraft({ ...draft, useProfileIcon: e.target.checked })} /> {t('Usar la imagen del perfil como icono de la app')}</span></label>
       <label>{t('Tipo de letra')}<select value={draft.font} onChange={e => setDraft({ ...draft, font: e.target.value })}>
-        <option value="default">{t('Por defecto')} (Inter)</option><option value="serif">{t('Serifa')} (Fraunces)</option>
+        <option value="default">{t('Por defecto')} (Inter)</option><option value="serif">{t('Serifa')} (Fraunces)</option><option value="hand">{t('Manuscrita')} (Caveat)</option>
       </select></label>
       <label>{t('Colores')}<select value={draft.palette} onChange={e => setDraft({ ...draft, palette: e.target.value })}>
         {[['green', 'Primavera'], ['yellow', 'Verano (por defecto)'], ['red', 'Otoño'], ['blue', 'Invierno'], ['seasonal', 'Según la estación']].map(([value, label]) => <option key={value} value={value}>{t(label)}</option>)}
