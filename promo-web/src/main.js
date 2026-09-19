@@ -210,30 +210,14 @@ function render(locale = defaultLocale) {
             <div class="mini-projects">
               <div>
                 <div class="room room-one">
-                  <svg class="kitchen-illustration" viewBox="0 0 120 76" role="img" aria-label="Cocina moderna junto al mar">
-                    <path d="M14 17h29v24H14zM18 21h21v16H18z" fill="none" stroke="#171717" stroke-width="1.5" stroke-linejoin="round" />
-                    <path d="M21 35c4-5 8-5 12 0M23 31c3 2 6 2 10 0" fill="none" stroke="#f2cc32" stroke-width="1.5" stroke-linecap="round" />
-                    <path d="M72 18h30v26H72zM77 23c3-3 6-3 9 0s6 3 9 0" fill="none" stroke="#171717" stroke-width="1.5" stroke-linejoin="round" />
-                    <path d="M75 40h24M80 44v12M94 44v12" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" />
-                    <path d="M39 42h48l9 8c-12 6-38 7-61 1l-9-6c2-2 7-3 13-3Z" fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" />
-                    <path d="M39 50l-3 17M82 51l5 16M55 53l-1 14" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" />
-                    <path d="M46 48c3-3 7-3 10 0M69 48c3-3 7-3 10 0" fill="none" stroke="#f2cc32" stroke-width="1.8" stroke-linecap="round" />
-                    <path d="M19 43c7 4 14 5 22 4M96 48c5 2 8 3 11 2" fill="none" stroke="#171717" stroke-width="1.3" stroke-linecap="round" />
-                  </svg>
+                  <img class="project-image" src="${import.meta.env.BASE_URL}cocina.png" alt="Cocina moderna junto al mar" />
                 </div>
                 <strong>Casa junto al mar</strong>
                 <span><i aria-hidden="true"></i> En diseño</span>
               </div>
               <div>
                 <div class="room room-two">
-                  <svg class="chair-illustration" viewBox="0 0 120 76" role="img" aria-label="Silla de diseño moderna">
-                    <path d="M45 14c8-3 16 1 19 8l5 24-19 4-8-27c-1-4 0-7 3-9Z" fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" />
-                    <path d="M39 43c10-4 28-5 43-2l10 7c-12 5-32 8-52 5l-9-5c1-2 4-4 8-5Z" fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" />
-                    <path d="M31 48l-8 20M83 49l11 18M47 52l-3 18M80 51l-7 18" fill="none" stroke="#171717" stroke-width="1.6" stroke-linecap="round" />
-                    <path d="M37 42l-8-17M68 43l8-17" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" />
-                    <path d="M30 25c4-2 8-2 12-1M74 26c3-1 6-1 9 1" fill="none" stroke="#f2cc32" stroke-width="2" stroke-linecap="round" />
-                    <path d="M55 12c2-2 5-2 7-1" fill="none" stroke="#f2cc32" stroke-width="1.8" stroke-linecap="round" />
-                  </svg>
+                  <img class="project-image" src="${import.meta.env.BASE_URL}silla.png" alt="Silla de diseño moderna" />
                 </div>
                 <strong>Asiento para Lambrusco</strong>
                 <span><i aria-hidden="true"></i> En ejecución</span>
