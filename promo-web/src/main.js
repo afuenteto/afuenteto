@@ -386,7 +386,7 @@ function render(locale = defaultLocale) {
       </div>
       <div class="footer-info">
         <nav class="footer-app-links" aria-label="Apartados legales">
-          ${content.footer.appSections.map(label => `<a href="#inicio">${label}</a>`).join('')}
+          ${content.footer.appSections.map((label, index) => `${index > 0 ? '<span class="footer-separator" aria-hidden="true">|</span>' : ''}<a href="#inicio">${label}</a>`).join('')}
         </nav>
         <p class="footer-copy">${content.footer.copyright} <a href="https://www.beusual.com/" target="_blank" rel="noreferrer">Beusual</a> ${content.footer.version}</p>
       </div>
