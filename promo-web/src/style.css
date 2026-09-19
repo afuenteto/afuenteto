@@ -427,7 +427,16 @@ h1, h2, h3, h4, p { margin: 0; }
   font-size: 0.48rem;
   color: var(--ink-soft);
 }
-.preview-event > span:nth-child(2) {
+.event-project-thumb {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  margin-top: 2px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+.preview-event > span:nth-child(3) {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -445,7 +454,7 @@ h1, h2, h3, h4, p { margin: 0; }
   line-height: 1.4;
   color: var(--ink);
 }
-.preview-event > span:nth-child(2) > span:last-child {
+.preview-event > span:nth-child(3) > span:last-child {
   color: var(--ink-soft);
   font-size: 0.7rem;
 }
