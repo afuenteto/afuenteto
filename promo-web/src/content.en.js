@@ -219,7 +219,7 @@ export const contentEN = {
     links: ['Home', 'The app', 'Features', 'How it works', 'Origin', 'FAQ', 'Contact'],
     legal: ['Privacy', 'Terms'],
     appSections: ['Legal notice', 'Privacy', 'Terms of use', 'Contact'],
-    copyright: '© 2026 ·A·T·R·I·A· · Project management ·',
+    copyright: '© 2026 ·A·T·R·I·A· | Project management |',
     version: 'v1.0',
     legalContent: {
       'Legal notice': {

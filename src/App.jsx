@@ -1453,7 +1453,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     <button type="button" onClick={() => setInformacionAbierta('contacto')}>{translateUI("Contacto")}</button>
   </FooterLinks>
 
-  <div className="app-footer-copy">{translateUI("© 2026 ·A·T·R·I·A· · Gestión de proyectos ·")}{' '}
+  <div className="app-footer-copy">{translateUI("© 2026 ·A·T·R·I·A· | Gestión de proyectos |")}{' '}
     <a
       href="https://www.beusual.com/"
       target="_blank"

@@ -219,7 +219,7 @@ export const contentES = {
     links: ['Inicio', 'La app', 'Funciones', 'Cómo funciona', 'Origen', 'Preguntas', 'Contacto'],
     legal: ['Privacidad', 'Términos'],
     appSections: ['Aviso legal', 'Privacidad', 'Condiciones de uso', 'Contacto'],
-    copyright: '© 2026 ·A·T·R·I·A· · Gestión de proyectos ·',
+    copyright: '© 2026 ·A·T·R·I·A· | Gestión de proyectos |',
     version: 'v1.0',
     legalContent: {
       'Aviso legal': {

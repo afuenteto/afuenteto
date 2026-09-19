@@ -4,6 +4,7 @@ import { BRAND, LANGUAGES, getContent, getDefaultLocale, isRtlLocale } from './c
 
 const app = document.querySelector('#app')
 const defaultLocale = getDefaultLocale()
+let navFitResizeHandler = null
 
 function setLocale(nextLocale) {
   const url = new URL(window.location.href)
@@ -422,11 +423,26 @@ function render(locale = defaultLocale) {
 
   const menu = document.querySelector('.menu-toggle')
   const nav = document.querySelector('#navigation')
+  const siteHeader = document.querySelector('.site-header')
   const localeSelect = document.querySelector('#locale-select')
   const featureButtons = document.querySelectorAll('[data-feature]')
   const infoDialog = document.querySelector('.info-dialog')
   const infoDialogContent = document.querySelector('.info-dialog-content')
   const infoLinks = document.querySelectorAll('[data-info]')
+
+  if (siteHeader && nav) {
+    const updateNavFit = () => {
+      siteHeader.classList.remove('nav-compact')
+      const wordmarkWidth = siteHeader.querySelector('.wordmark')?.getBoundingClientRect().width || 0
+      const available = siteHeader.getBoundingClientRect().width - wordmarkWidth - 28
+      const fits = nav.scrollWidth <= available
+      siteHeader.classList.toggle('nav-compact', !fits)
+    }
+    updateNavFit()
+    if (navFitResizeHandler) window.removeEventListener('resize', navFitResizeHandler)
+    navFitResizeHandler = updateNavFit
+    window.addEventListener('resize', navFitResizeHandler)
+  }
 
   if (menu && nav) {
     const closeMenu = () => {
