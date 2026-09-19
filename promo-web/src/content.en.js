@@ -6,8 +6,8 @@ export const contentEN = {
     { label: 'Features', href: '#funciones' },
     { label: 'How it works', href: '#como-funciona' },
     { label: 'Origin', href: '#origen' },
-    { label: 'FAQ', href: '#faq' },
     { label: 'Download', href: '#descarga' },
+    { label: 'FAQ', href: '#faq' },
   ],
   brand: {
     name: 'ATRIA GESTIÓN',
