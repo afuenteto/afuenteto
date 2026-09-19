@@ -198,13 +198,13 @@ function render(locale = defaultLocale) {
             </div>
             <div class="preview-event">
               <span class="event-time">10:00<small>HOY</small></span>
-              <img class="event-project-thumb" src="${import.meta.env.BASE_URL}cocina.png" alt="" aria-hidden="true" />
+              <img class="event-project-thumb" src="${import.meta.env.BASE_URL}ejemplo1.jpg" alt="" aria-hidden="true" />
               <span><small>VISITA DE OBRA</small><strong>Una nueva vida en el centro</strong><span>Vivienda · Calle del Sol</span></span>
               <span class="event-dot" aria-hidden="true"></span>
             </div>
             <div class="preview-event event-blue">
               <span class="event-time">16:30<small>HOY</small></span>
-              <img class="event-project-thumb" src="${import.meta.env.BASE_URL}silla.png" alt="" aria-hidden="true" />
+              <img class="event-project-thumb" src="${import.meta.env.BASE_URL}ejemplo2.jpg" alt="" aria-hidden="true" />
               <span><small>REUNIÓN CON CLIENTE</small><strong>Elegimos los materiales</strong><span>Proyecto · Casa junto al mar</span></span>
               <span class="event-dot" aria-hidden="true"></span>
             </div>
