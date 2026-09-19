@@ -1654,12 +1654,13 @@ a {
 .daily-when { display: flex; flex-direction: column; gap: 5px; font-size: 13px; }
 .daily-when span { font-size: 11px; color: var(--ink-soft); }
 .daily-row.is-overdue .daily-when strong { color: var(--alert); }
-.daily-main { display: flex; flex-direction: column; gap: 5px; min-width: 0; text-align: start; border: 0; padding: 4px 0; background: transparent; cursor: pointer; color: var(--ink); font: inherit; }
-.daily-main strong { font-size: 15px; overflow-wrap: anywhere; }
-.daily-main > span { font-size: 12px; color: var(--ink-soft); overflow-wrap: anywhere; }
-.daily-main .daily-kind { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
-.personal-appointment-logo { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-bottom: 2px; }
-.daily-main:hover strong { text-decoration: underline; }
+.daily-main { display: flex; align-items: center; gap: 10px; min-width: 0; text-align: start; border: 0; padding: 4px 0; background: transparent; cursor: pointer; color: var(--ink); font: inherit; }
+.daily-main-content { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.daily-main-content strong { font-size: 15px; overflow-wrap: anywhere; }
+.daily-main-content > span { font-size: 12px; color: var(--ink-soft); overflow-wrap: anywhere; }
+.daily-main-content .daily-kind { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+.personal-appointment-logo { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.daily-main:hover .daily-main-content strong { text-decoration: underline; }
 .daily-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .daily-empty { padding: 24px 12px; margin: 0 0 16px; background: var(--surface-soft); border-radius: 8px; color: var(--ink-soft); text-align: center; font-size: 14px; }
 .daily-more { margin: 10px 26px 20px; }
