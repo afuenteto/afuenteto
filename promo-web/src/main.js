@@ -145,7 +145,7 @@ function render(locale = defaultLocale) {
       </a>
 
       <button class="menu-toggle" aria-controls="navigation" aria-expanded="false" type="button">
-        Menú <span aria-hidden="true">+</span>
+        Menú <span class="menu-toggle-symbol" aria-hidden="true"></span>
       </button>
 
       <nav id="navigation" aria-label="Navegación principal">
