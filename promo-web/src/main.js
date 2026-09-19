@@ -173,6 +173,7 @@ function render(locale = defaultLocale) {
 
         <div class="hero-visual">
           <div class="visual-badge"><span>${content.hero.badge}</span><span aria-hidden="true">↙</span></div>
+          <div class="hero-preview-wrap">
           <div class="app-preview" aria-label="Vista ilustrativa de la aplicación">
             <div class="preview-top">
               <div class="preview-brand">
@@ -214,6 +215,7 @@ function render(locale = defaultLocale) {
             <div class="preview-footer"><span>Todo en su sitio.</span><span>${BRAND.name}</span></div>
           </div>
           <div class="floating-note"><span aria-hidden="true">✓</span><div>Un poco más de orden.<br><strong>Mucho más de calma.</strong></div></div>
+          </div>
           <p class="mockup-caption">Vista ilustrativa · Datos de ejemplo</p>
         </div>
       </section>
