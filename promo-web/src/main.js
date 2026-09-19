@@ -442,7 +442,6 @@ function render(locale = defaultLocale) {
       if (key === 'Contacto' || key === 'Contact') {
         const contact = content.footer.contact
         infoDialogContent.innerHTML = `
-          <p class="eyebrow">${contact.title}</p>
           <h2 id="info-dialog-title">${contact.title}</h2>
           <p class="dialog-intro">${contact.intro}</p>
           <form class="contact-form" data-contact-form>
@@ -457,7 +456,6 @@ function render(locale = defaultLocale) {
       } else {
         const legal = content.footer.legalContent[key]
         infoDialogContent.innerHTML = `
-          <p class="eyebrow">${legal.title}</p>
           <h2 id="info-dialog-title">${legal.title}</h2>
           <div class="legal-copy">${legal.paragraphs.map(paragraph => `<p>${paragraph}</p>`).join('')}</div>
         `

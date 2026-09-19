@@ -1105,9 +1105,15 @@ h1, h2, h3, h4, p { margin: 0; }
   font-size: 1.35rem;
   line-height: 1;
 }
-.info-dialog h2 { color: var(--brand-heading); font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; }
+.info-dialog h2 {
+  margin: 0;
+  padding-right: 42px;
+  color: var(--brand-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.05;
+}
 .dialog-intro,
-.legal-copy p { margin-top: 18px; color: var(--ink-soft); line-height: 1.7; }
+.legal-copy p { margin-top: 24px; color: var(--ink-soft); line-height: 1.7; }
 .contact-form { display: grid; gap: 14px; margin-top: 24px; }
 .contact-form label { display: grid; gap: 7px; color: var(--brand-heading); font-size: 0.78rem; }
 .contact-form input,
