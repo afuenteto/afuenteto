@@ -220,8 +220,8 @@ function render(locale = defaultLocale) {
                     <path d="M55 12c2-2 5-2 7-1" fill="none" stroke="#f2cc32" stroke-width="1.8" stroke-linecap="round" />
                   </svg>
                 </div>
-                <strong>Vivienda Calle del Sol</strong>
-                <span><i aria-hidden="true"></i> En obra</span>
+                <strong>Asiento para Lambrusco</strong>
+                <span><i aria-hidden="true"></i> En ejecución</span>
               </div>
             </div>
             <div class="preview-footer"><span>Todo en su sitio.</span><span>${BRAND.name}</span></div>
