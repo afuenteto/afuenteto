@@ -10,7 +10,7 @@ export const contentES = {
     { label: 'Preguntas', href: '#faq' },
   ],
   brand: {
-    name: 'ATRIA GESTIÓN',
+    name: '·A·T·R·I·A· GESTIÓN',
     short: 'A',
     tagline: 'Gestión creativa',
   },
@@ -214,18 +214,18 @@ export const contentES = {
     secondary: 'Contactar',
   },
   footer: {
-    brand: 'ATRIA GESTIÓN',
+    brand: '·A·T·R·I·A· GESTIÓN',
     text: 'Gestión creativa para proyectos, agenda, clientes y cobros.',
     links: ['Inicio', 'La app', 'Funciones', 'Cómo funciona', 'Origen', 'Preguntas', 'Contacto'],
     legal: ['Privacidad', 'Términos'],
     appSections: ['Aviso legal', 'Privacidad', 'Condiciones de uso', 'Contacto'],
-    copyright: '© 2026 Fuente Studio · Gestión de proyectos ·',
+    copyright: '© 2026 ·A·T·R·I·A· · Gestión de proyectos ·',
     version: 'v1.0',
     legalContent: {
       'Aviso legal': {
         title: 'Aviso legal',
         paragraphs: [
-          'Fuente Studio utiliza esta aplicación para gestionar proyectos, clientes, tareas y documentación de trabajo.',
+          '·A·T·R·I·A· utiliza esta aplicación para gestionar proyectos, clientes, tareas y documentación de trabajo.',
           'La información mostrada pertenece al usuario autenticado y debe utilizarse únicamente para la gestión profesional de su actividad.',
           'Los datos identificativos y fiscales del titular deberán completarse antes de publicar esta información como texto legal definitivo.',
         ],

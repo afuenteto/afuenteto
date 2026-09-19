@@ -10,7 +10,7 @@ export const contentEN = {
     { label: 'FAQ', href: '#faq' },
   ],
   brand: {
-    name: 'ATRIA GESTIÓN',
+    name: '·A·T·R·I·A· GESTIÓN',
     short: 'A',
     tagline: 'Creative management',
   },
@@ -214,18 +214,18 @@ export const contentEN = {
     secondary: 'Contact',
   },
   footer: {
-    brand: 'ATRIA GESTIÓN',
+    brand: '·A·T·R·I·A· GESTIÓN',
     text: 'Creative management for projects, agenda, clients and payments.',
     links: ['Home', 'The app', 'Features', 'How it works', 'Origin', 'FAQ', 'Contact'],
     legal: ['Privacy', 'Terms'],
     appSections: ['Legal notice', 'Privacy', 'Terms of use', 'Contact'],
-    copyright: '© 2026 Fuente Studio · Project management ·',
+    copyright: '© 2026 ·A·T·R·I·A· · Project management ·',
     version: 'v1.0',
     legalContent: {
       'Legal notice': {
         title: 'Legal notice',
         paragraphs: [
-          'Fuente Studio uses this application to manage projects, clients, tasks and work documentation.',
+          '·A·T·R·I·A· uses this application to manage projects, clients, tasks and work documentation.',
           'The information shown belongs to the authenticated user and should only be used for professional activity management.',
           'The owner’s identification and tax details must be completed before publishing this information as final legal text.',
         ],

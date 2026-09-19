@@ -1346,7 +1346,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 
       {informacionAbierta === 'legal' && (
         <div className="footer-info-content">
-          <p>{translateUI("Fuente Studio utiliza esta aplicación para gestionar proyectos, clientes, tareas y documentación de trabajo.")}</p>
+          <p>{translateUI("·A·T·R·I·A· utiliza esta aplicación para gestionar proyectos, clientes, tareas y documentación de trabajo.")}</p>
           <p>{translateUI("La información mostrada pertenece al usuario autenticado y debe utilizarse únicamente para la gestión profesional de su actividad.")}</p>
           <p>{translateUI("Los datos identificativos y fiscales del titular deberán completarse antes de publicar esta información como texto legal definitivo.")}</p>
         </div>
@@ -1453,7 +1453,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     <button type="button" onClick={() => setInformacionAbierta('contacto')}>{translateUI("Contacto")}</button>
   </FooterLinks>
 
-  <div className="app-footer-copy">{translateUI("© 2026 Fuente Studio · Gestión de proyectos ·")}{' '}
+  <div className="app-footer-copy">{translateUI("© 2026 ·A·T·R·I·A· · Gestión de proyectos ·")}{' '}
     <a
       href="https://www.beusual.com/"
       target="_blank"
