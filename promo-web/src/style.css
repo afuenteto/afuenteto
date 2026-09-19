@@ -732,18 +732,24 @@ h1, h2, h3, h4, p { margin: 0; }
   text-transform: none;
 }
 .tab-arrow { color: var(--brand-heading); font-size: 0.9rem; }
-.feature-panels { position: relative; min-height: 420px; }
+.feature-panels { position: relative; min-height: 560px; }
 .feature-panel {
   position: absolute;
   inset: 0;
   display: none;
   flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-  padding: 34px 32px;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 28px 32px 32px;
   background: rgba(255,255,255,0.7);
   border: 1px solid var(--line);
   border-radius: 26px;
+}
+.panel-image {
+  width: 100%;
+  height: 140px;
+  border-radius: 16px;
+  object-fit: cover;
 }
 .feature-panel.is-visible { display: flex; }
 .panel-tag {

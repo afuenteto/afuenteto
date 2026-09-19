@@ -15,6 +15,7 @@ function setLocale(nextLocale) {
 const logoSrc = `${import.meta.env.BASE_URL}header-photo.png`
 const IMAGE_VERSION = '20260919-2'
 const imageSrc = name => `${import.meta.env.BASE_URL}${name}?v=${IMAGE_VERSION}`
+const FEATURE_TAB_IMAGES = { projects: 'proyectos.png', today: 'hoy.png', agenda: 'agenda.png', contacts: 'clientes.png', finance: 'cobros.png', docs: 'documentos.png' }
 const APP_URL = 'https://afuenteto.github.io/afuenteto/'
 const appleGlyph = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.9c0-2.1 1.7-3.1 1.8-3.2-1-1.4-2.5-1.6-3-1.6-1.3-.1-2.5.7-3.1.7-.6 0-1.6-.7-2.7-.7-1.4 0-2.6.8-3.3 2-1.4 2.5-.4 6.1 1 8.1.7 1 1.5 2.1 2.6 2 1-.1 1.4-.7 2.7-.7s1.6.7 2.7.6c1.1 0 1.8-1 2.5-2 .8-1.1 1.1-2.2 1.1-2.3-.1 0-2.2-.9-2.3-3.2Z" fill="currentColor"/><path d="M14.2 6.3c.6-.7 1-1.7.9-2.7-.8 0-1.9.6-2.5 1.3-.5.6-1 1.7-.9 2.6.9.1 1.9-.5 2.5-1.2Z" fill="currentColor"/></svg>'
 const playGlyph = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.6c0-.5.5-.8 1-.6l12.4 8.4c.4.3.4.9 0 1.2L6 20.9c-.5.2-1-.1-1-.6Z" fill="currentColor"/></svg>'
@@ -54,6 +55,7 @@ function render(locale = defaultLocale) {
       aria-labelledby="tab-${key}"
       data-feature-panel="${key}"
     >
+      <img class="panel-image" src="${imageSrc(FEATURE_TAB_IMAGES[key])}" alt="" aria-hidden="true" />
       <span class="panel-tag">${panel.tag}</span>
       <h3>${panel.title}</h3>
       <p>${panel.text}</p>
