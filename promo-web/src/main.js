@@ -13,6 +13,8 @@ function setLocale(nextLocale) {
 }
 
 const logoSrc = `${import.meta.env.BASE_URL}header-photo.png`
+const IMAGE_VERSION = '20260919-2'
+const imageSrc = name => `${import.meta.env.BASE_URL}${name}?v=${IMAGE_VERSION}`
 const APP_URL = 'https://afuenteto.github.io/afuenteto/'
 const appleGlyph = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.9c0-2.1 1.7-3.1 1.8-3.2-1-1.4-2.5-1.6-3-1.6-1.3-.1-2.5.7-3.1.7-.6 0-1.6-.7-2.7-.7-1.4 0-2.6.8-3.3 2-1.4 2.5-.4 6.1 1 8.1.7 1 1.5 2.1 2.6 2 1-.1 1.4-.7 2.7-.7s1.6.7 2.7.6c1.1 0 1.8-1 2.5-2 .8-1.1 1.1-2.2 1.1-2.3-.1 0-2.2-.9-2.3-3.2Z" fill="currentColor"/><path d="M14.2 6.3c.6-.7 1-1.7.9-2.7-.8 0-1.9.6-2.5 1.3-.5.6-1 1.7-.9 2.6.9.1 1.9-.5 2.5-1.2Z" fill="currentColor"/></svg>'
 const playGlyph = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.6c0-.5.5-.8 1-.6l12.4 8.4c.4.3.4.9 0 1.2L6 20.9c-.5.2-1-.1-1-.6Z" fill="currentColor"/></svg>'
@@ -99,7 +101,7 @@ function render(locale = defaultLocale) {
   const platformImages = ['escritorio.png', 'tablet.png', 'movil.png']
   const platformCards = content.platforms.cards.map((card, index) => `
     <article class="platform-card">
-      <img class="platform-illustration" src="${import.meta.env.BASE_URL}${platformImages[index]}" alt="" aria-hidden="true" />
+      <img class="platform-illustration" src="${imageSrc(platformImages[index])}" alt="" aria-hidden="true" />
       <h3>${card.title}</h3>
       <p>${card.text}</p>
     </article>
@@ -198,13 +200,13 @@ function render(locale = defaultLocale) {
             </div>
             <div class="preview-event">
               <span class="event-time">10:00<small>HOY</small></span>
-              <img class="event-project-thumb" src="${import.meta.env.BASE_URL}ejemplo1.jpg" alt="" aria-hidden="true" />
+              <img class="event-project-thumb" src="${imageSrc('ejemplo1.jpg')}" alt="" aria-hidden="true" />
               <span><small>VISITA DE OBRA</small><strong>Una nueva vida en el centro</strong><span>Vivienda · Calle del Sol</span></span>
               <span class="event-dot" aria-hidden="true"></span>
             </div>
             <div class="preview-event event-blue">
               <span class="event-time">16:30<small>HOY</small></span>
-              <img class="event-project-thumb" src="${import.meta.env.BASE_URL}ejemplo2.jpg" alt="" aria-hidden="true" />
+              <img class="event-project-thumb" src="${imageSrc('ejemplo2.jpg')}" alt="" aria-hidden="true" />
               <span><small>REUNIÓN CON CLIENTE</small><strong>Elegimos los materiales</strong><span>Proyecto · Casa junto al mar</span></span>
               <span class="event-dot" aria-hidden="true"></span>
             </div>
@@ -212,14 +214,14 @@ function render(locale = defaultLocale) {
             <div class="mini-projects">
               <div>
                 <div class="room room-one">
-                  <img class="project-image" src="${import.meta.env.BASE_URL}cocina.png" alt="Cocina moderna junto al mar" />
+                  <img class="project-image" src="${imageSrc('cocina.png')}" alt="Cocina moderna junto al mar" />
                 </div>
                 <strong>Casa junto al mar</strong>
                 <span><i aria-hidden="true"></i> En diseño</span>
               </div>
               <div>
                 <div class="room room-two">
-                  <img class="project-image" src="${import.meta.env.BASE_URL}silla.png" alt="Silla de diseño moderna" />
+                  <img class="project-image" src="${imageSrc('silla.png')}" alt="Silla de diseño moderna" />
                 </div>
                 <strong>Asiento para Lambrusco</strong>
                 <span><i aria-hidden="true"></i> En ejecución</span>
