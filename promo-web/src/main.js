@@ -1,6 +1,6 @@
 import './style.css'
 import './brand.css'
-import { BRAND, getContent, getDefaultLocale } from './content.js'
+import { BRAND, LANGUAGES, getContent, getDefaultLocale, isRtlLocale } from './content.js'
 
 const app = document.querySelector('#app')
 const defaultLocale = getDefaultLocale()
@@ -20,6 +20,7 @@ const playGlyph = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.6c0
 function render(locale = defaultLocale) {
   const content = getContent(locale)
   document.documentElement.lang = locale
+  document.documentElement.dir = isRtlLocale(locale) ? 'rtl' : 'ltr'
   document.title = `${BRAND.name} — Gestión creativa`
 
   const navItems = content.nav.map(item => `
@@ -147,9 +148,11 @@ function render(locale = defaultLocale) {
 
       <nav id="navigation" aria-label="Navegación principal">
         ${navItems}
-        <div class="lang-switch" aria-label="Selector de idioma">
-          <button class="locale-button ${locale === 'es' ? 'is-active' : ''}" type="button" data-locale="es">ES</button>
-          <button class="locale-button ${locale === 'en' ? 'is-active' : ''}" type="button" data-locale="en">EN</button>
+        <div class="lang-switch">
+          <label class="sr-only" for="locale-select">Idioma</label>
+          <select id="locale-select" class="locale-select" aria-label="Selector de idioma">
+            ${LANGUAGES.map(language => `<option value="${language.code}" ${language.code === locale ? 'selected' : ''}>${language.label}</option>`).join('')}
+          </select>
         </div>
         <a class="nav-cta" href="#descarga">${content.header.cta}<span aria-hidden="true">↗</span></a>
       </nav>
@@ -395,7 +398,7 @@ function render(locale = defaultLocale) {
 
   const menu = document.querySelector('.menu-toggle')
   const nav = document.querySelector('#navigation')
-  const localeButtons = document.querySelectorAll('[data-locale]')
+  const localeSelect = document.querySelector('#locale-select')
   const featureButtons = document.querySelectorAll('[data-feature]')
 
   if (menu && nav) {
@@ -422,9 +425,7 @@ function render(locale = defaultLocale) {
     })
   }
 
-  localeButtons.forEach(button => {
-    button.addEventListener('click', () => setLocale(button.dataset.locale))
-  })
+  localeSelect?.addEventListener('change', event => setLocale(event.target.value))
 
   featureButtons.forEach(button => {
     button.addEventListener('click', () => {
