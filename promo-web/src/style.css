@@ -1010,14 +1010,28 @@ h1, h2, h3, h4, p { margin: 0; }
   margin-top: 26px;
 }
 .site-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 40;
   display: grid;
-  justify-items: center;
-  gap: 12px;
-  min-height: 150px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  min-height: 82px;
   border-top: 1px solid var(--line);
-  padding-block: 28px;
+  padding-block: 14px;
+  background: rgba(248,246,240,0.96);
+  backdrop-filter: blur(10px);
 }
 .footer-wordmark { letter-spacing: 0.1em; }
+.footer-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  min-width: 0;
+}
 .footer-app-links {
   display: flex;
   flex-wrap: wrap;
@@ -1035,7 +1049,7 @@ h1, h2, h3, h4, p { margin: 0; }
   .feature-layout,
   .section-intro-row,
   .origin-grid,
-  .site-footer { grid-template-columns: 1fr; }
+  .site-footer { grid-template-columns: auto minmax(0, 1fr); }
   .hero { grid-template-columns: 1fr; }
   .value-grid,
   .reason-grid,
@@ -1165,11 +1179,13 @@ h1, h2, h3, h4, p { margin: 0; }
   }
   .site-footer {
     grid-template-columns: 1fr;
+    justify-items: center;
     gap: 8px;
-    min-height: auto;
+    min-height: 110px;
     padding-top: 14px;
     padding-bottom: 16px;
   }
+  .footer-info { gap: 6px 14px; }
   .site-footer .brand-mark {
     width: 34px;
     height: 34px;
