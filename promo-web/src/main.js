@@ -55,9 +55,12 @@ function render(locale = defaultLocale) {
       aria-labelledby="tab-${key}"
       data-feature-panel="${key}"
     >
-      <img class="panel-image" src="${imageSrc(FEATURE_TAB_IMAGES[key])}" alt="" aria-hidden="true" />
+      <span class="panel-tag">${panel.tag}</span>
+      <div class="panel-visual">
+        <img class="panel-image" src="${imageSrc(FEATURE_TAB_IMAGES[key])}" alt="" aria-hidden="true" />
+        <div class="panel-fade" aria-hidden="true"></div>
+      </div>
       <div class="panel-copy">
-        <span class="panel-tag">${panel.tag}</span>
         <h3>${panel.title}</h3>
         <p>${panel.text}</p>
         <div class="panel-example">

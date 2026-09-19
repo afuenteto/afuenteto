@@ -732,28 +732,46 @@ h1, h2, h3, h4, p { margin: 0; }
   text-transform: none;
 }
 .tab-arrow { color: var(--brand-heading); font-size: 0.9rem; }
-.feature-panels { position: relative; min-height: 560px; }
+.feature-panels { position: relative; min-height: 506px; }
 .feature-panel {
   position: absolute;
   inset: 0;
   display: none;
   flex-direction: column;
-  justify-content: flex-start;
+  gap: 10px;
+  padding: 24px 32px;
   background: rgba(255,255,255,0.7);
   border: 1px solid var(--line);
   border-radius: 26px;
   overflow: hidden;
 }
+.panel-visual {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.5);
+}
 .panel-image {
   width: 100%;
-  height: 330px;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.panel-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 45%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.94));
 }
 .panel-copy {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 10px 32px 24px;
+  flex-shrink: 0;
 }
 .feature-panel.is-visible { display: flex; }
 .panel-tag {
@@ -1276,6 +1294,7 @@ h1, h2, h3, h4, p { margin: 0; }
     position: relative;
     min-height: 100%;
   }
+  .panel-visual { flex: none; height: 220px; }
   .feature-panels { min-height: auto; }
   .intro-section,
   .modules-section,
