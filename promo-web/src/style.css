@@ -21,6 +21,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 108px; }
+html, body { overflow-x: clip; }
 body {
   margin: 0;
   min-width: 320px;
@@ -1013,6 +1014,7 @@ h1, h2, h3, h4, p { margin: 0; }
   position: sticky;
   bottom: 0;
   z-index: 40;
+  isolation: isolate;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
@@ -1020,16 +1022,20 @@ h1, h2, h3, h4, p { margin: 0; }
   min-height: 82px;
   border-top: 0;
   padding-block: 14px;
-  background: rgba(248,246,240,0.96);
-  backdrop-filter: blur(10px);
+  background: transparent;
 }
 .site-footer::before {
   content: "";
   position: absolute;
   top: 0;
+  bottom: 0;
   left: 50%;
   width: 100vw;
+  background: rgba(248,246,240,0.98);
   border-top: 1px solid var(--line);
+  box-shadow: 0 -8px 20px rgba(23,23,23,0.03);
+  backdrop-filter: blur(10px);
+  z-index: -1;
   transform: translateX(-50%);
 }
 .footer-wordmark { letter-spacing: 0.1em; }
