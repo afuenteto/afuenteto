@@ -210,7 +210,16 @@ function render(locale = defaultLocale) {
                 <span><i aria-hidden="true"></i> En diseño</span>
               </div>
               <div>
-                <div class="room room-two"><span class="room-window"></span><span class="room-sofa"></span><span class="room-table"></span></div>
+                <div class="room room-two">
+                  <svg class="chair-illustration" viewBox="0 0 120 76" role="img" aria-label="Silla de diseño moderna">
+                    <path d="M45 14c8-3 16 1 19 8l5 24-19 4-8-27c-1-4 0-7 3-9Z" fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" />
+                    <path d="M39 43c10-4 28-5 43-2l10 7c-12 5-32 8-52 5l-9-5c1-2 4-4 8-5Z" fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" />
+                    <path d="M31 48l-8 20M83 49l11 18M47 52l-3 18M80 51l-7 18" fill="none" stroke="#171717" stroke-width="1.6" stroke-linecap="round" />
+                    <path d="M37 42l-8-17M68 43l8-17" fill="none" stroke="#171717" stroke-width="1.4" stroke-linecap="round" />
+                    <path d="M30 25c4-2 8-2 12-1M74 26c3-1 6-1 9 1" fill="none" stroke="#f2cc32" stroke-width="2" stroke-linecap="round" />
+                    <path d="M55 12c2-2 5-2 7-1" fill="none" stroke="#f2cc32" stroke-width="1.8" stroke-linecap="round" />
+                  </svg>
+                </div>
                 <strong>Vivienda Calle del Sol</strong>
                 <span><i aria-hidden="true"></i> En obra</span>
               </div>
