@@ -370,8 +370,8 @@ h1, h2, h3, h4, p { margin: 0; }
 .preview-actions span:first-child {
   padding: 6px 8px;
   border-radius: 7px;
-  background: var(--accent-soft);
-  color: var(--brand-heading);
+  background: var(--ink);
+  color: #fff;
   font-weight: 700;
 }
 .preview-heading {
