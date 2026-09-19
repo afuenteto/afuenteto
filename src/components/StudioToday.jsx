@@ -116,12 +116,9 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
             {!completed && (() => { const left = remainingTime(item, now); return left && <span className="daily-countdown">{t('Quedan')} {left.days > 0 ? left.days + ' d · ' : ''}{left.hours} h · {left.minutes} min</span> })()}
           </div>
           <button type="button" className="daily-main" onClick={() => item.project.id === 'generic' || item.project.id === 'personal' ? (setDraft({ ...(proyectos.find(p => p.id === item.project.id)?.tareas.find(task => task.id === item.task.id) || item.task), project: item.project.id }), setScheduling(true)) : item.type === 'task' ? onOpenTasks(item.project, item.task.tipo === 'cita' ? 'cita' : 'tarea') : onOpen(item.project)}>
-            {item.project.id === 'personal' && <img className="personal-appointment-logo" src={profileLogoUrl} alt="" aria-hidden="true" />}
-            <span className="daily-main-content">
-              <span className="daily-kind">{t(item.type === 'task' ? (item.task.tipo === 'cita' ? 'Cita' : 'Tareas') : 'Entregas')}{item.task?.prioridad === 'alta' ? <> · <FlatStatus label="🔴 Alta" /></> : ''}</span>
-              <strong><ProjectName proyecto={item.project} enabled={modulos.documentos}>{item.title}</ProjectName></strong>
-              <span className={item.project.id === 'generic' ? 'generic-label' : undefined}>{item.type === 'task' ? item.project.nombre : item.project.cliente}</span>
-            </span>
+            <span className="daily-kind">{t(item.type === 'task' ? (item.task.tipo === 'cita' ? 'Cita' : 'Tareas') : 'Entregas')}{item.task?.prioridad === 'alta' ? <> · <FlatStatus label="🔴 Alta" /></> : ''}</span>
+            <strong>{item.project.id === 'personal' ? <span className="project-name-with-photo"><img src={profileLogoUrl} alt="" aria-hidden="true" /><span>{item.title}</span></span> : <ProjectName proyecto={item.project} enabled={modulos.documentos}>{item.title}</ProjectName>}</strong>
+            <span className={item.project.id === 'generic' ? 'generic-label' : undefined}>{item.type === 'task' ? item.project.nombre : item.project.cliente}</span>
           </button>
           <div className="daily-actions">
             {item.days !== null && <CalendarAction event={{ id: item.id, date: item.date, time: item.time,
