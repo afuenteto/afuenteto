@@ -16,7 +16,7 @@ export default function useGenericAppointments(userId) {
     const { data, error } = await supabase.from('citas_genericas').select('*').eq('user_id', userId)
     if (error) throw error
     if (isCurrent() && owner.current === userId && version === revision.current) {
-      setState({ userId, items: data.map(item => ({ ...item, tipo: 'cita', prioridad: 'normal' })) })
+      setState({ userId, items: data.map(item => ({ ...item, tipo: 'cita', prioridad: 'normal', tipoCita: item.tipoCita === 'personal' ? 'personal' : 'generic' })) })
       setError('')
     }
   }
@@ -34,7 +34,7 @@ export default function useGenericAppointments(userId) {
     try {
       const data = await saveGenericAppointment(userId, task)
       if (owner.current !== userId) return false
-      setState(previous => ({ userId, items: [...(previous.userId === userId ? previous.items : []).filter(item => item.id !== data.id), { ...data, tipo: 'cita', prioridad: 'normal' }] }))
+      setState(previous => ({ userId, items: [...(previous.userId === userId ? previous.items : []).filter(item => item.id !== data.id), { ...data, tipo: 'cita', prioridad: 'normal', tipoCita: data.tipoCita === 'personal' ? 'personal' : 'generic' }] }))
       setError('')
       return true
     } catch { if (owner.current === userId) setError('No se pudo guardar la cita genérica.'); return false }

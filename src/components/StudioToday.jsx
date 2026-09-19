@@ -9,7 +9,7 @@ import { MODULOS_PREDETERMINADOS } from '../modules/preferences/model.js'
 import CalendarAction from './CalendarAction.jsx'
 
 export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCompleteTask, onSchedule,
-  guardando, setPanelAbierto, citasOnly = false, modulos = MODULOS_PREDETERMINADOS }) {
+  guardando, setPanelAbierto, citasOnly = false, modulos = MODULOS_PREDETERMINADOS, profileLogoUrl }) {
   const [filter, setFilter] = useState('immediate')
   const [kind, setKind] = useState(citasOnly ? 'cita' : 'all')
   const [now, setNow] = useState(() => new Date())
@@ -25,7 +25,8 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
     setScheduleError(false)
     try {
       const saved = await onSchedule(draft.project, { id: draft.id || crypto.randomUUID(), texto: draft.texto.trim(),
-        fecha: draft.fecha, hora: draft.hora, tipo: draft.project === 'generic' ? 'cita' : draft.tipo, hecha: Boolean(draft.hecha), prioridad: 'normal', fechaCompletada: draft.fechaCompletada || '' })
+        fecha: draft.fecha, hora: draft.hora, tipo: draft.project === 'generic' || draft.project === 'personal' ? 'cita' : draft.tipo,
+        tipoCita: draft.project === 'personal' ? 'personal' : 'generic', hecha: Boolean(draft.hecha), prioridad: 'normal', fechaCompletada: draft.fechaCompletada || '' })
       if (!saved) { setScheduleError(true); return }
       setDraft({ project: '', texto: '', fecha: '', hora: '', tipo: citasOnly ? 'cita' : 'tarea' })
       setScheduling(false)
@@ -66,12 +67,13 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
     </header>
     {modulos.tareas && scheduling && <form className="daily-schedule" onSubmit={schedule}>
       <fieldset disabled={guardando}>
-        <label>{t('Proyecto')}<select className={draft.project === 'generic' ? 'generic-label' : undefined} required disabled={Boolean(draft.id)} value={draft.project} onChange={e => setDraft({ ...draft, project: e.target.value, tipo: e.target.value === 'generic' ? 'cita' : draft.tipo })}>
+        <label>{t('Proyecto')}<select className={draft.project === 'generic' || draft.project === 'personal' ? 'generic-label' : undefined} required disabled={Boolean(draft.id)} value={draft.project} onChange={e => setDraft({ ...draft, project: e.target.value, tipo: e.target.value === 'generic' || e.target.value === 'personal' ? 'cita' : draft.tipo })}>
           <option value="">{t('Selecciona un proyecto')}</option>
           <option value="generic" className="generic-label">{t('Genérico')}</option>
+          <option value="personal" className="generic-label">{t('Asuntos propios')}</option>
           {proyectos.filter(p => p.estado !== 'finalizado' && p.id !== 'generic').map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
         </select></label>
-        {!citasOnly && draft.project !== 'generic' && <label>{t('Tipo')}<select value={draft.tipo} onChange={e => setDraft({ ...draft, tipo: e.target.value })}>
+        {!citasOnly && draft.project !== 'generic' && draft.project !== 'personal' && <label>{t('Tipo')}<select value={draft.tipo} onChange={e => setDraft({ ...draft, tipo: e.target.value })}>
           <option value="tarea">{t('Tareas')}</option><option value="cita">{t('Cita')}</option>
         </select></label>}
         <label className="daily-schedule-title">{t('Descripción')}<input required maxLength={300} value={draft.texto}
@@ -113,7 +115,8 @@ export default function StudioToday({ proyectos = [], onOpen, onOpenTasks, onCom
             {item.time && <span>{item.time}</span>}
             {!completed && (() => { const left = remainingTime(item, now); return left && <span className="daily-countdown">{t('Quedan')} {left.days > 0 ? left.days + ' d · ' : ''}{left.hours} h · {left.minutes} min</span> })()}
           </div>
-          <button type="button" className="daily-main" onClick={() => item.project.id === 'generic' ? (setDraft({ ...(proyectos.find(p => p.id === 'generic')?.tareas.find(task => task.id === item.task.id) || item.task), project: 'generic' }), setScheduling(true)) : item.type === 'task' ? onOpenTasks(item.project, item.task.tipo === 'cita' ? 'cita' : 'tarea') : onOpen(item.project)}>
+          <button type="button" className="daily-main" onClick={() => item.project.id === 'generic' || item.project.id === 'personal' ? (setDraft({ ...(proyectos.find(p => p.id === item.project.id)?.tareas.find(task => task.id === item.task.id) || item.task), project: item.project.id }), setScheduling(true)) : item.type === 'task' ? onOpenTasks(item.project, item.task.tipo === 'cita' ? 'cita' : 'tarea') : onOpen(item.project)}>
+            {item.project.id === 'personal' && <img className="personal-appointment-logo" src={profileLogoUrl} alt="" aria-hidden="true" />}
             <span className="daily-kind">{t(item.type === 'task' ? (item.task.tipo === 'cita' ? 'Cita' : 'Tareas') : 'Entregas')}{item.task?.prioridad === 'alta' ? <> · <FlatStatus label="🔴 Alta" /></> : ''}</span>
             <strong><ProjectName proyecto={item.project} enabled={modulos.documentos}>{item.title}</ProjectName></strong>
             <span className={item.project.id === 'generic' ? 'generic-label' : undefined}>{item.type === 'task' ? item.project.nombre : item.project.cliente}</span>

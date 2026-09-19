@@ -397,7 +397,7 @@ function abrirExistente(proyecto, seccion = null) {
   }
 
 async function programarAgenda(id, tarea) {
-  if (id === 'generic') return genericAppointments.save(tarea)
+  if (id === 'generic' || id === 'personal') return genericAppointments.save({ ...tarea, tipoCita: id === 'personal' ? 'personal' : 'generic' })
   const project = proyectos.find(p => p.id === id)
   return project ? guardarTareas(id, [...project.tareas, tarea]) : false
 }
@@ -492,7 +492,7 @@ async function guardarTareas(proyectoId, tareas) {
   }
 }
   async function completarTareaDesdePanel(proyectoId, tareaId) {
-    if (proyectoId === 'generic') {
+    if (proyectoId === 'generic' || proyectoId === 'personal') {
       const task = genericAppointments.items.find(item => item.id === tareaId)
       return task ? genericAppointments.save({ ...task, hecha: true, fechaCompletada: fechaLocal() }) : false
     }
@@ -1050,12 +1050,13 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
           onCompleteTask={completarTareaDesdePanel}
           guardando={guardando || genericAppointments.busy}
           modulos={modulos}
-          proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items }]}
+          proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items.filter(item => item.tipoCita !== 'personal') }, { id: 'personal', nombre: translateUI('Asuntos propios'), tareas: genericAppointments.items.filter(item => item.tipoCita === 'personal') }]}
+          profileLogoUrl={appearance.logoUrl}
           onOpen={abrirExistente}
           onOpenTasks={abrirTareas}
           setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({id:'appointments'}) : setPanelAbierto(panel)}
         />) },
-        ...(modulos.tareas ? [{id: 'appointments', title: 'Citas', content: <StudioToday citasOnly proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items }]} modulos={modulos} guardando={guardando || genericAppointments.busy} onOpen={abrirExistente} onOpenTasks={abrirTareas} onCompleteTask={completarTareaDesdePanel} onSchedule={programarAgenda} />}]:[]),
+        ...(modulos.tareas ? [{id: 'appointments', title: 'Citas', content: <StudioToday citasOnly proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items.filter(item => item.tipoCita !== 'personal') }, { id: 'personal', nombre: translateUI('Asuntos propios'), tareas: genericAppointments.items.filter(item => item.tipoCita === 'personal') }]} profileLogoUrl={appearance.logoUrl} modulos={modulos} guardando={guardando || genericAppointments.busy} onOpen={abrirExistente} onOpenTasks={abrirTareas} onCompleteTask={completarTareaDesdePanel} onSchedule={programarAgenda} />}]:[]),
         { id: 'projects', title: 'Proyectos', content: (<>      <div className="filters">
         <div className="filter-row filter-row-categories">
         <button
@@ -1174,7 +1175,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
             <LineIcon name="bloqueados" /><span>{proyectosActivos.filter(p => p.prioridad === 'bloqueado').length}</span>
           </button>
         </div> : section.id !== 'today' ? null :
-        <ModulePreview proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items }]} modulos={modulos} onOpenTasks={abrirTareas} onOpenDelivery={abrirEntrega} setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({ id: 'appointments' }) : setPanelAbierto(panel)} /> }))} />
+        <ModulePreview proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items.filter(item => item.tipoCita !== 'personal') }, { id: 'personal', nombre: translateUI('Asuntos propios'), tareas: genericAppointments.items.filter(item => item.tipoCita === 'personal') }]} modulos={modulos} onOpenTasks={abrirTareas} onOpenDelivery={abrirEntrega} setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({ id: 'appointments' }) : setPanelAbierto(panel)} /> }))} />
 
  {editando && (
   <>
