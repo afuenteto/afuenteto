@@ -10,7 +10,7 @@ export const contentEN = {
     { label: 'Download', href: '#descarga' },
   ],
   brand: {
-    name: 'ATRIA GESTIÓN DE MOMENTO',
+    name: 'ATRIA GESTIÓN',
     short: 'A',
     tagline: 'Creative management',
   },
@@ -214,7 +214,7 @@ export const contentEN = {
     secondary: 'Contact',
   },
   footer: {
-    brand: 'ATRIA GESTIÓN DE MOMENTO',
+    brand: 'ATRIA GESTIÓN',
     text: 'Creative management for projects, agenda, clients and payments.',
     links: ['Home', 'The app', 'Features', 'How it works', 'Origin', 'FAQ', 'Contact'],
     legal: ['Privacy', 'Terms'],

@@ -2,7 +2,7 @@ import { contentES } from './content.es.js'
 import { contentEN } from './content.en.js'
 
 export const BRAND = {
-  name: 'ATRIA GESTIÓN DE MOMENTO',
+  name: 'ATRIA GESTIÓN',
   short: 'A',
   tagline: 'Gestión creativa',
   appLabel: 'Acceder a la app',
