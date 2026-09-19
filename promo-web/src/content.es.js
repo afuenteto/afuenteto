@@ -218,6 +218,9 @@ export const contentES = {
     text: 'Gestión creativa para proyectos, agenda, clientes y cobros.',
     links: ['Inicio', 'La app', 'Funciones', 'Cómo funciona', 'Origen', 'Preguntas', 'Contacto'],
     legal: ['Privacidad', 'Términos'],
+    appSections: ['Aviso legal', 'Privacidad', 'Condiciones de uso', 'Contacto'],
+    copyright: '© 2026 Fuente Studio · Gestión de proyectos ·',
+    version: 'v1.0',
   },
   download: {
     eyebrow: 'DESCARGA Y ACCESO',

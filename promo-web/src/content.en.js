@@ -218,6 +218,9 @@ export const contentEN = {
     text: 'Creative management for projects, agenda, clients and payments.',
     links: ['Home', 'The app', 'Features', 'How it works', 'Origin', 'FAQ', 'Contact'],
     legal: ['Privacy', 'Terms'],
+    appSections: ['Legal notice', 'Privacy', 'Terms of use', 'Contact'],
+    copyright: '© 2026 Fuente Studio · Project management ·',
+    version: 'v1.0',
   },
   download: {
     eyebrow: 'DOWNLOAD AND ACCESS',

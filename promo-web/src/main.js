@@ -384,7 +384,10 @@ function render(locale = defaultLocale) {
           <span class="brand-name">${BRAND.name}</span>
         </a>
       </div>
-      <p>${content.footer.text}</p>
+      <nav class="footer-app-links" aria-label="Apartados legales">
+        ${content.footer.appSections.map(label => `<a href="#inicio">${label}</a>`).join('')}
+      </nav>
+      <p class="footer-copy">${content.footer.copyright} <a href="https://www.beusual.com/" target="_blank" rel="noreferrer">Beusual</a> ${content.footer.version}</p>
     </footer>
   `
 
