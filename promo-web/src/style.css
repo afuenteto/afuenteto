@@ -994,9 +994,11 @@ h1, h2, h3, h4, p { margin: 0; }
   margin-inline: auto;
 }
 .closing-description {
+  display: block;
   max-width: 850px;
-  margin: 72px auto 0;
-  font-size: clamp(2rem, 3.6vw, 3.6rem);
+  margin: 0 auto;
+  padding-top: 72px;
+  font-size: clamp(2.4rem, 4vw, 4rem);
   line-height: 1.25;
 }
 .closing-actions {
@@ -1154,7 +1156,8 @@ h1, h2, h3, h4, p { margin: 0; }
     line-height: 1.08;
   }
   .closing-description {
-    margin-top: 48px;
+    margin: 0 auto;
+    padding-top: 48px;
     font-size: clamp(1.8rem, 7vw, 3rem);
     line-height: 1.25;
     max-width: 100%;
