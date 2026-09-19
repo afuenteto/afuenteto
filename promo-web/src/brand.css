@@ -90,7 +90,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visi
 .workflow-steps h3 { margin: 22px 0 13px; font-size: 17px; letter-spacing: -.02em; }
 .workflow-steps p { font-size: 13px; line-height: 1.85; color: var(--ink-soft); }
 .step-example { display: block; margin-top: 22px; font: 10px/1.6 var(--font-mono); color: var(--brand-heading); }
-.closing-description { max-width: 420px; position: relative; z-index: 1; font-size: 14px; line-height: 1.75; color: var(--brand-heading); margin: -10px 0 25px; }
+.closing-description { max-width: 850px; position: relative; z-index: 1; font-size: clamp(2.4rem, 4vw, 4rem); line-height: 1.25; color: var(--brand-heading); margin: 0 auto; padding-top: 72px; }
 summary { min-height: 60px; }
 .module-tabs button { min-height: 64px; }
 @media (max-width:1000px) { .site-header nav { gap: 15px; font-size: 11px; } }
@@ -106,5 +106,5 @@ summary { min-height: 60px; }
  .hero-actions .text-link { padding-block: 14px; }
  .workflow-section { padding-block: 55px; }
  .workflow-steps { grid-template-columns: 1fr; gap: 30px; margin-top: 30px; }
- .closing-description { max-width: 260px; }
+ .closing-description { max-width: 100%; font-size: clamp(1.8rem, 7vw, 3rem); margin: 0 auto; padding-top: 48px; }
 }
