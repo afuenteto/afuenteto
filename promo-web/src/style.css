@@ -1273,7 +1273,7 @@ h1, h2, h3, h4, p { margin: 0; }
   .wrap {
     width: min(1240px, calc(100% - 20px));
   }
-  .site-header .wordmark {
+  .footer-wordmark {
     display: none;
   }
   .hero {
