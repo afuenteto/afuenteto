@@ -65,7 +65,7 @@ function render(locale = defaultLocale) {
     <details ${index === 0 ? 'open' : ''}>
       <summary>
         <span>${item.q}</span>
-        <span aria-hidden="true">+</span>
+        <span class="faq-toggle" aria-hidden="true">+</span>
       </summary>
       <p>${item.a}</p>
     </details>

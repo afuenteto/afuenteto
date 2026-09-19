@@ -1010,7 +1010,9 @@ h1, h2, h3, h4, p { margin: 0; }
   font-weight: 600;
 }
 .faq-list summary::-webkit-details-marker { display: none; }
-.faq-list summary span:last-child { font-size: 1.5rem; color: var(--ink-soft); }
+.faq-toggle { font-size: 1.5rem; color: var(--ink-soft); }
+.faq-list details[open] .faq-toggle { font-size: 0; }
+.faq-list details[open] .faq-toggle::after { content: "−"; font-size: 1.5rem; }
 .faq-list p {
   margin: 0 0 18px;
   padding-top: 2px;
