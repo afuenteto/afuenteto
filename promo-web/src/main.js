@@ -131,16 +131,6 @@ function render(locale = defaultLocale) {
     </article>
   `).join('')
 
-  const footerLinks = [
-    { label: 'Inicio', href: '#inicio' },
-    { label: 'La app', href: '#la-app' },
-    { label: 'Funciones', href: '#funciones' },
-    { label: 'Cómo funciona', href: '#como-funciona' },
-    { label: 'Origen', href: '#origen' },
-    { label: 'Preguntas', href: '#faq' },
-    { label: 'Contacto', href: '#inicio' },
-  ]
-
   app.innerHTML = `
     <a class="skip-link" href="#contenido">Ir al contenido</a>
     <span id="inicio" class="top-anchor" aria-hidden="true"></span>
@@ -282,20 +272,21 @@ function render(locale = defaultLocale) {
       </section>
 
       <section id="origen" class="origin-section wrap">
-        <div class="origin-header">
-          <div>
+        <div class="origin-grid">
+          <div class="origin-visual">
+            <img class="origin-image" src="${import.meta.env.BASE_URL}profesional creativo.png" alt="Profesional creativo trabajando sobre los planos de un proyecto" />
+          </div>
+          <div class="origin-content">
             <p class="eyebrow">${content.origin.eyebrow}</p>
             <h2>${content.origin.title}</h2>
+            <div class="origin-copy">
+              <p>${content.origin.text}</p>
+              <p>${content.origin.secondary}</p>
+            </div>
+            <ul class="origin-list">
+              ${content.origin.points.map(point => `<li>${point}</li>`).join('')}
+            </ul>
           </div>
-        </div>
-        <div class="origin-grid">
-          <div class="origin-copy">
-            <p>${content.origin.text}</p>
-            <p>${content.origin.secondary}</p>
-          </div>
-          <ul class="origin-list">
-            ${content.origin.points.map(point => `<li>${point}</li>`).join('')}
-          </ul>
         </div>
       </section>
 
@@ -381,7 +372,6 @@ function render(locale = defaultLocale) {
           <a class="button button-dark" href="#descarga">${content.cta.primary}<span aria-hidden="true">↗</span></a>
           <a class="button button-light" href="#inicio">${content.cta.secondary}</a>
         </div>
-        <span class="closing-mark" aria-hidden="true">m.</span>
       </section>
     </main>
 
@@ -393,12 +383,6 @@ function render(locale = defaultLocale) {
         </a>
       </div>
       <p>${content.footer.text}</p>
-      <div class="footer-links">
-        ${footerLinks.map(link => `<a href="${link.href}">${link.label}</a>`).join('')}
-      </div>
-      <div class="footer-legal">
-        ${content.footer.legal.map(item => `<a href="#">${item}</a>`).join('')}
-      </div>
     </footer>
   `
 

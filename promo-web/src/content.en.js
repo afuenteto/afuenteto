@@ -153,10 +153,6 @@ export const contentEN = {
         title: 'Scales with your studio',
         text: 'It works just as well for a solo professional as for a small studio with several active projects.',
       },
-      {
-        title: 'Less chaos, more focus',
-        text: 'When the operational side is clear, there is more space to think, create and decide better.',
-      },
     ],
   },
   video: {

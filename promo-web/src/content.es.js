@@ -153,10 +153,6 @@ export const contentES = {
         title: 'Escala con tu estudio',
         text: 'Funciona igual de bien para un profesional autónomo que para un pequeño estudio con varios encargos activos.',
       },
-      {
-        title: 'Menos caos, más enfoque',
-        text: 'Cuando la parte operativa está clara, hay más espacio para pensar, crear y decidir mejor.',
-      },
     ],
   },
   video: {

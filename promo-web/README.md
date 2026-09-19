@@ -22,7 +22,9 @@ Abrir http://localhost:5174. Para compilar: `npm run build`. Para revisar el res
 
 El botón de acceso enlaza a https://afuenteto.github.io/afuenteto/. Las escenas y datos de la vista previa son ilustrativos, no capturas del producto ni datos reales. No se incluyen precios ni testimonios inventados.
 
-No tiene despliegue automático: el workflow de la app no publica esta carpeta. Hay que elegir un destino separado para publicarla.
+La web promocional se publica dentro del mismo sitio en https://afuenteto.github.io/afuenteto/promo/.
+
+El workflow principal compila la app y esta web y publica ambas dentro del mismo proyecto de GitHub Pages.
 
 ## Elegir proyecto en VS Code
 

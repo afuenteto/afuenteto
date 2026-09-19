@@ -41,6 +41,13 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Build promotional website
+        working-directory: promo-web
+        run: npm ci && npm run build
+
+      - name: Add promotional website to Pages artifact
+        run: cp -R promo-web/dist dist/promo
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
