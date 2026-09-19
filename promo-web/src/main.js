@@ -56,11 +56,13 @@ function render(locale = defaultLocale) {
       data-feature-panel="${key}"
     >
       <img class="panel-image" src="${imageSrc(FEATURE_TAB_IMAGES[key])}" alt="" aria-hidden="true" />
-      <span class="panel-tag">${panel.tag}</span>
-      <h3>${panel.title}</h3>
-      <p>${panel.text}</p>
-      <div class="panel-example">
-        ${panel.example.map(item => `<span>${item}</span>`).join('<i aria-hidden="true"></i>')}
+      <div class="panel-copy">
+        <span class="panel-tag">${panel.tag}</span>
+        <h3>${panel.title}</h3>
+        <p>${panel.text}</p>
+        <div class="panel-example">
+          ${panel.example.map(item => `<span>${item}</span>`).join('<i aria-hidden="true"></i>')}
+        </div>
       </div>
     </div>
   `).join('')

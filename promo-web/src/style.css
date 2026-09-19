@@ -739,17 +739,21 @@ h1, h2, h3, h4, p { margin: 0; }
   display: none;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 16px;
-  padding: 28px 32px 32px;
   background: rgba(255,255,255,0.7);
   border: 1px solid var(--line);
   border-radius: 26px;
+  overflow: hidden;
 }
 .panel-image {
   width: 100%;
-  height: 140px;
-  border-radius: 16px;
+  height: 330px;
   object-fit: cover;
+}
+.panel-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 32px 24px;
 }
 .feature-panel.is-visible { display: flex; }
 .panel-tag {
@@ -767,24 +771,24 @@ h1, h2, h3, h4, p { margin: 0; }
 .panel-example {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
   background: var(--accent-soft);
-  border-radius: 18px;
-  padding: 18px 22px;
-  margin-top: 12px;
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin-top: 4px;
 }
 .panel-example span,
 .panel-example strong {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 0 14px;
+  min-height: 30px;
+  padding: 0 10px;
   border-radius: 999px;
   background: rgba(255,255,255,0.7);
   color: var(--ink);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.05em;
 }
 .panel-example i {
