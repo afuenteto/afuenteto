@@ -183,7 +183,11 @@ function render(locale = defaultLocale) {
                 <img class="preview-icon" src="${logoSrc}" alt="" aria-hidden="true" />
                 <span class="preview-copy"><strong>${BRAND.name}</strong><small>${BRAND.tagline}</small></span>
               </div>
-              <span class="preview-avatar" aria-hidden="true">M</span>
+              <div class="preview-actions" aria-label="Acciones de la aplicación">
+                <span>+ Nuevo proyecto</span>
+                <span>Clientes</span>
+                <span>Módulos</span>
+              </div>
             </div>
             <div class="preview-heading"><span>HOY EN EL ESTUDIO</span><span aria-hidden="true">↗</span></div>
             <div class="preview-date">Jueves, 17 de septiembre <span>|</span> 09 : 30 <span class="preview-plus" aria-hidden="true">+</span></div>

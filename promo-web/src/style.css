@@ -357,6 +357,23 @@ h1, h2, h3, h4, p { margin: 0; }
   color: var(--brand-heading);
   font-weight: 700;
 }
+.preview-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: var(--ink-soft);
+  font-size: 0.5rem;
+  line-height: 1.2;
+}
+.preview-actions span:first-child {
+  padding: 6px 8px;
+  border-radius: 7px;
+  background: var(--accent-soft);
+  color: var(--brand-heading);
+  font-weight: 700;
+}
 .preview-heading {
   justify-content: space-between;
   gap: 12px;
