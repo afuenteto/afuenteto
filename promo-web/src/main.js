@@ -205,7 +205,18 @@ function render(locale = defaultLocale) {
             <div class="preview-project-title">PROYECTOS <span>Ver todos ↗</span></div>
             <div class="mini-projects">
               <div>
-                <div class="room room-one"><span class="room-window"></span><span class="room-sofa"></span><span class="room-table"></span></div>
+                <div class="room room-one">
+                  <svg class="kitchen-illustration" viewBox="0 0 120 76" role="img" aria-label="Cocina moderna junto al mar">
+                    <path d="M14 17h29v24H14zM18 21h21v16H18z" fill="none" stroke="#171717" stroke-width="1.5" stroke-linejoin="round" />
+                    <path d="M21 35c4-5 8-5 12 0M23 31c3 2 6 2 10 0" fill="none" stroke="#f2cc32" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M72 18h30v26H72zM77 23c3-3 6-3 9 0s6 3 9 0" fill="none" stroke="#171717" stroke-width="1.5" stroke-linejoin="round" />
+                    <path d="M75 40h24M80 44v12M94 44v12" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M39 42h48l9 8c-12 6-38 7-61 1l-9-6c2-2 7-3 13-3Z" fill="none" stroke="#171717" stroke-width="1.6" stroke-linejoin="round" />
+                    <path d="M39 50l-3 17M82 51l5 16M55 53l-1 14" fill="none" stroke="#171717" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M46 48c3-3 7-3 10 0M69 48c3-3 7-3 10 0" fill="none" stroke="#f2cc32" stroke-width="1.8" stroke-linecap="round" />
+                    <path d="M19 43c7 4 14 5 22 4M96 48c5 2 8 3 11 2" fill="none" stroke="#171717" stroke-width="1.3" stroke-linecap="round" />
+                  </svg>
+                </div>
                 <strong>Casa junto al mar</strong>
                 <span><i aria-hidden="true"></i> En diseño</span>
               </div>

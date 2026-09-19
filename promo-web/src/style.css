@@ -475,6 +475,8 @@ h1, h2, h3, h4, p { margin: 0; }
 .room-table { position: absolute; left: 52%; transform: translateX(-50%); bottom: 12px; width: 28px; height: 10px; border-radius: 999px; background: rgba(106,75,22,0.25); }
 .room-two { background: transparent; }
 .chair-illustration { display: block; width: 100%; height: 100%; overflow: visible; }
+.room-one { background: transparent; }
+.kitchen-illustration { display: block; width: 100%; height: 100%; overflow: visible; }
 .mini-projects strong {
   display: block;
   margin-bottom: 4px;
