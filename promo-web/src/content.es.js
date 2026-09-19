@@ -221,6 +221,43 @@ export const contentES = {
     appSections: ['Aviso legal', 'Privacidad', 'Condiciones de uso', 'Contacto'],
     copyright: '© 2026 Fuente Studio · Gestión de proyectos ·',
     version: 'v1.0',
+    legalContent: {
+      'Aviso legal': {
+        title: 'Aviso legal',
+        paragraphs: [
+          'Fuente Studio utiliza esta aplicación para gestionar proyectos, clientes, tareas y documentación de trabajo.',
+          'La información mostrada pertenece al usuario autenticado y debe utilizarse únicamente para la gestión profesional de su actividad.',
+          'Los datos identificativos y fiscales del titular deberán completarse antes de publicar esta información como texto legal definitivo.',
+        ],
+      },
+      Privacidad: {
+        title: 'Privacidad',
+        paragraphs: [
+          'Los datos se almacenan en Supabase y se asocian a la cuenta autenticada del usuario.',
+          'La aplicación utiliza los datos introducidos para organizar proyectos, clientes, cobros, tareas y documentos.',
+          'No introduzcas información que no sea necesaria para la gestión profesional del proyecto.',
+        ],
+      },
+      'Condiciones de uso': {
+        title: 'Condiciones de uso',
+        paragraphs: [
+          'El acceso a la aplicación es personal y debe protegerse con credenciales seguras.',
+          'El usuario es responsable de la exactitud de los datos introducidos y de conservar copias de seguridad adecuadas.',
+          'La aplicación es una herramienta de gestión y no sustituye asesoramiento legal, fiscal o profesional.',
+        ],
+      },
+    },
+    contact: {
+      title: 'Contacto',
+      intro: 'Envíanos tu consulta y nos pondremos en contacto contigo.',
+      name: 'Nombre',
+      email: 'Tu email',
+      subject: 'Asunto',
+      message: 'Mensaje',
+      submit: 'Enviar consulta',
+      required: 'Completa los campos obligatorios.',
+      success: 'Formulario completado correctamente.',
+    },
   },
   download: {
     eyebrow: 'DESCARGA Y ACCESO',

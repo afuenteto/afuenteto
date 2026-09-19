@@ -389,17 +389,25 @@ function render(locale = defaultLocale) {
       </div>
       <div class="footer-info">
         <nav class="footer-app-links" aria-label="Apartados legales">
-          ${content.footer.appSections.map((label, index) => `${index > 0 ? '<span class="footer-separator" aria-hidden="true">|</span>' : ''}<a href="#inicio">${label}</a>`).join('')}
+          ${content.footer.appSections.map((label, index) => `${index > 0 ? '<span class="footer-separator" aria-hidden="true">|</span>' : ''}<a href="#inicio" data-info="${label}">${label}</a>`).join('')}
         </nav>
         <p class="footer-copy">${content.footer.copyright} <a href="https://www.beusual.com/" target="_blank" rel="noreferrer">Beusual</a> ${content.footer.version}</p>
       </div>
     </footer>
+
+    <dialog class="info-dialog" aria-labelledby="info-dialog-title">
+      <button class="dialog-close" type="button" aria-label="Cerrar">×</button>
+      <div class="info-dialog-content"></div>
+    </dialog>
   `
 
   const menu = document.querySelector('.menu-toggle')
   const nav = document.querySelector('#navigation')
   const localeSelect = document.querySelector('#locale-select')
   const featureButtons = document.querySelectorAll('[data-feature]')
+  const infoDialog = document.querySelector('.info-dialog')
+  const infoDialogContent = document.querySelector('.info-dialog-content')
+  const infoLinks = document.querySelectorAll('[data-info]')
 
   if (menu && nav) {
     const closeMenu = () => {
@@ -426,6 +434,48 @@ function render(locale = defaultLocale) {
   }
 
   localeSelect?.addEventListener('change', event => setLocale(event.target.value))
+
+  infoLinks.forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault()
+      const key = link.dataset.info
+      if (key === 'Contacto' || key === 'Contact') {
+        const contact = content.footer.contact
+        infoDialogContent.innerHTML = `
+          <p class="eyebrow">${contact.title}</p>
+          <h2 id="info-dialog-title">${contact.title}</h2>
+          <p class="dialog-intro">${contact.intro}</p>
+          <form class="contact-form" data-contact-form>
+            <label>${contact.name}<input name="name" autocomplete="name" required /></label>
+            <label>${contact.email}<input name="email" type="email" autocomplete="email" required /></label>
+            <label>${contact.subject}<input name="subject" required /></label>
+            <label>${contact.message}<textarea name="message" rows="5" required></textarea></label>
+            <button class="button button-dark" type="submit">${contact.submit}</button>
+            <p class="form-status" hidden>${contact.success}</p>
+          </form>
+        `
+      } else {
+        const legal = content.footer.legalContent[key]
+        infoDialogContent.innerHTML = `
+          <p class="eyebrow">${legal.title}</p>
+          <h2 id="info-dialog-title">${legal.title}</h2>
+          <div class="legal-copy">${legal.paragraphs.map(paragraph => `<p>${paragraph}</p>`).join('')}</div>
+        `
+      }
+
+      infoDialog.showModal()
+    })
+  })
+
+  infoDialog?.addEventListener('click', event => {
+    if (event.target === infoDialog || event.target.closest('.dialog-close')) infoDialog.close()
+  })
+  infoDialog?.addEventListener('submit', event => {
+    if (!event.target.matches('[data-contact-form]')) return
+    event.preventDefault()
+    event.target.querySelector('.form-status').hidden = false
+    event.target.reset()
+  })
 
   featureButtons.forEach(button => {
     button.addEventListener('click', () => {

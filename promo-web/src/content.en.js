@@ -221,6 +221,43 @@ export const contentEN = {
     appSections: ['Legal notice', 'Privacy', 'Terms of use', 'Contact'],
     copyright: '© 2026 Fuente Studio · Project management ·',
     version: 'v1.0',
+    legalContent: {
+      'Legal notice': {
+        title: 'Legal notice',
+        paragraphs: [
+          'Fuente Studio uses this application to manage projects, clients, tasks and work documentation.',
+          'The information shown belongs to the authenticated user and should only be used for professional activity management.',
+          'The owner’s identification and tax details must be completed before publishing this information as final legal text.',
+        ],
+      },
+      Privacy: {
+        title: 'Privacy',
+        paragraphs: [
+          'Data is stored in Supabase and associated with the authenticated user account.',
+          'The application uses entered data to organise projects, clients, payments, tasks and documents.',
+          'Do not enter information that is not necessary for professional project management.',
+        ],
+      },
+      'Terms of use': {
+        title: 'Terms of use',
+        paragraphs: [
+          'Access to the application is personal and must be protected with secure credentials.',
+          'The user is responsible for the accuracy of entered data and for keeping suitable backups.',
+          'The application is a management tool and does not replace legal, tax or professional advice.',
+        ],
+      },
+    },
+    contact: {
+      title: 'Contact',
+      intro: 'Send us your question and we will get back to you.',
+      name: 'Name',
+      email: 'Your email',
+      subject: 'Subject',
+      message: 'Message',
+      submit: 'Send enquiry',
+      required: 'Complete the required fields.',
+      success: 'Form completed successfully.',
+    },
   },
   download: {
     eyebrow: 'DOWNLOAD AND ACCESS',
