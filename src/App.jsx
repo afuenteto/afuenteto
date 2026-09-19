@@ -996,7 +996,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
     <div>
       <p className="eyebrow">{appearance.settings.headerLabel || translateUI("Panel de estudio")}</p>
 
-      <h1 className="serif">{appearance.settings.headerTitle || translateUI("Proyectos")}</h1>
+      <h1 className="serif">{appearance.settings.headerTitle || '·A·T·R·I·A·'}</h1>
     </div>
   </div>
 

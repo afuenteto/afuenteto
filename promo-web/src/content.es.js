@@ -10,7 +10,7 @@ export const contentES = {
     { label: 'Preguntas', href: '#faq' },
   ],
   brand: {
-    name: '·A·T·R·I·A· GESTIÓN',
+    name: '·A·T·R·I·A·',
     short: 'A',
     tagline: 'Gestión creativa',
   },
@@ -214,7 +214,7 @@ export const contentES = {
     secondary: 'Contactar',
   },
   footer: {
-    brand: '·A·T·R·I·A· GESTIÓN',
+    brand: '·A·T·R·I·A·',
     text: 'Gestión creativa para proyectos, agenda, clientes y cobros.',
     links: ['Inicio', 'La app', 'Funciones', 'Cómo funciona', 'Origen', 'Preguntas', 'Contacto'],
     legal: ['Privacidad', 'Términos'],

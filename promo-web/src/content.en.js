@@ -10,7 +10,7 @@ export const contentEN = {
     { label: 'FAQ', href: '#faq' },
   ],
   brand: {
-    name: '·A·T·R·I·A· GESTIÓN',
+    name: '·A·T·R·I·A·',
     short: 'A',
     tagline: 'Creative management',
   },
@@ -214,7 +214,7 @@ export const contentEN = {
     secondary: 'Contact',
   },
   footer: {
-    brand: '·A·T·R·I·A· GESTIÓN',
+    brand: '·A·T·R·I·A·',
     text: 'Creative management for projects, agenda, clients and payments.',
     links: ['Home', 'The app', 'Features', 'How it works', 'Origin', 'FAQ', 'Contact'],
     legal: ['Privacy', 'Terms'],

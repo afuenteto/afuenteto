@@ -2,7 +2,7 @@ import { contentES } from './content.es.js'
 import { contentEN } from './content.en.js'
 
 export const BRAND = {
-  name: '·A·T·R·I·A· GESTIÓN',
+  name: '·A·T·R·I·A·',
   short: 'A',
   tagline: 'Gestión creativa',
   appLabel: 'Acceder a la app',
