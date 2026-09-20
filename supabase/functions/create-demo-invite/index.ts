@@ -130,14 +130,14 @@ async function seedDemoData(client: ReturnType<typeof createClient>, userId: str
   const projects = [
     {
       id: firstProject, user_id: userId, nombre: 'Casa junto al mar', cliente: 'Jaime Martín', estado: 'activo', prioridad: 'en_curso', orden: 0,
-      fase: 'Diseño', fecha_inicio: date, fecha_entrega: '', importancia: 8, presupuesto_total: 42000, presupuesto_gastado: 12500,
+      fase: 'Diseño', fecha_inicio: date, fecha_entrega: null, importancia: 8, presupuesto_total: 42000, presupuesto_gastado: 12500,
       tipo_proyecto: 'Vivienda unifamiliar', imagen_proyecto: `${baseUrl}cocina.png`, notas: 'Proyecto de demostración', tareas: [], proveedores: [], cobros: [
         { id: crypto.randomUUID(), concepto: 'Primer pago', importe: 8500, estado: 'previsto', fecha: date },
       ], comisiones: [{ id: crypto.randomUUID(), colaborador: 'Luz Mediterránea', concepto: 'Iluminación', importe: 840, porcentaje: 2, estado: 'pendiente', fecha: date }], historial: [],
     },
     {
       id: secondProject, user_id: userId, nombre: 'Asiento para Lambrusco', cliente: 'Ana y Luis', estado: 'activo', prioridad: 'en_curso', orden: 1,
-      fase: 'Ejecución', fecha_inicio: date, fecha_entrega: '', importancia: 7, presupuesto_total: 18500, presupuesto_gastado: 5200,
+      fase: 'Ejecución', fecha_inicio: date, fecha_entrega: null, importancia: 7, presupuesto_total: 18500, presupuesto_gastado: 5200,
       tipo_proyecto: 'Interiorismo', imagen_proyecto: `${baseUrl}silla.png`, notas: 'Proyecto de demostración', tareas: [], proveedores: [], cobros: [
         { id: crypto.randomUUID(), concepto: 'Pago de materiales', importe: 3200, estado: 'previsto', fecha: date },
       ], comisiones: [{ id: crypto.randomUUID(), colaborador: 'Maderas Norte', concepto: 'Carpintería', importe: 370, porcentaje: 2, estado: 'pendiente', fecha: date }], historial: [],
