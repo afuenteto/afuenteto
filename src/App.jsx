@@ -43,7 +43,6 @@ import {
 
 export default function App() {
   useSyncExternalStore(subscribeLanguage, getLanguage, () => 'es')
-      const previousUserId = usuarioActualRef.current
   const [usuario, setUsuario] = useState(null)
   const genericAppointments = useGenericAppointments(usuario?.id)
   const appearance = useAppearance(usuario)
@@ -58,6 +57,7 @@ export default function App() {
   }
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+      const previousUserId = usuarioActualRef.current
   const [errorLogin, setErrorLogin] = useState('')
   const [cargando, setCargando] = useState(true)
   const [proyectos, setProyectos] = useState([])
