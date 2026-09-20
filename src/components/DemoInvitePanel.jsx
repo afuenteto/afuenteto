@@ -5,6 +5,7 @@ export default function DemoInvitePanel({ onClose }) {
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState('')
+  const [recoveryLink, setRecoveryLink] = useState('')
   const [busy, setBusy] = useState(false)
 
   async function submit(event) {
@@ -12,6 +13,7 @@ export default function DemoInvitePanel({ onClose }) {
     if (busy) return
     setBusy(true)
     setStatus('')
+    setRecoveryLink('')
     const { data, error } = await supabase.functions.invoke('create-demo-invite', {
       body: { nombre, email },
     })
@@ -26,9 +28,12 @@ export default function DemoInvitePanel({ onClose }) {
       setStatus(detail)
       return
     }
-    setStatus(data?.existingUser
-      ? 'La cuenta ya existía. Hemos reenviado un email para recuperar el acceso.'
-      : 'Invitación creada. El profesional recibirá un email para acceder.')
+    setRecoveryLink(data?.recoveryLink || '')
+    setStatus(data?.recoveryLink
+      ? 'Supabase limitó los emails. Copia el enlace de recuperación y envíaselo al profesional.'
+      : data?.existingUser
+        ? 'La cuenta ya existía. Hemos reenviado un email para recuperar el acceso.'
+        : 'Invitación creada. El profesional recibirá un email para acceder.')
     setNombre('')
     setEmail('')
   }
@@ -49,6 +54,7 @@ export default function DemoInvitePanel({ onClose }) {
             <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? 'Creando…' : 'Crear invitación'}</button>
           </div>
           {status && <p className="demo-invite-status" role="status">{status}</p>}
+          {recoveryLink && <textarea className="demo-invite-link" readOnly value={recoveryLink} aria-label="Enlace de recuperación" />}
         </form>
       </section>
     </div>
