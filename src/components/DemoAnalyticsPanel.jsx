@@ -37,9 +37,9 @@ export default function DemoAnalyticsPanel({ onClose }) {
         {error && <p role="alert">{error}</p>}
         {data && <>
           <div className="demo-analytics-summary">
-            <strong>{data.invitations.length}</strong><span>Invitados</span>
-            <strong>{data.access.length}</strong><span>Accesos registrados</span>
-            <strong>{data.usage.length}</strong><span>Eventos de uso</span>
+            <div><strong>{data.invitations.length}</strong><span>Invitados</span></div>
+            <div><strong>{data.access.length}</strong><span>Accesos registrados</span></div>
+            <div><strong>{data.usage.length}</strong><span>Eventos de uso</span></div>
           </div>
           <div className="demo-analytics-table-wrap">
             <table className="demo-analytics-table">

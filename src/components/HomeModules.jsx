@@ -5,6 +5,7 @@ import { SortableContext, useSortable, verticalListSortingStrategy, sortableKeyb
 import { CSS } from '@dnd-kit/utilities'
 import { t } from '../i18n.js'
 import { normalizeHomeOrder, moveHomeModule } from '../homeModulesModel.js'
+import { recordDemoUsage } from '../demoAnalytics.js'
 
 function Module({ section, open, toggle }) {
   const panelId = useId()
@@ -55,7 +56,7 @@ export default function HomeModules({ usuarioId, sections, openRequest }) {
   return <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={move}>
     <SortableContext items={sorted} strategy={verticalListSortingStrategy}>
       <div className="home-modules" ref={root}>{sorted.map(id => <Module key={id} section={sections.find(s => s.id === id)} open={Boolean(opened[id])}
-        toggle={() => setOpened(prev => ({ ...prev, [id]: !prev[id] }))} />)}</div>
+        toggle={() => { const nextOpen = !opened[id]; setOpened(prev => ({ ...prev, [id]: nextOpen })); if (nextOpen) recordDemoUsage(usuarioId, 'module_open', id) }} />)}</div>
     </SortableContext>
   </DndContext>
 }

@@ -73,6 +73,23 @@ create policy demo_usage_events_insert_self on public.demo_usage_events
     )
   );
 
+-- Si la invitación quedó pendiente pero ya tiene usuario vinculado, permite registrar actividad.
+drop policy if exists demo_access_events_insert_self on public.demo_access_events;
+create policy demo_access_events_insert_self on public.demo_access_events
+  for insert to authenticated
+  with check (
+    user_id = (select auth.uid())
+    and exists (select 1 from public.invitaciones_demo invitation where invitation.user_id = (select auth.uid()))
+  );
+
+drop policy if exists demo_usage_events_insert_self on public.demo_usage_events;
+create policy demo_usage_events_insert_self on public.demo_usage_events
+  for insert to authenticated
+  with check (
+    user_id = (select auth.uid())
+    and exists (select 1 from public.invitaciones_demo invitation where invitation.user_id = (select auth.uid()))
+  );
+
 create or replace function public.touch_demo_invitation()
 returns trigger
 language plpgsql

@@ -416,8 +416,9 @@ a {
 .demo-invite-link { width: 100%; min-height: 90px; box-sizing: border-box; padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); color: var(--ink); font-size: 11px; }
 .demo-analytics-modal { width: min(900px, calc(100vw - 32px)); }
 .demo-analytics-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 20px 0; }
+.demo-analytics-summary > div { display: grid; gap: 6px; min-width: 0; }
 .demo-analytics-summary strong { display: block; padding: 12px; background: var(--surface-soft); color: var(--brand-heading); font-size: 24px; border-radius: 8px; }
-.demo-analytics-summary span { margin-left: -10px; align-self: end; padding: 0 12px 10px; color: var(--ink-soft); font-size: 11px; }
+.demo-analytics-summary span { padding: 0 2px; color: var(--ink-soft); font-size: 11px; }
 .demo-analytics-table-wrap { overflow-x: auto; }
 .demo-analytics-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .demo-analytics-table th, .demo-analytics-table td { padding: 10px; border-top: 1px solid var(--line); text-align: start; white-space: nowrap; }
