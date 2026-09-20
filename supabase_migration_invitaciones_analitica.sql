@@ -82,7 +82,8 @@ as $$
 begin
   update public.invitaciones_demo
   set estado = 'activa', accepted_at = coalesce(accepted_at, now())
-  where user_id = new.id and estado = 'pendiente';
+  where estado = 'pendiente'
+    and (user_id = new.id or lower(email) = lower(coalesce(new.email, '')));
   return new;
 end;
 $$;
