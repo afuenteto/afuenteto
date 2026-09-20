@@ -886,9 +886,13 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
         >
          <div className="login-brand">
 
-  <div>
-    <p className="eyebrow">{translateUI("Panel de estudio")}</p>
+  <img
+    src={appearance.logoUrl}
+    className="login-logo"
+    alt=""
+  />
 
+  <div>
     <h1 className="serif">·A·T·R·I·A·</h1>
     <p className="login-tagline">{translateUI("Gestión de proyectos")}</p>
   </div>
