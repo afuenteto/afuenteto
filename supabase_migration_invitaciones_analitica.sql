@@ -68,7 +68,7 @@ create index if not exists demo_sessions_user_started_idx
   on public.demo_sessions(user_id, started_at desc);
 alter table public.demo_sessions enable row level security;
 revoke all on public.demo_sessions from anon, authenticated;
-grant insert, update on public.demo_sessions to authenticated;
+grant select, insert, update on public.demo_sessions to authenticated;
 drop policy if exists demo_sessions_owner on public.demo_sessions;
 create policy demo_sessions_owner on public.demo_sessions
   for all to authenticated

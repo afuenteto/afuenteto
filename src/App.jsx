@@ -235,8 +235,13 @@ useEffect(() => {
         setCargando(false)
       }
     })
-    supabase.auth.getSession().then(({ error }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (activo && error) { setErrorLogin(error.message); setCargando(false) }
+      if (activo && session?.user?.id && usuarioActualRef.current !== session.user.id) {
+        usuarioActualRef.current = session.user.id
+        recordDemoAccess(session.user.id, 'session_start')
+        startDemoSession(session.user.id)
+      }
     }).catch(error => {
       if (activo) { setErrorLogin(error.message); setCargando(false) }
     })
