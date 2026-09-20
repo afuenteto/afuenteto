@@ -1,20 +1,24 @@
 import { supabase } from './supabase.js'
 
 let activeSessionId = null
+let activeSessionUserId = null
 
 export async function startDemoSession(userId) {
-  if (!userId || activeSessionId) return activeSessionId
+  if (!userId || activeSessionUserId === userId) return activeSessionId
+  if (activeSessionId && activeSessionUserId !== userId) await endDemoSession()
   try {
     const { data } = await supabase.from('demo_sessions').insert({ user_id: userId }).select('id').single()
     activeSessionId = data?.id || null
+    activeSessionUserId = userId
     return activeSessionId
-  } catch { return null }
+  } catch { activeSessionUserId = null; return null }
 }
 
 export async function endDemoSession() {
   if (!activeSessionId) return
   const sessionId = activeSessionId
   activeSessionId = null
+  activeSessionUserId = null
   try {
     const endedAt = new Date()
     const startedAt = await supabase.from('demo_sessions').select('started_at').eq('id', sessionId).single()
@@ -42,6 +46,7 @@ export async function recordDemoAccess(userId, event, route = window.location.pa
 export async function recordDemoUsage(userId, event, module = '', metadata = {}) {
   if (!userId || !event) return
   try {
+    if (!activeSessionId) await startDemoSession(userId)
     await supabase.from('demo_usage_events').insert({ user_id: userId, session_id: activeSessionId, event, module, metadata })
   } catch {
     // La analítica nunca debe bloquear la experiencia del usuario.

@@ -194,10 +194,8 @@ useEffect(() => {
       if (session?.user?.user_metadata?.demo_invitation_id && !session.user.user_metadata.demo_password_set) {
         setRecuperando(true)
       }
-      if (session && cambioDeCuenta) {
-        recordDemoAccess(session.user.id, event === 'SIGNED_IN' ? 'login' : 'session_start')
-        startDemoSession(session.user.id)
-      }
+      if (session && cambioDeCuenta) recordDemoAccess(session.user.id, event === 'SIGNED_IN' ? 'login' : 'session_start')
+      if (session) startDemoSession(session.user.id)
       if (!session && cambioDeCuenta && previousUserId) {
         recordDemoAccess(previousUserId, 'logout')
         endDemoSession()
@@ -237,7 +235,7 @@ useEffect(() => {
     })
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (activo && error) { setErrorLogin(error.message); setCargando(false) }
-      if (activo && session?.user?.id && usuarioActualRef.current !== session.user.id) {
+      if (activo && session?.user?.id) {
         usuarioActualRef.current = session.user.id
         recordDemoAccess(session.user.id, 'session_start')
         startDemoSession(session.user.id)
