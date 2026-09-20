@@ -12,7 +12,7 @@ export default function DemoInvitePanel({ onClose }) {
     if (busy) return
     setBusy(true)
     setStatus('')
-    const { error } = await supabase.functions.invoke('create-demo-invite', {
+    const { data, error } = await supabase.functions.invoke('create-demo-invite', {
       body: { nombre, email },
     })
     setBusy(false)
@@ -26,7 +26,9 @@ export default function DemoInvitePanel({ onClose }) {
       setStatus(detail)
       return
     }
-    setStatus('Invitación creada. El profesional recibirá un email para acceder.')
+    setStatus(data?.existingUser
+      ? 'La cuenta ya existía. Hemos reenviado un email para recuperar el acceso.'
+      : 'Invitación creada. El profesional recibirá un email para acceder.')
     setNombre('')
     setEmail('')
   }

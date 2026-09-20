@@ -21,6 +21,10 @@ Deno.serve(async request => {
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       { global: { headers: { Authorization: authorization } } },
     )
+    const emailClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+    )
 
     const { data: { user }, error: userError } = await authClient.auth.getUser()
     if (userError || !user) throw new Error('La sesión no es válida.')
@@ -58,10 +62,12 @@ Deno.serve(async request => {
     }
 
     let invitedUserId = invitation.user_id
+    let existingUser = Boolean(invitedUserId)
     if (!invitedUserId) {
       const { data: users, error: usersError } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 })
       if (usersError) throw usersError
       invitedUserId = users.users.find(candidate => candidate.email?.toLowerCase() === normalizedEmail)?.id
+      existingUser = Boolean(invitedUserId)
     }
 
     if (!invitedUserId) {
@@ -72,6 +78,13 @@ Deno.serve(async request => {
       invitedUserId = invited.user.id
     }
 
+    if (existingUser) {
+      const { error: resetError } = await emailClient.auth.resetPasswordForEmail(normalizedEmail, {
+        redirectTo: Deno.env.get('DEMO_REDIRECT_URL') ?? 'https://afuenteto.github.io/afuenteto/',
+      })
+      if (resetError) throw new Error(`La cuenta ya existía, pero no se pudo reenviar el email: ${resetError.message}`)
+    }
+
     const { error: linkError } = await adminClient
       .from('invitaciones_demo')
       .update({ user_id: invitedUserId, nombre: normalizedName || invitation.nombre })
@@ -80,7 +93,7 @@ Deno.serve(async request => {
 
     await seedDemoData(adminClient, invitedUserId)
 
-    return json({ invitation: { ...invitation, user_id: invitedUserId } })
+    return json({ invitation: { ...invitation, user_id: invitedUserId }, emailSent: true, existingUser })
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : 'No se pudo crear la invitación.' }, 400)
   }
