@@ -38,8 +38,8 @@ Deno.serve(async request => {
     ])
     if (invitationsError) throw invitationsError
     if (accessError) throw accessError
-    if (usageError) throw usageError
-    if (sessionsError) throw sessionsError
+    if (usageError && !isMissingAnalyticsColumn(usageError)) throw usageError
+    if (sessionsError && !isMissingAnalyticsTable(sessionsError)) throw sessionsError
 
     const accessByUser = new Map<string, { total: number; lastAccess: string | null }>()
     for (const event of access ?? []) {
@@ -57,7 +57,7 @@ Deno.serve(async request => {
       })),
       access: access ?? [],
       usage: usage ?? [],
-      sessions: sessions ?? [],
+      sessions: sessionsError && isMissingAnalyticsTable(sessionsError) ? [] : (sessions ?? []),
     })
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : 'No se pudo cargar la analítica.' }, 400)
@@ -69,4 +69,12 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   })
+}
+
+function isMissingAnalyticsTable(error: { code?: string; message?: string }) {
+  return error?.code === '42P01' || /demo_sessions.*does not exist/i.test(error?.message || '')
+}
+
+function isMissingAnalyticsColumn(error: { code?: string; message?: string }) {
+  return error?.code === '42703' || /session_id.*does not exist/i.test(error?.message || '')
 }
