@@ -38,32 +38,49 @@ Deno.serve(async request => {
     const normalizedName = String(nombre ?? '').trim().slice(0, 120)
     if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) throw new Error('El email no es válido.')
 
-    const token = crypto.randomUUID()
-    const tokenHash = await sha256(token)
-    const { data: invitation, error: invitationError } = await adminClient
+    const { data: existingInvitation, error: existingInvitationError } = await adminClient
       .from('invitaciones_demo')
-      .insert({ email: normalizedEmail, nombre: normalizedName, token_hash: tokenHash })
-      .select('id, email, nombre, estado')
-      .single()
-    if (invitationError) throw invitationError
+      .select('id, email, nombre, estado, user_id')
+      .eq('email', normalizedEmail)
+      .maybeSingle()
+    if (existingInvitationError) throw existingInvitationError
 
-    const { data: invited, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(normalizedEmail, {
-      data: { demo_invitation_id: invitation.id, demo_name: normalizedName },
-    })
-    if (inviteError) {
-      await adminClient.from('invitaciones_demo').delete().eq('id', invitation.id)
-      throw inviteError
+    let invitation = existingInvitation
+    if (!invitation) {
+      const tokenHash = await sha256(crypto.randomUUID())
+      const { data, error } = await adminClient
+        .from('invitaciones_demo')
+        .insert({ email: normalizedEmail, nombre: normalizedName, token_hash: tokenHash })
+        .select('id, email, nombre, estado, user_id')
+        .single()
+      if (error) throw error
+      invitation = data
+    }
+
+    let invitedUserId = invitation.user_id
+    if (!invitedUserId) {
+      const { data: users, error: usersError } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 })
+      if (usersError) throw usersError
+      invitedUserId = users.users.find(candidate => candidate.email?.toLowerCase() === normalizedEmail)?.id
+    }
+
+    if (!invitedUserId) {
+      const { data: invited, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(normalizedEmail, {
+        data: { demo_invitation_id: invitation.id, demo_name: normalizedName },
+      })
+      if (inviteError) throw inviteError
+      invitedUserId = invited.user.id
     }
 
     const { error: linkError } = await adminClient
       .from('invitaciones_demo')
-      .update({ user_id: invited.user.id })
+      .update({ user_id: invitedUserId, nombre: normalizedName || invitation.nombre })
       .eq('id', invitation.id)
     if (linkError) throw linkError
 
-    await seedDemoData(adminClient, invited.user.id)
+    await seedDemoData(adminClient, invitedUserId)
 
-    return json({ invitation: { ...invitation, user_id: invited.user.id } })
+    return json({ invitation: { ...invitation, user_id: invitedUserId } })
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : 'No se pudo crear la invitación.' }, 400)
   }
@@ -82,13 +99,6 @@ function json(body: unknown, status = 200) {
 }
 
 async function seedDemoData(client: ReturnType<typeof createClient>, userId: string) {
-  const { count, error: countError } = await client
-    .from('proyectos')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', userId)
-  if (countError) throw countError
-  if ((count ?? 0) > 0) return
-
   const today = new Date()
   today.setDate(today.getDate() + 2)
   const date = today.toISOString().slice(0, 10)
@@ -130,6 +140,12 @@ async function seedDemoData(client: ReturnType<typeof createClient>, userId: str
   ]
 
   for (const [table, rows] of [['clientes', clients], ['proveedores', providers], ['proyectos', projects], ['deudas', debts], ['citas_genericas', appointments]] as const) {
+    const { count, error: countError } = await client
+      .from(table)
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+    if (countError) throw new Error(`No se pudieron comprobar los datos de ${table}: ${countError.message}`)
+    if ((count ?? 0) > 0) continue
     const { error } = await client.from(table).insert(rows)
     if (error) throw new Error(`No se pudieron crear los datos de ${table}: ${error.message}`)
   }
