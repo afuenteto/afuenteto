@@ -406,6 +406,13 @@ a {
 .login-field {
   background: transparent !important;
 }
+
+.demo-invite-modal { width: min(520px, calc(100vw - 32px)); }
+.demo-invite-form { display: grid; gap: 14px; margin-top: 18px; }
+.demo-invite-form label { display: grid; gap: 6px; font-size: 12px; color: var(--ink-soft); }
+.demo-invite-form input { width: 100%; box-sizing: border-box; padding: 10px 11px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--ink); }
+.demo-invite-form input:focus { border-color: #cbb8cf; box-shadow: 0 0 0 3px rgba(230,221,231,0.72); outline: none; }
+.demo-invite-status { margin: 0; color: var(--brand-heading); font-size: 12px; }
 /* =========================================================
    ACCIONES
    ========================================================= */

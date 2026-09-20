@@ -25,6 +25,7 @@ import ProjectModal from './components/ProjectModal.jsx'
 import TasksModal from './components/TasksModal.jsx'
 import DeliveryModal from './components/DeliveryModal.jsx'
 import StudioProfile from './components/StudioProfile.jsx'
+import DemoInvitePanel from './components/DemoInvitePanel.jsx'
 import SuppliersPanel from './components/SuppliersPanel.jsx'
 import FooterActions from './components/FooterActions.jsx'
 import TasksPanel from './components/TasksPanel.jsx'
@@ -89,6 +90,7 @@ export default function App() {
   useEffect(() => () => clearTimeout(avisoTimerRef.current), [usuario?.id])
   const [panelAbierto, setPanelAbierto] = useState(null)
   const [informacionAbierta, setInformacionAbierta] = useState(null)
+  const [invitacionDemoAbierta, setInvitacionDemoAbierta] = useState(false)
   const [enviandoContacto, setEnviandoContacto] = useState(false)
   const operacionRef = useRef(false)
   const [errorCarga, setErrorCarga] = useState('')
@@ -1020,6 +1022,8 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 
 <button type="button" className="btn" disabled={guardando || guardandoModulos}
   onClick={() => setConfigurandoModulos(true)}>{translateUI('Módulos')}</button>
+
+<button type="button" className="btn" onClick={() => setInvitacionDemoAbierta(true)}>Invitar profesional</button>
         
 </div>
 </div>
@@ -1035,6 +1039,8 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
           {aviso}
         </p>
       )}
+
+      {invitacionDemoAbierta && <DemoInvitePanel onClose={() => setInvitacionDemoAbierta(false)} />}
 
       {guardando && (
         <p
