@@ -1,6 +1,6 @@
 import CommissionsPanel from './components/CommissionsPanel.jsx'
 import useGenericAppointments from './useGenericAppointments.js'
-import { recordDemoAccess } from './demoAnalytics.js'
+import { recordDemoAccess, startDemoSession, endDemoSession } from './demoAnalytics.js'
 import LineIcon, { iconText } from './components/LineIcon.jsx'
 import FooterLinks from './components/FooterLinks.jsx'
 import useAppearance from './useAppearance.js'
@@ -194,8 +194,14 @@ useEffect(() => {
       if (session?.user?.user_metadata?.demo_invitation_id && !session.user.user_metadata.demo_password_set) {
         setRecuperando(true)
       }
-      if (session && cambioDeCuenta) recordDemoAccess(session.user.id, event === 'SIGNED_IN' ? 'login' : 'session_start')
-      if (!session && cambioDeCuenta && previousUserId) recordDemoAccess(previousUserId, 'logout')
+      if (session && cambioDeCuenta) {
+        recordDemoAccess(session.user.id, event === 'SIGNED_IN' ? 'login' : 'session_start')
+        startDemoSession(session.user.id)
+      }
+      if (!session && cambioDeCuenta && previousUserId) {
+        recordDemoAccess(previousUserId, 'logout')
+        endDemoSession()
+      }
       if (cambioDeCuenta) {
         setOpenHomeModule(null)
         setConfigurandoModulos(false)

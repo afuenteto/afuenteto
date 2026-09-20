@@ -425,6 +425,7 @@ a {
 .demo-analytics-table th { color: var(--ink-soft); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
 .demo-analytics-table td:first-child { white-space: normal; }
 .demo-analytics-table td:first-child small { display: block; color: var(--ink-soft); }
+.demo-analytics-heading { margin: 24px 0 10px; color: var(--brand-heading); font-size: 15px; }
 /* =========================================================
    ACCIONES
    ========================================================= */

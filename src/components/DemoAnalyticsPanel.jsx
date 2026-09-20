@@ -6,6 +6,13 @@ function formatDate(value) {
   return new Date(value).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' })
 }
 
+function formatDuration(seconds) {
+  const total = Math.max(0, Number(seconds) || 0)
+  const minutes = Math.floor(total / 60)
+  const remaining = total % 60
+  return minutes ? `${minutes} min ${remaining} s` : `${remaining} s`
+}
+
 export default function DemoAnalyticsPanel({ onClose }) {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
@@ -49,6 +56,18 @@ export default function DemoAnalyticsPanel({ onClose }) {
                 <td>{invitation.estado}</td>
                 <td>{invitation.accessCount}</td>
                 <td>{formatDate(invitation.lastAccess)}</td>
+              </tr>)}</tbody>
+            </table>
+          </div>
+          <h3 className="demo-analytics-heading">Sesiones y módulos utilizados</h3>
+          <div className="demo-analytics-table-wrap">
+            <table className="demo-analytics-table">
+              <thead><tr><th>Sesión</th><th>Inicio</th><th>Duración</th><th>Módulos</th></tr></thead>
+              <tbody>{(data.sessions || []).map(session => <tr key={session.id}>
+                <td>{data.invitations.find(item => item.user_id === session.user_id)?.email || session.user_id}</td>
+                <td>{formatDate(session.started_at)}</td>
+                <td>{formatDuration(session.duration_seconds)}</td>
+                <td>{[...new Set((data.usage || []).filter(event => event.session_id === session.id && event.module).map(event => event.module))].join(', ') || 'Sin módulos registrados'}</td>
               </tr>)}</tbody>
             </table>
           </div>

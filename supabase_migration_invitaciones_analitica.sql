@@ -56,6 +56,28 @@ create table if not exists public.demo_usage_events (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.demo_sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  started_at timestamptz not null default now(),
+  ended_at timestamptz,
+  duration_seconds integer not null default 0 check (duration_seconds >= 0)
+);
+
+create index if not exists demo_sessions_user_started_idx
+  on public.demo_sessions(user_id, started_at desc);
+alter table public.demo_sessions enable row level security;
+revoke all on public.demo_sessions from anon, authenticated;
+grant insert, update on public.demo_sessions to authenticated;
+drop policy if exists demo_sessions_owner on public.demo_sessions;
+create policy demo_sessions_owner on public.demo_sessions
+  for all to authenticated
+  using (user_id = (select auth.uid()))
+  with check (user_id = (select auth.uid()));
+
+alter table public.demo_usage_events add column if not exists session_id uuid references public.demo_sessions(id) on delete set null;
+create index if not exists demo_usage_events_session_idx on public.demo_usage_events(session_id);
+
 create index if not exists demo_usage_events_user_created_idx
   on public.demo_usage_events(user_id, created_at desc);
 alter table public.demo_usage_events enable row level security;

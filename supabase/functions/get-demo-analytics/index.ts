@@ -30,14 +30,16 @@ Deno.serve(async request => {
       throw new Error('No tienes permisos para consultar la analítica.')
     }
 
-    const [{ data: invitations, error: invitationsError }, { data: access, error: accessError }, { data: usage, error: usageError }] = await Promise.all([
+    const [{ data: invitations, error: invitationsError }, { data: access, error: accessError }, { data: usage, error: usageError }, { data: sessions, error: sessionsError }] = await Promise.all([
       adminClient.from('invitaciones_demo').select('id,email,nombre,estado,user_id,created_at,accepted_at').order('created_at', { ascending: false }),
       adminClient.from('demo_access_events').select('user_id,event,route,created_at').order('created_at', { ascending: false }).limit(500),
-      adminClient.from('demo_usage_events').select('user_id,event,module,metadata,created_at').order('created_at', { ascending: false }).limit(500),
+      adminClient.from('demo_usage_events').select('user_id,session_id,event,module,metadata,created_at').order('created_at', { ascending: false }).limit(500),
+      adminClient.from('demo_sessions').select('id,user_id,started_at,ended_at,duration_seconds').order('started_at', { ascending: false }).limit(500),
     ])
     if (invitationsError) throw invitationsError
     if (accessError) throw accessError
     if (usageError) throw usageError
+    if (sessionsError) throw sessionsError
 
     const accessByUser = new Map<string, { total: number; lastAccess: string | null }>()
     for (const event of access ?? []) {
@@ -55,6 +57,7 @@ Deno.serve(async request => {
       })),
       access: access ?? [],
       usage: usage ?? [],
+      sessions: sessions ?? [],
     })
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : 'No se pudo cargar la analítica.' }, 400)
