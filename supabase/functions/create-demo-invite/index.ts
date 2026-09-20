@@ -73,6 +73,7 @@ Deno.serve(async request => {
     if (!invitedUserId) {
       const { data: invited, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(normalizedEmail, {
         data: { demo_invitation_id: invitation.id, demo_name: normalizedName },
+        redirectTo: Deno.env.get('DEMO_REDIRECT_URL') ?? 'https://afuenteto.github.io/afuenteto/',
       })
       if (inviteError) throw inviteError
       invitedUserId = invited.user.id
@@ -81,13 +82,13 @@ Deno.serve(async request => {
     let recoveryLink = ''
     if (existingUser) {
       const { error: resetError } = await emailClient.auth.resetPasswordForEmail(normalizedEmail, {
-        redirectTo: Deno.env.get('DEMO_REDIRECT_URL') ?? 'https://afuenteto.github.io/afuento/',
+        redirectTo: Deno.env.get('DEMO_REDIRECT_URL') ?? 'https://afuenteto.github.io/afuenteto/',
       })
       if (resetError) {
         const { data: generated, error: linkError } = await adminClient.auth.admin.generateLink({
           type: 'recovery',
           email: normalizedEmail,
-          options: { redirectTo: Deno.env.get('DEMO_REDIRECT_URL') ?? 'https://afuenteto.github.io/afuento/' },
+          options: { redirectTo: Deno.env.get('DEMO_REDIRECT_URL') ?? 'https://afuenteto.github.io/afuenteto/' },
         })
         if (linkError) throw new Error(`La cuenta ya existía y Supabase limitó el email: ${resetError.message}`)
         recoveryLink = generated.properties?.action_link ?? ''
