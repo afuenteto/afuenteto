@@ -1,5 +1,6 @@
 import CommissionsPanel from './components/CommissionsPanel.jsx'
 import useGenericAppointments from './useGenericAppointments.js'
+import { recordDemoAccess } from './demoAnalytics.js'
 import LineIcon, { iconText } from './components/LineIcon.jsx'
 import FooterLinks from './components/FooterLinks.jsx'
 import useAppearance from './useAppearance.js'
@@ -41,6 +42,7 @@ import {
 
 export default function App() {
   useSyncExternalStore(subscribeLanguage, getLanguage, () => 'es')
+      const previousUserId = usuarioActualRef.current
   const [usuario, setUsuario] = useState(null)
   const genericAppointments = useGenericAppointments(usuario?.id)
   const appearance = useAppearance(usuario)
@@ -184,6 +186,8 @@ useEffect(() => {
         ? { ...session.user, user_metadata: actual.user_metadata }
         : session?.user ?? null)
       if (session) actualizarPerfil(session.access_token, session.user.id)
+      if (session && cambioDeCuenta) recordDemoAccess(session.user.id, event === 'SIGNED_IN' ? 'login' : 'session_start')
+      if (!session && cambioDeCuenta && previousUserId) recordDemoAccess(previousUserId, 'logout')
       if (cambioDeCuenta) {
         setOpenHomeModule(null)
         setConfigurandoModulos(false)
