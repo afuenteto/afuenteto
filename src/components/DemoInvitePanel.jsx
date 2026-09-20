@@ -14,6 +14,12 @@ export default function DemoInvitePanel({ onClose }) {
     setBusy(true)
     setStatus('')
     setRecoveryLink('')
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      setBusy(false)
+      setStatus('Tu sesión ha caducado. Cierra sesión, vuelve a entrar con la cuenta administradora y reintenta.')
+      return
+    }
     const { data, error } = await supabase.functions.invoke('create-demo-invite', {
       body: { nombre, email },
     })
