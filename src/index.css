@@ -361,7 +361,8 @@ a {
 .login-brand {
   display: flex;
   align-items: center;
-  gap: 18px;
+  justify-content: center;
+  text-align: center;
   margin-bottom: 30px;
 }
 
@@ -1966,8 +1967,8 @@ a {
 
 
 .attention-delivery {
-  border-inline-start: 4px solid #8aaed9;
-  background: rgba(138,174,217,0.08);
+  border-inline-start: 4px solid #b96679;
+  background: rgba(217,139,155,0.08);
 }
 
 
@@ -2052,8 +2053,8 @@ a {
 
 
 .attention-delivery {
-  border-inline-start: 4px solid #8aaed9;
-  background: rgba(138,174,217,0.08);
+  border-inline-start: 4px solid #b96679;
+  background: rgba(217,139,155,0.08);
 }
 
 
@@ -2110,8 +2111,8 @@ a {
 
 
 .attention-delivery {
-  border-inline-start: 4px solid #8aaed9;
-  background: rgba(138,174,217,0.08);
+  border-inline-start: 4px solid #b96679;
+  background: rgba(217,139,155,0.08);
 }
 
 
@@ -3165,7 +3166,7 @@ input[type='date'] {
 /* Agenda y contactos del estudio */
 .daily-clock { display: inline-block; margin-inline-start: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); }
 .daily-row.is-today { background: #fff2d8; border-inline-start: 3px solid #aa6800; padding-inline: 12px; border-radius: 8px; }
-.daily-row.is-tomorrow { background: #eaf3fb; border-inline-start: 3px solid #3574a5; padding-inline: 12px; border-radius: 8px; }
+.daily-row.is-tomorrow { background: #f7e5e8; border-inline-start: 3px solid #b96679; padding-inline: 12px; border-radius: 8px; }
 .daily-when .daily-countdown { color: var(--ink); font-weight: 600; }
 .debt-card progress { appearance: none; height: 7px; border: 0; border-radius: 8px; overflow: hidden; background: #e0e0de; color: #92928e; }
 .debt-card progress::-webkit-progress-bar { background: #e0e0de; }
