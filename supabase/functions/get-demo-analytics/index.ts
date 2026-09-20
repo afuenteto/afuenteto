@@ -59,9 +59,10 @@ Deno.serve(async request => {
     const sessionRows = sessionsError && isMissingAnalyticsTable(sessionsError)
       ? deriveSessions(access ?? [])
       : (sessions ?? [])
+    const normalizedSessions = normalizeSessions(sessionRows)
     const usageRows = usageRowsSource.map(event => ({
       ...event,
-      session_id: event.session_id || sessionRows.find(session => session.user_id === event.user_id && isWithinSession(event.created_at, session))?.id || null,
+      session_id: event.session_id || normalizedSessions.find(session => session.user_id === event.user_id && isWithinSession(event.created_at, session))?.id || null,
     }))
 
     return json({
@@ -72,7 +73,7 @@ Deno.serve(async request => {
       })),
       access: access ?? [],
       usage: usageRows,
-      sessions: sessionRows,
+      sessions: normalizedSessions,
     })
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : 'No se pudo cargar la analítica.' }, 400)
@@ -119,4 +120,19 @@ function isWithinSession(createdAt: string, session: { started_at: string; ended
   const start = new Date(session.started_at).getTime()
   const end = session.ended_at ? new Date(session.ended_at).getTime() : Date.now()
   return time >= start && time <= end
+}
+
+function normalizeSessions(sessions: Array<any>) {
+  const ordered = [...sessions].sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime())
+  const latestByUser = new Map<string, any>()
+  for (const session of ordered) {
+    if (!latestByUser.has(session.user_id)) latestByUser.set(session.user_id, session)
+  }
+  return ordered.map(session => {
+    if (session.ended_at || latestByUser.get(session.user_id)?.id === session.id) return session
+    const newer = ordered.find(candidate => candidate.user_id === session.user_id && new Date(candidate.started_at).getTime() > new Date(session.started_at).getTime())
+    if (!newer) return session
+    const duration = Math.max(0, Math.round((new Date(newer.started_at).getTime() - new Date(session.started_at).getTime()) / 1000))
+    return { ...session, ended_at: newer.started_at, duration_seconds: duration }
+  })
 }
