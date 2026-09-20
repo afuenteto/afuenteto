@@ -131,6 +131,6 @@ async function seedDemoData(client: ReturnType<typeof createClient>, userId: str
 
   for (const [table, rows] of [['clientes', clients], ['proveedores', providers], ['proyectos', projects], ['deudas', debts], ['citas_genericas', appointments]] as const) {
     const { error } = await client.from(table).insert(rows)
-    if (error) throw error
+    if (error) throw new Error(`No se pudieron crear los datos de ${table}: ${error.message}`)
   }
 }

@@ -17,7 +17,13 @@ export default function DemoInvitePanel({ onClose }) {
     })
     setBusy(false)
     if (error) {
-      setStatus(error.message || 'No se pudo crear la invitación.')
+      let detail = error.message || 'No se pudo crear la invitación.'
+      try {
+        const response = error.context
+        const body = response ? await response.clone().json() : null
+        if (body?.error) detail = body.error
+      } catch { /* Mantener el mensaje genérico si Supabase no devuelve JSON. */ }
+      setStatus(detail)
       return
     }
     setStatus('Invitación creada. El profesional recibirá un email para acceder.')
