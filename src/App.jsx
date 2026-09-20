@@ -26,6 +26,7 @@ import TasksModal from './components/TasksModal.jsx'
 import DeliveryModal from './components/DeliveryModal.jsx'
 import StudioProfile from './components/StudioProfile.jsx'
 import DemoInvitePanel from './components/DemoInvitePanel.jsx'
+import DemoAnalyticsPanel from './components/DemoAnalyticsPanel.jsx'
 import SuppliersPanel from './components/SuppliersPanel.jsx'
 import FooterActions from './components/FooterActions.jsx'
 import TasksPanel from './components/TasksPanel.jsx'
@@ -92,6 +93,7 @@ export default function App() {
   const [panelAbierto, setPanelAbierto] = useState(null)
   const [informacionAbierta, setInformacionAbierta] = useState(null)
   const [invitacionDemoAbierta, setInvitacionDemoAbierta] = useState(false)
+  const [analiticaDemoAbierta, setAnaliticaDemoAbierta] = useState(false)
   const [enviandoContacto, setEnviandoContacto] = useState(false)
   const operacionRef = useRef(false)
   const [errorCarga, setErrorCarga] = useState('')
@@ -1028,6 +1030,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
   onClick={() => setConfigurandoModulos(true)}>{translateUI('Módulos')}</button>
 
 {usuario?.email?.toLowerCase() === demoAdminEmail && <button type="button" className="btn" onClick={() => setInvitacionDemoAbierta(true)}>Invitar profesional</button>}
+{usuario?.email?.toLowerCase() === demoAdminEmail && <button type="button" className="btn" onClick={() => setAnaliticaDemoAbierta(true)}>Analítica</button>}
         
 </div>
 </div>
@@ -1045,6 +1048,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
       )}
 
       {invitacionDemoAbierta && <DemoInvitePanel onClose={() => setInvitacionDemoAbierta(false)} />}
+      {analiticaDemoAbierta && <DemoAnalyticsPanel onClose={() => setAnaliticaDemoAbierta(false)} />}
 
       {guardando && (
         <p
