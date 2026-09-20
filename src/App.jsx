@@ -910,6 +910,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
             >{translateUI("Email")}</label>
 
             <input
+              className="login-field"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -930,6 +931,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
             >{translateUI("Contraseña")}</label>
 
             <input
+              className="login-field"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

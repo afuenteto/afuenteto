@@ -3,7 +3,7 @@ export const PALETTES = {
   green: { accent: '#69b96e', soft: '#c5e6a5', hover: '#2e8f36', heading: '#2e5a3a', background: '#f4f7f3' },
   yellow: { accent: '#f2cc32', soft: '#fff0a0', hover: '#cfa01f', heading: '#6a4b16', background: '#f8f6f0' },
   red: { accent: '#c99b42', soft: '#ecd092', hover: '#a16b18', heading: '#654321', background: '#f7f3ef' },
-  blue: { accent: '#d98b9b', soft: '#f2d9de', hover: '#b96679', heading: '#713b49', background: '#fbf3f4' },
+  blue: { accent: '#e6dde7', soft: '#e6dde7', hover: '#cbb8cf', heading: '#6f586f', background: '#fcfafd' },
 }
 export function paletteColors(palette) {
   const key = Object.hasOwn(PALETTES, palette) ? palette : 'yellow'
