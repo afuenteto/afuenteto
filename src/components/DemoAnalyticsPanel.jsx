@@ -25,7 +25,6 @@ const moduleNames = {
   documents: 'Documentos',
   tasks: 'Tareas',
   delivery: 'Entregas',
-  suppliers: 'Proveedores',
   'Hoy en el estudio': 'Hoy en el estudio',
   'The app': 'La app',
 }
@@ -44,17 +43,16 @@ export default function DemoAnalyticsPanel({ onClose }) {
 
   useEffect(() => {
     let active = true
-    supabase.functions.invoke('get-demo-analytics')
-      .then(({ data: result, error: requestError }) => {
-        if (!active) return
-        if (requestError) setError(requestError.message)
-        else setData(result)
-        setLoading(false)
-      })
-      .catch(requestError => {
-        if (active) { setError(requestError.message); setLoading(false) }
-      })
-    return () => { active = false }
+    async function loadAnalytics() {
+      const { data: result, error: requestError } = await supabase.functions.invoke('get-demo-analytics')
+      if (!active) return
+      if (requestError) setError(requestError.message)
+      else { setData(result); setError('') }
+      setLoading(false)
+    }
+    loadAnalytics()
+    const timer = setInterval(loadAnalytics, 5000)
+    return () => { active = false; clearInterval(timer) }
   }, [])
 
   useEffect(() => {
@@ -82,7 +80,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
               <thead><tr><th>Profesional</th><th>Estado</th><th>Accesos</th><th>Último acceso</th></tr></thead>
               <tbody>{data.invitations.map(invitation => <tr key={invitation.id}>
                 <td><strong>{invitation.nombre || 'Sin nombre'}</strong><small>{invitation.email}</small></td>
-                <td>{invitation.estado}</td>
+                <td><span className={`analytics-status-dot ${invitation.estado === 'activa' ? 'is-active' : 'is-closed'}`} aria-hidden="true" />{invitation.estado}</td>
                 <td>{invitation.accessCount}</td>
                 <td>{formatDate(invitation.lastAccess)}</td>
               </tr>)}</tbody>
@@ -91,11 +89,12 @@ export default function DemoAnalyticsPanel({ onClose }) {
           <h3 className="demo-analytics-heading">Sesiones y módulos utilizados</h3>
           <div className="demo-analytics-table-wrap">
             <table className="demo-analytics-table">
-              <thead><tr><th>Sesión</th><th>Inicio</th><th>Duración</th><th>Módulos</th></tr></thead>
+              <thead><tr><th>Sesión</th><th>Inicio</th><th>Duración</th><th>Estado</th><th>Módulos</th></tr></thead>
               <tbody>{(data.sessions || []).map(session => <tr key={session.id}>
                 <td>{data.invitations.find(item => item.user_id === session.user_id)?.email || session.user_id}</td>
                 <td>{formatDate(session.started_at)}</td>
                 <td>{formatDuration(sessionDuration(session))}{!session.ended_at && ' (activa)'}</td>
+                <td><span className={`analytics-status-dot ${session.ended_at ? 'is-closed' : 'is-active'}`} aria-label={session.ended_at ? 'Cerrada' : 'Activa'} /></td>
                 <td>{[...new Set((data.usage || []).filter(event => event.session_id === session.id && event.module).map(event => moduleNames[event.module] || event.module))].join(', ') || 'Sin módulos registrados'}</td>
               </tr>)}</tbody>
             </table>
