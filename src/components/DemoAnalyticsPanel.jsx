@@ -13,10 +13,28 @@ function formatDuration(seconds) {
   return minutes ? `${minutes} min ${remaining} s` : `${remaining} s`
 }
 
+const moduleNames = {
+  today: 'Hoy en el estudio',
+  appointments: 'Citas',
+  projects: 'Proyectos',
+  debts: 'Deudas',
+  economy: 'Economía',
+  summary: 'Resumen',
+  suppliers: 'Proveedores',
+  commissions: 'Comisiones',
+}
+
+function sessionDuration(session) {
+  const end = session.ended_at ? new Date(session.ended_at).getTime() : Date.now()
+  const start = new Date(session.started_at).getTime()
+  return Math.max(Number(session.duration_seconds) || 0, Math.round((end - start) / 1000))
+}
+
 export default function DemoAnalyticsPanel({ onClose }) {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [, refreshDuration] = useState(Date.now())
 
   useEffect(() => {
     let active = true
@@ -31,6 +49,11 @@ export default function DemoAnalyticsPanel({ onClose }) {
         if (active) { setError(requestError.message); setLoading(false) }
       })
     return () => { active = false }
+  }, [])
+
+  useEffect(() => {
+    const timer = setInterval(() => refreshDuration(Date.now()), 1000)
+    return () => clearInterval(timer)
   }, [])
 
   return (
@@ -66,8 +89,8 @@ export default function DemoAnalyticsPanel({ onClose }) {
               <tbody>{(data.sessions || []).map(session => <tr key={session.id}>
                 <td>{data.invitations.find(item => item.user_id === session.user_id)?.email || session.user_id}</td>
                 <td>{formatDate(session.started_at)}</td>
-                <td>{formatDuration(session.duration_seconds)}</td>
-                <td>{[...new Set((data.usage || []).filter(event => event.session_id === session.id && event.module).map(event => event.module))].join(', ') || 'Sin módulos registrados'}</td>
+                <td>{formatDuration(sessionDuration(session))}{!session.ended_at && ' (activa)'}</td>
+                <td>{[...new Set((data.usage || []).filter(event => event.session_id === session.id && event.module).map(event => moduleNames[event.module] || event.module))].join(', ') || 'Sin módulos registrados'}</td>
               </tr>)}</tbody>
             </table>
           </div>
