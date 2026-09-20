@@ -316,11 +316,11 @@ a {
 .topbar > div:first-child {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
+  justify-content: flex-start;
 
   gap: 13px;
 }
+.topbar > div:first-child > div { text-align: center; }
 
 .topbar h1 {
   margin: 0;
@@ -402,6 +402,9 @@ a {
   border-color: #cbb8cf !important;
   box-shadow: 0 0 0 3px rgba(230,221,231,0.72) !important;
   outline: none;
+}
+.login-field {
+  background: transparent !important;
 }
 /* =========================================================
    ACCIONES
@@ -1991,8 +1994,8 @@ a {
 
 
 .attention-delivery {
-  border-inline-start: 4px solid #b96679;
-  background: rgba(217,139,155,0.08);
+  border-inline-start: 4px solid #cbb8cf;
+  background: rgba(230,221,231,0.72);
 }
 
 
@@ -2077,8 +2080,8 @@ a {
 
 
 .attention-delivery {
-  border-inline-start: 4px solid #b96679;
-  background: rgba(217,139,155,0.08);
+  border-inline-start: 4px solid #cbb8cf;
+  background: rgba(230,221,231,0.72);
 }
 
 
@@ -2135,8 +2138,8 @@ a {
 
 
 .attention-delivery {
-  border-inline-start: 4px solid #b96679;
-  background: rgba(217,139,155,0.08);
+  border-inline-start: 4px solid #cbb8cf;
+  background: rgba(230,221,231,0.72);
 }
 
 
@@ -3190,7 +3193,7 @@ input[type='date'] {
 /* Agenda y contactos del estudio */
 .daily-clock { display: inline-block; margin-inline-start: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); }
 .daily-row.is-today { background: #fff2d8; border-inline-start: 3px solid #aa6800; padding-inline: 12px; border-radius: 8px; }
-.daily-row.is-tomorrow { background: #f7e5e8; border-inline-start: 3px solid #b96679; padding-inline: 12px; border-radius: 8px; }
+.daily-row.is-tomorrow { background: #e6dde7; border-inline-start: 3px solid #cbb8cf; padding-inline: 12px; border-radius: 8px; }
 .daily-when .daily-countdown { color: var(--ink); font-weight: 600; }
 .debt-card progress { appearance: none; height: 7px; border: 0; border-radius: 8px; overflow: hidden; background: #e0e0de; color: #92928e; }
 .debt-card progress::-webkit-progress-bar { background: #e0e0de; }
