@@ -43,6 +43,7 @@ import {
 
 export default function App() {
   useSyncExternalStore(subscribeLanguage, getLanguage, () => 'es')
+  const demoAdminEmail = 'afuenteto@gmail.com'
   const [usuario, setUsuario] = useState(null)
   const genericAppointments = useGenericAppointments(usuario?.id)
   const appearance = useAppearance(usuario)
@@ -188,6 +189,9 @@ useEffect(() => {
         ? { ...session.user, user_metadata: actual.user_metadata }
         : session?.user ?? null)
       if (session) actualizarPerfil(session.access_token, session.user.id)
+      if (session?.user?.user_metadata?.demo_invitation_id && !session.user.user_metadata.demo_password_set) {
+        setRecuperando(true)
+      }
       if (session && cambioDeCuenta) recordDemoAccess(session.user.id, event === 'SIGNED_IN' ? 'login' : 'session_start')
       if (!session && cambioDeCuenta && previousUserId) recordDemoAccess(previousUserId, 'logout')
       if (cambioDeCuenta) {
@@ -285,7 +289,7 @@ useEffect(() => {
     setGuardando(true)
     setErrorLogin('')
     try {
-      const { error } = await supabase.auth.updateUser({ password: nuevaPassword })
+      const { error } = await supabase.auth.updateUser({ password: nuevaPassword, data: { ...usuario.user_metadata, demo_password_set: true } })
       if (error) throw error
       setRecuperando(false)
       setNuevaPassword('')
@@ -1023,7 +1027,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 <button type="button" className="btn" disabled={guardando || guardandoModulos}
   onClick={() => setConfigurandoModulos(true)}>{translateUI('Módulos')}</button>
 
-<button type="button" className="btn" onClick={() => setInvitacionDemoAbierta(true)}>Invitar profesional</button>
+{usuario?.email?.toLowerCase() === demoAdminEmail && <button type="button" className="btn" onClick={() => setInvitacionDemoAbierta(true)}>Invitar profesional</button>}
         
 </div>
 </div>
