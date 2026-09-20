@@ -22,6 +22,12 @@ const moduleNames = {
   summary: 'Resumen',
   suppliers: 'Proveedores',
   commissions: 'Comisiones',
+  documents: 'Documentos',
+  tasks: 'Tareas',
+  delivery: 'Entregas',
+  suppliers: 'Proveedores',
+  'Hoy en el estudio': 'Hoy en el estudio',
+  'The app': 'La app',
 }
 
 function sessionDuration(session) {

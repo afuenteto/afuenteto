@@ -41,6 +41,13 @@ Deno.serve(async request => {
     if (usageError && !isMissingAnalyticsColumn(usageError)) throw usageError
     if (sessionsError && !isMissingAnalyticsTable(sessionsError)) throw sessionsError
 
+    let usageRowsSource = usage ?? []
+    if (usageError && isMissingAnalyticsColumn(usageError)) {
+      const fallback = await adminClient.from('demo_usage_events').select('user_id,event,module,metadata,created_at').order('created_at', { ascending: false }).limit(500)
+      if (fallback.error) throw fallback.error
+      usageRowsSource = fallback.data ?? []
+    }
+
     const accessByUser = new Map<string, { total: number; lastAccess: string | null }>()
     for (const event of access ?? []) {
       const current = accessByUser.get(event.user_id) ?? { total: 0, lastAccess: null }
@@ -49,6 +56,14 @@ Deno.serve(async request => {
       accessByUser.set(event.user_id, current)
     }
 
+    const sessionRows = sessionsError && isMissingAnalyticsTable(sessionsError)
+      ? deriveSessions(access ?? [])
+      : (sessions ?? [])
+    const usageRows = usageRowsSource.map(event => ({
+      ...event,
+      session_id: event.session_id || sessionRows.find(session => session.user_id === event.user_id && isWithinSession(event.created_at, session))?.id || null,
+    }))
+
     return json({
       invitations: (invitations ?? []).map(invitation => ({
         ...invitation,
@@ -56,8 +71,8 @@ Deno.serve(async request => {
         lastAccess: accessByUser.get(invitation.user_id)?.lastAccess ?? null,
       })),
       access: access ?? [],
-      usage: usage ?? [],
-      sessions: sessionsError && isMissingAnalyticsTable(sessionsError) ? [] : (sessions ?? []),
+      usage: usageRows,
+      sessions: sessionRows,
     })
   } catch (error) {
     return json({ error: error instanceof Error ? error.message : 'No se pudo cargar la analítica.' }, 400)
@@ -77,4 +92,31 @@ function isMissingAnalyticsTable(error: { code?: string; message?: string }) {
 
 function isMissingAnalyticsColumn(error: { code?: string; message?: string }) {
   return error?.code === '42703' || /session_id.*does not exist/i.test(error?.message || '')
+}
+
+function deriveSessions(access: Array<{ user_id: string; event: string; created_at: string }>) {
+  const sessions = []
+  const active = new Map<string, any>()
+  for (const event of [...access].sort((a, b) => a.created_at.localeCompare(b.created_at))) {
+    if (event.event === 'login' || event.event === 'session_start') {
+      const session = { id: `derived-${event.user_id}-${event.created_at}`, user_id: event.user_id, started_at: event.created_at, ended_at: null, duration_seconds: 0 }
+      sessions.push(session)
+      active.set(event.user_id, session)
+    } else if (event.event === 'logout') {
+      const session = active.get(event.user_id)
+      if (session) {
+        session.ended_at = event.created_at
+        session.duration_seconds = Math.max(0, Math.round((new Date(event.created_at).getTime() - new Date(session.started_at).getTime()) / 1000))
+        active.delete(event.user_id)
+      }
+    }
+  }
+  return sessions.reverse()
+}
+
+function isWithinSession(createdAt: string, session: { started_at: string; ended_at?: string | null }) {
+  const time = new Date(createdAt).getTime()
+  const start = new Date(session.started_at).getTime()
+  const end = session.ended_at ? new Date(session.ended_at).getTime() : Date.now()
+  return time >= start && time <= end
 }
