@@ -1208,14 +1208,16 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
           <button type="button" className="module-new-project-action" onClick={abrirNuevo} disabled={guardando}>
             {translateUI('+ Nuevo proyecto')}
           </button>
-          <button type="button" className="module-quick-action" onClick={() => { setFiltro('Todos'); toggle() }} aria-expanded={open} aria-controls={panelId}
-            title={translateUI('Proyectos activos')} aria-label={`${translateUI('Proyectos activos')}: ${proyectosActivos.length}`}>
-            <LineIcon name="unlocked" /><span>{proyectosActivos.length}</span>
-          </button>
-          <button type="button" className="module-quick-action" onClick={() => setPanelAbierto('bloqueados')}
-            title={translateUI('🔵 Proyectos bloqueados').replace(/^🔵\s*/u, '')} aria-label={`${translateUI('🔵 Proyectos bloqueados').replace(/^🔵\s*/u, '')}: ${proyectosActivos.filter(p => p.prioridad === 'bloqueado').length}`}>
-            <LineIcon name="bloqueados" /><span>{proyectosActivos.filter(p => p.prioridad === 'bloqueado').length}</span>
-          </button>
+          <span className="module-project-indicators">
+            <button type="button" className="module-quick-action" onClick={() => { setFiltro('Todos'); toggle() }} aria-expanded={open} aria-controls={panelId}
+              title={translateUI('Proyectos activos')} aria-label={`${translateUI('Proyectos activos')}: ${proyectosActivos.length}`}>
+              <LineIcon name="unlocked" /><span>{proyectosActivos.length}</span>
+            </button>
+            <button type="button" className="module-quick-action" onClick={() => setPanelAbierto('bloqueados')}
+              title={translateUI('🔵 Proyectos bloqueados').replace(/^🔵\s*/u, '')} aria-label={`${translateUI('🔵 Proyectos bloqueados').replace(/^🔵\s*/u, '')}: ${proyectosActivos.filter(p => p.prioridad === 'bloqueado').length}`}>
+              <LineIcon name="bloqueados" /><span>{proyectosActivos.filter(p => p.prioridad === 'bloqueado').length}</span>
+            </button>
+          </span>
         </div> : section.id === 'appointments' ?
         ({ open, toggle, panelId }) => <div className="module-quick-actions">
           <button type="button" className="module-quick-action" onClick={toggle} aria-expanded={open} aria-controls={panelId}
