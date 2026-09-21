@@ -35,6 +35,10 @@ function sessionDuration(session) {
   return Math.max(Number(session.duration_seconds) || 0, Math.round((end - start) / 1000))
 }
 
+function isSessionActive(session) {
+  return !session.ended_at && (!session.last_seen_at || Date.now() - new Date(session.last_seen_at).getTime() <= 300000)
+}
+
 function modulesForSession(session, usage) {
   const relevant = usage.filter(event => {
     if (event.user_id !== session.user_id || !event.module) return false
@@ -111,8 +115,8 @@ export default function DemoAnalyticsPanel({ onClose }) {
               <tbody>{(data.sessions || []).slice(0, visibleSessions).map(session => <tr key={session.id}>
                 <td>{data.invitations.find(item => item.user_id === session.user_id)?.email || session.user_id}</td>
                 <td>{formatDate(session.started_at)}</td>
-                <td>{formatDuration(sessionDuration(session))}{!session.ended_at && ' (activa)'}</td>
-                <td><span className={`analytics-status-dot ${session.ended_at ? 'is-closed' : 'is-active'}`} aria-label={session.ended_at ? 'Cerrada' : 'Activa'} /></td>
+                <td>{formatDuration(sessionDuration(session))}{isSessionActive(session) && ' (activa)'}</td>
+                <td><span className={`analytics-status-dot ${isSessionActive(session) ? 'is-active' : 'is-closed'}`} aria-label={isSessionActive(session) ? 'Activa' : 'Cerrada'} /></td>
                 <td>{modulesForSession(session, data.usage || [])}</td>
               </tr>)}</tbody>
             </table>
