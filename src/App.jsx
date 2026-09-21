@@ -1040,13 +1040,6 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
   </div>
 
       <div className="top-actions">
-
-  <button
-    className="btn btn-primary"
-    onClick={abrirNuevo}
-    disabled={guardando}
-  >{translateUI("+ Nuevo proyecto")}</button>
-        
 {modulos.clientes && <button
   className="btn"
   onClick={() => setPanelAbierto('clientes')}
@@ -1102,7 +1095,13 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
           setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({id:'appointments'}) : setPanelAbierto(panel)}
         />) },
         ...(modulos.tareas ? [{id: 'appointments', title: 'Citas', content: <StudioToday citasOnly proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items.filter(item => item.tipoCita !== 'personal') }, { id: 'personal', nombre: translateUI('Asuntos propios'), tareas: genericAppointments.items.filter(item => item.tipoCita === 'personal') }]} profileLogoUrl={appearance.logoUrl} modulos={modulos} guardando={guardando || genericAppointments.busy} onOpen={abrirExistente} onOpenTasks={abrirTareas} onCompleteTask={completarTareaDesdePanel} onSchedule={programarAgenda} />}]:[]),
-        { id: 'projects', title: 'Proyectos', content: (<>      <div className="filters">
+        { id: 'projects', title: 'Proyectos', content: (<>
+      <div className="project-module-actions">
+        <button className="btn btn-primary" onClick={abrirNuevo} disabled={guardando}>
+          {translateUI("+ Nuevo proyecto")}
+        </button>
+      </div>
+      <div className="filters">
         <div className="filter-row filter-row-categories">
         <button
           className={'chip' + (filtro === 'Todos' ? ' active' : '')}
