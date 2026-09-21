@@ -160,10 +160,10 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
       {abierto && (
         <div className="profile-panel">
           <button type="button" className="icon-btn personal-card-close" disabled={guardando || appearanceBusy} aria-label={translateUI('Cerrar')} onClick={() => setAbierto(false)}><LineIcon name="close-main" /></button>
-          {appearance && <AppearanceSettings ref={appearanceRef} usuario={usuario} settings={appearance.settings} logoUrl={appearance.logoUrl} onSaved={onAppearanceSaved} onBusy={setAppearanceBusy} editing={editando} actionsTarget={appearanceActions} saving={guardando} />}
 
           {!editando ? (
             <>
+              {appearance && <AppearanceSettings ref={appearanceRef} usuario={usuario} settings={appearance.settings} logoUrl={appearance.logoUrl} onSaved={onAppearanceSaved} onBusy={setAppearanceBusy} editing={editando} actionsTarget={appearanceActions} saving={guardando} />}
               <div className="profile-details">
               <h3 className="serif">
                 {perfil.nombre || translateUI("Perfil del estudio")}
@@ -251,6 +251,7 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
               </label>
 
               </div>
+              {appearance && <AppearanceSettings ref={appearanceRef} usuario={usuario} settings={appearance.settings} logoUrl={appearance.logoUrl} onSaved={onAppearanceSaved} onBusy={setAppearanceBusy} editing={editando} actionsTarget={appearanceActions} saving={guardando} />}
               <div className="profile-edit-actions" ref={setAppearanceActions}>
               <button
                 type="button"
