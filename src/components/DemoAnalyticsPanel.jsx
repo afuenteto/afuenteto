@@ -29,14 +29,27 @@ const moduleNames = {
   'The app': 'La app',
 }
 
-function sessionDuration(session) {
-  const end = session.ended_at ? new Date(session.ended_at).getTime() : Date.now()
+function sessionDuration(session, active = isSessionActive(session)) {
+  const end = active || !session.ended_at ? Date.now() : new Date(session.ended_at).getTime()
   const start = new Date(session.started_at).getTime()
   return Math.max(Number(session.duration_seconds) || 0, Math.round((end - start) / 1000))
 }
 
 function isSessionActive(session) {
   return !session.ended_at && (!session.last_seen_at || Date.now() - new Date(session.last_seen_at).getTime() <= 300000)
+}
+
+function latestAccessFor(userId, access) {
+  return access.filter(event => event.user_id === userId)
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0]
+}
+
+function isUserSessionActive(session, access) {
+  if (isSessionActive(session)) return true
+  const latestAccess = latestAccessFor(session.user_id, access)
+  return Boolean(latestAccess && ['login', 'session_start'].includes(latestAccess.event) &&
+    Date.now() - new Date(latestAccess.created_at).getTime() <= 300000 &&
+    new Date(latestAccess.created_at).getTime() >= new Date(session.started_at).getTime())
 }
 
 function latestSessionFor(userId, sessions) {
@@ -106,7 +119,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
               <thead><tr><th>Profesional</th><th>Estado</th><th>Accesos</th><th>Último acceso</th></tr></thead>
               <tbody>{data.invitations.map(invitation => <tr key={invitation.id}>
                 <td><strong>{invitation.nombre || 'Sin nombre'}</strong><small>{invitation.email}</small></td>
-                <td>{(() => { const session = latestSessionFor(invitation.user_id, data.sessions || []); const active = session ? isSessionActive(session) : false; return <><span className={`analytics-status-dot ${active ? 'is-active' : 'is-closed'}`} aria-hidden="true" />{active ? 'activa' : 'inactiva'}</> })()}</td>
+                <td>{(() => { const session = latestSessionFor(invitation.user_id, data.sessions || []); const active = session ? isUserSessionActive(session, data.access || []) : false; return <><span className={`analytics-status-dot ${active ? 'is-active' : 'is-closed'}`} aria-hidden="true" />{active ? 'activa' : 'inactiva'}</> })()}</td>
                 <td>{invitation.accessCount}</td>
                 <td>{formatDate(invitation.lastAccess)}</td>
               </tr>)}</tbody>
@@ -119,8 +132,8 @@ export default function DemoAnalyticsPanel({ onClose }) {
               <tbody>{(data.sessions || []).slice(0, visibleSessions).map(session => <tr key={session.id}>
                 <td>{data.invitations.find(item => item.user_id === session.user_id)?.email || session.user_id}</td>
                 <td>{formatDate(session.started_at)}</td>
-                <td>{formatDuration(sessionDuration(session))}{isSessionActive(session) && ' (activa)'}</td>
-                <td><span className={`analytics-status-dot ${isSessionActive(session) ? 'is-active' : 'is-closed'}`} aria-label={isSessionActive(session) ? 'Activa' : 'Cerrada'} /></td>
+                <td>{formatDuration(sessionDuration(session, isUserSessionActive(session, data.access || [])))}{isUserSessionActive(session, data.access || []) && ' (activa)'}</td>
+                <td><span className={`analytics-status-dot ${isUserSessionActive(session, data.access || []) ? 'is-active' : 'is-closed'}`} aria-label={isUserSessionActive(session, data.access || []) ? 'Activa' : 'Cerrada'} /></td>
                 <td>{modulesForSession(session, data.usage || [])}</td>
               </tr>)}</tbody>
             </table>
