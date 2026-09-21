@@ -64,6 +64,7 @@ export default function App() {
   const [cargando, setCargando] = useState(true)
   const [proyectos, setProyectos] = useState([])
   const [clientes, setClientes] = useState([])
+  const [moduleCounts, setModuleCounts] = useState({ debts: 0, suppliers: 0 })
   const [clienteAbierto, setClienteAbierto] = useState(null)
   const [editando, setEditando] = useState(null)
   const [tareasAbiertas, setTareasAbiertas] = useState(null)
@@ -102,6 +103,21 @@ export default function App() {
   const [nuevaPassword, setNuevaPassword] = useState('')
   const [splashTerminado, setSplashTerminado] = useState(false)
   const inicioCargaRef = useRef(Date.now())
+
+  useEffect(() => {
+    if (!usuario?.id) return undefined
+    let active = true
+    const loadModuleCounts = async () => {
+      const [debtsResult, suppliersResult] = await Promise.all([
+        modulos.deudas ? supabase.from('deudas').select('id', { count: 'exact', head: true }).eq('user_id', usuario.id) : Promise.resolve({ count: 0 }),
+        modulos.proveedores ? supabase.from('proveedores').select('id', { count: 'exact', head: true }).eq('user_id', usuario.id) : Promise.resolve({ count: 0 }),
+      ])
+      if (!active) return
+      setModuleCounts({ debts: debtsResult.count || 0, suppliers: suppliersResult.count || 0 })
+    }
+    loadModuleCounts().catch(() => { if (active) setModuleCounts({ debts: 0, suppliers: 0 }) })
+    return () => { active = false }
+  }, [usuario?.id, modulos.deudas, modulos.proveedores])
 
   useEffect(() => {
     if (cargando) {
@@ -1208,6 +1224,24 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
           <button type="button" className="module-quick-action" onClick={toggle} aria-expanded={open} aria-controls={panelId}
             title={translateUI('Citas')} aria-label={`${translateUI('Citas')}: ${citasPendientes}`}>
             <LineIcon name="📅" /><span>{citasPendientes}</span>
+          </button>
+        </div> : section.id === 'debts' ?
+        ({ open, toggle, panelId }) => <div className="module-quick-actions">
+          <button type="button" className="module-quick-action" onClick={toggle} aria-expanded={open} aria-controls={panelId}
+            title={translateUI('Deudas')} aria-label={`${translateUI('Deudas')}: ${moduleCounts.debts}`}>
+            <LineIcon name="money" /><span>{moduleCounts.debts}</span>
+          </button>
+        </div> : section.id === 'commissions' ?
+        ({ open, toggle, panelId }) => <div className="module-quick-actions">
+          <button type="button" className="module-quick-action" onClick={toggle} aria-expanded={open} aria-controls={panelId}
+            title={translateUI('Comisiones')} aria-label={`${translateUI('Comisiones')}: ${proyectos.reduce((total, proyecto) => total + (proyecto.comisiones || []).length, 0)}`}>
+            <LineIcon name="payment" /><span>{proyectos.reduce((total, proyecto) => total + (proyecto.comisiones || []).length, 0)}</span>
+          </button>
+        </div> : section.id === 'suppliers' ?
+        ({ open, toggle, panelId }) => <div className="module-quick-actions">
+          <button type="button" className="module-quick-action" onClick={toggle} aria-expanded={open} aria-controls={panelId}
+            title={translateUI('Proveedores')} aria-label={`${translateUI('Proveedores')}: ${moduleCounts.suppliers}`}>
+            <LineIcon name="people" /><span>{moduleCounts.suppliers}</span>
           </button>
         </div> : section.id !== 'today' ? null :
         <ModulePreview proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items.filter(item => item.tipoCita !== 'personal') }, { id: 'personal', nombre: translateUI('Asuntos propios'), tareas: genericAppointments.items.filter(item => item.tipoCita === 'personal') }]} modulos={modulos} onOpenTasks={abrirTareas} onOpenDelivery={abrirEntrega} setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({ id: 'appointments' }) : setPanelAbierto(panel)} /> }))} />
