@@ -23,7 +23,7 @@ const images = {
   '📅': 'calendar', '💰': 'money', '📎': 'attachment', '📄': 'document',
   '🗑': 'trash', '👤': 'person', '👥': 'people', '💾': 'save', '⚠': 'warning',
   '✅': 'check', '✓': 'check', '📍': 'location', '🖼': 'image', '🔄': 'refresh', '⏳': 'pending',
-  bloqueados: 'lock', cobros: 'payment', close: 'close', grip: 'grip', move: 'move', color: 'color',
+  bloqueados: 'lock', money: 'money', people: 'people', cobros: 'payment', close: 'close', grip: 'grip', move: 'move', color: 'color',
   'import-contact': 'import-contact', payment: 'payment', tareas: 'check', '⌛': 'pending', unlocked: 'unlocked', drag: 'drag',
 }
 const aliases = { entregas: '📅', cobros: '💰' }
