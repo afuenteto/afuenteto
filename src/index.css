@@ -1540,6 +1540,8 @@ a {
 }
 
 @media (max-width: 520px) {
+  .demo-analytics-overlay { padding: 16px 8px; }
+  .demo-analytics-modal { width: calc(100vw - 16px); height: calc(100dvh - 32px); max-height: calc(100dvh - 32px); padding: 18px; }
   .demo-analytics-body { margin-inline-end: -18px; padding-inline-end: 18px; }
   .field-row {
     grid-template-columns: 1fr;

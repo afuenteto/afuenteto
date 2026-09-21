@@ -1049,7 +1049,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 <button type="button" className="btn" disabled={guardando || guardandoModulos}
   onClick={() => setConfigurandoModulos(true)}>{translateUI('Módulos')}</button>
 
-{usuario?.email?.toLowerCase() === demoAdminEmail && <button type="button" className="btn" onClick={() => setInvitacionDemoAbierta(true)}>Invitar profesional</button>}
+{usuario?.email?.toLowerCase() === demoAdminEmail && <button type="button" className="btn admin-invite-button" title="Invitar profesional" aria-label="Invitar profesional" onClick={() => setInvitacionDemoAbierta(true)}>INV</button>}
 {usuario?.email?.toLowerCase() === demoAdminEmail && <button type="button" className="btn" onClick={() => setAnaliticaDemoAbierta(true)}>Analítica</button>}
         
 </div>
