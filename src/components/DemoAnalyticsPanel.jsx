@@ -126,7 +126,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
-  const [visibleSessions, setVisibleSessions] = useState(6)
+  const [visibleSessions, setVisibleSessions] = useState(4)
   const [expandedSessions, setExpandedSessions] = useState(false)
   const [, refreshDuration] = useState(Date.now())
 
