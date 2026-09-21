@@ -55,6 +55,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [visibleSessions, setVisibleSessions] = useState(10)
   const [, refreshDuration] = useState(Date.now())
 
   useEffect(() => {
@@ -77,12 +78,13 @@ export default function DemoAnalyticsPanel({ onClose }) {
   }, [])
 
   return (
-    <div className="overlay" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) onClose() }}>
+    <div className="overlay demo-analytics-overlay" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) onClose() }}>
       <section className="modal demo-analytics-modal" role="dialog" aria-modal="true" aria-labelledby="demo-analytics-title">
         <div className="modal-head">
           <h2 id="demo-analytics-title" className="serif">Analítica de invitados</h2>
           <button type="button" className="icon-btn" onClick={onClose} aria-label="Cerrar">×</button>
         </div>
+        <div className="demo-analytics-body">
         {loading && <p>Cargando datos…</p>}
         {error && <p role="alert">{error}</p>}
         {data && <>
@@ -106,7 +108,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
           <div className="demo-analytics-table-wrap">
             <table className="demo-analytics-table">
               <thead><tr><th>Sesión</th><th>Inicio</th><th>Duración</th><th>Estado</th><th>Módulos</th></tr></thead>
-              <tbody>{(data.sessions || []).map(session => <tr key={session.id}>
+              <tbody>{(data.sessions || []).slice(0, visibleSessions).map(session => <tr key={session.id}>
                 <td>{data.invitations.find(item => item.user_id === session.user_id)?.email || session.user_id}</td>
                 <td>{formatDate(session.started_at)}</td>
                 <td>{formatDuration(sessionDuration(session))}{!session.ended_at && ' (activa)'}</td>
@@ -115,7 +117,9 @@ export default function DemoAnalyticsPanel({ onClose }) {
               </tr>)}</tbody>
             </table>
           </div>
+          {visibleSessions < (data.sessions || []).length && <button type="button" className="btn demo-analytics-more" onClick={() => setVisibleSessions(value => value + 10)}>Mostrar más</button>}
         </>}
+        </div>
       </section>
     </div>
   )
