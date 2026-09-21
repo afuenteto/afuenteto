@@ -152,7 +152,7 @@ function normalizeSessions(sessions: Array<any>) {
   }
   return ordered.map(session => {
     if (session.ended_at || latestByUser.get(session.user_id)?.id === session.id) {
-      if (!session.ended_at && session.last_seen_at && Date.now() - new Date(session.last_seen_at).getTime() > 90000) {
+      if (!session.ended_at && session.last_seen_at && Date.now() - new Date(session.last_seen_at).getTime() > 300000) {
         const duration = Math.max(0, Math.round((new Date(session.last_seen_at).getTime() - new Date(session.started_at).getTime()) / 1000))
         return { ...session, ended_at: session.last_seen_at, duration_seconds: duration }
       }

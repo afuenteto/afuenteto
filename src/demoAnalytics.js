@@ -4,6 +4,11 @@ let activeSessionId = null
 let activeSessionUserId = null
 let heartbeatTimer = null
 let startingSession = null
+let heartbeatHandler = null
+
+function touchDemoSession() {
+  if (activeSessionId) supabase.from('demo_sessions').update({ last_seen_at: new Date().toISOString() }).eq('id', activeSessionId)
+}
 
 export async function startDemoSession(userId) {
   if (!userId || activeSessionUserId === userId) return activeSessionId
@@ -13,9 +18,10 @@ export async function startDemoSession(userId) {
     const { data } = await supabase.from('demo_sessions').insert({ user_id: userId }).select('id').single()
     activeSessionId = data?.id || null
     activeSessionUserId = userId
-    heartbeatTimer = setInterval(() => {
-      if (activeSessionId) supabase.from('demo_sessions').update({ last_seen_at: new Date().toISOString() }).eq('id', activeSessionId)
-    }, 30000)
+    heartbeatHandler = () => { if (document.visibilityState !== 'hidden') touchDemoSession() }
+    heartbeatTimer = setInterval(heartbeatHandler, 15000)
+    window.addEventListener('focus', heartbeatHandler)
+    document.addEventListener('visibilitychange', heartbeatHandler)
     return activeSessionId
   })().catch(() => { activeSessionUserId = null; return null }).finally(() => { startingSession = null })
   return startingSession
@@ -28,6 +34,11 @@ export async function endDemoSession() {
   activeSessionUserId = null
   clearInterval(heartbeatTimer)
   heartbeatTimer = null
+  if (heartbeatHandler) {
+    window.removeEventListener('focus', heartbeatHandler)
+    document.removeEventListener('visibilitychange', heartbeatHandler)
+    heartbeatHandler = null
+  }
   try {
     const endedAt = new Date()
     const startedAt = await supabase.from('demo_sessions').select('started_at').eq('id', sessionId).single()
