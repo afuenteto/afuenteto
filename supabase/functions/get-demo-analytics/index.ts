@@ -65,11 +65,21 @@ Deno.serve(async request => {
     const sessionRows = sessionsError && isMissingAnalyticsTable(sessionsError)
       ? deriveSessions(access ?? [])
       : sessionRowsSource
-    const normalizedSessions = normalizeSessions(sessionRows)
+    const normalizedSessions = normalizeSessions(mergeLatestAccessSessions(sessionRows, access ?? []))
     const usageRows = usageRowsSource.map(event => ({
       ...event,
       session_id: event.session_id || normalizedSessions.find(session => session.user_id === event.user_id && isWithinSession(event.created_at, session))?.id || null,
     }))
+    const usageWithCounts = usageRows.map(event => ({ ...event, module_count: 0 }))
+    const moduleCounts = new Map<string, number>()
+    for (const event of usageWithCounts) {
+      if (!event.session_id || !event.module) continue
+      const key = `${event.session_id}:${event.module}`
+      moduleCounts.set(key, (moduleCounts.get(key) || 0) + 1)
+    }
+    for (const event of usageWithCounts) {
+      if (event.session_id && event.module) event.module_count = moduleCounts.get(`${event.session_id}:${event.module}`) || 0
+    }
 
     return json({
       invitations: (invitations ?? []).map(invitation => ({
@@ -78,7 +88,7 @@ Deno.serve(async request => {
         lastAccess: accessByUser.get(invitation.user_id)?.lastAccess ?? null,
       })),
       access: access ?? [],
-      usage: usageRows,
+      usage: usageWithCounts,
       sessions: normalizedSessions,
     })
   } catch (error) {
@@ -147,4 +157,21 @@ function normalizeSessions(sessions: Array<any>) {
     const duration = Math.max(0, Math.round((new Date(newer.started_at).getTime() - new Date(session.started_at).getTime()) / 1000))
     return { ...session, ended_at: newer.started_at, duration_seconds: duration }
   })
+}
+
+function mergeLatestAccessSessions(sessions: Array<any>, access: Array<any>) {
+  const result = [...sessions]
+  const latestStarts = new Map<string, any>()
+  for (const event of access) {
+    if (!['login', 'session_start'].includes(event.event)) continue
+    const current = latestStarts.get(event.user_id)
+    if (!current || new Date(event.created_at).getTime() > new Date(current.created_at).getTime()) latestStarts.set(event.user_id, event)
+  }
+  for (const [userId, event] of latestStarts) {
+    const latest = result.filter(session => session.user_id === userId).sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime())[0]
+    if (!latest || new Date(event.created_at).getTime() > new Date(latest.started_at).getTime()) {
+      result.push({ id: `derived-${userId}-${event.created_at}`, user_id: userId, started_at: event.created_at, ended_at: null, duration_seconds: 0, last_seen_at: event.created_at })
+    }
+  }
+  return result
 }

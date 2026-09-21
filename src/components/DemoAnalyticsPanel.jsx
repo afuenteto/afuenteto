@@ -95,7 +95,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
                 <td>{formatDate(session.started_at)}</td>
                 <td>{formatDuration(sessionDuration(session))}{!session.ended_at && ' (activa)'}</td>
                 <td><span className={`analytics-status-dot ${session.ended_at ? 'is-closed' : 'is-active'}`} aria-label={session.ended_at ? 'Cerrada' : 'Activa'} /></td>
-                <td>{[...new Set((data.usage || []).filter(event => event.session_id === session.id && event.module).map(event => moduleNames[event.module] || event.module))].join(', ') || 'Sin módulos registrados'}</td>
+                <td>{Object.entries((data.usage || []).filter(event => event.session_id === session.id && event.module).reduce((counts, event) => { const name = moduleNames[event.module] || event.module; counts[name] = (counts[name] || 0) + 1; return counts }, {})).map(([name, count]) => `${name} (${count})`).join(', ') || 'Sin módulos registrados'}</td>
               </tr>)}</tbody>
             </table>
           </div>
