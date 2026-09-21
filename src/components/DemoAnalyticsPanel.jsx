@@ -35,6 +35,22 @@ function sessionDuration(session) {
   return Math.max(Number(session.duration_seconds) || 0, Math.round((end - start) / 1000))
 }
 
+function modulesForSession(session, usage) {
+  const relevant = usage.filter(event => {
+    if (event.user_id !== session.user_id || !event.module) return false
+    if (event.session_id === session.id) return true
+    const time = new Date(event.created_at).getTime()
+    const start = new Date(session.started_at).getTime()
+    const end = session.ended_at ? new Date(session.ended_at).getTime() : Date.now()
+    return !event.session_id && time >= start && time <= end
+  })
+  return Object.entries(relevant.reduce((counts, event) => {
+    const name = moduleNames[event.module] || event.module
+    counts[name] = (counts[name] || 0) + 1
+    return counts
+  }, {})).map(([name, count]) => `${name} (${count})`).join(', ') || 'Sin módulos registrados'
+}
+
 export default function DemoAnalyticsPanel({ onClose }) {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
@@ -95,7 +111,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
                 <td>{formatDate(session.started_at)}</td>
                 <td>{formatDuration(sessionDuration(session))}{!session.ended_at && ' (activa)'}</td>
                 <td><span className={`analytics-status-dot ${session.ended_at ? 'is-closed' : 'is-active'}`} aria-label={session.ended_at ? 'Cerrada' : 'Activa'} /></td>
-                <td>{Object.entries((data.usage || []).filter(event => event.session_id === session.id && event.module).reduce((counts, event) => { const name = moduleNames[event.module] || event.module; counts[name] = (counts[name] || 0) + 1; return counts }, {})).map(([name, count]) => `${name} (${count})`).join(', ') || 'Sin módulos registrados'}</td>
+                <td>{modulesForSession(session, data.usage || [])}</td>
               </tr>)}</tbody>
             </table>
           </div>

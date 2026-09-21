@@ -35,7 +35,13 @@ export default function HomeModules({ usuarioId, sections, openRequest }) {
     try { return JSON.parse(localStorage.getItem(key)) } catch { return [] }
   })
   const [opened, setOpened] = useState({ today: true })
-  useEffect(() => { if (openRequest) setOpened(prev => ({ ...prev, [openRequest.id]: true })) }, [openRequest])
+  useEffect(() => { if (usuarioId) recordDemoUsage(usuarioId, 'module_open', 'today') }, [usuarioId])
+  useEffect(() => {
+    if (openRequest) {
+      setOpened(prev => ({ ...prev, [openRequest.id]: true }))
+      recordDemoUsage(usuarioId, 'module_open', openRequest.id)
+    }
+  }, [openRequest, usuarioId])
   useEffect(() => {
     if (!openRequest || !opened[openRequest.id]) return
     const frame = requestAnimationFrame(() => {
