@@ -44,7 +44,9 @@ function latestAccessFor(userId, access) {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0]
 }
 
-function isUserSessionActive(session, access) {
+function isUserSessionActive(session, access, sessions) {
+  const latest = latestSessionFor(session.user_id, sessions)
+  if (!latest || latest.id !== session.id) return false
   if (isSessionActive(session)) return true
   const latestAccess = latestAccessFor(session.user_id, access)
   return Boolean(latestAccess && ['login', 'session_start'].includes(latestAccess.event) &&
@@ -54,7 +56,7 @@ function isUserSessionActive(session, access) {
 
 function orderedSessions(sessions, access) {
   return [...sessions].sort((a, b) => {
-    const activeDifference = Number(isUserSessionActive(b, access)) - Number(isUserSessionActive(a, access))
+    const activeDifference = Number(isUserSessionActive(b, access, sessions)) - Number(isUserSessionActive(a, access, sessions))
     return activeDifference || new Date(b.started_at).getTime() - new Date(a.started_at).getTime()
   })
 }
@@ -126,7 +128,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
               <thead><tr><th>Profesional</th><th>Estado</th><th>Accesos</th><th>Último acceso</th></tr></thead>
               <tbody>{data.invitations.map(invitation => <tr key={invitation.id}>
                 <td><strong>{invitation.nombre || 'Sin nombre'}</strong><small>{invitation.email}</small></td>
-                <td>{(() => { const session = latestSessionFor(invitation.user_id, data.sessions || []); const active = session ? isUserSessionActive(session, data.access || []) : false; return <><span className={`analytics-status-dot ${active ? 'is-active' : 'is-closed'}`} aria-hidden="true" />{active ? 'activa' : 'inactiva'}</> })()}</td>
+                <td>{(() => { const session = latestSessionFor(invitation.user_id, data.sessions || []); const active = session ? isUserSessionActive(session, data.access || [], data.sessions || []) : false; return <><span className={`analytics-status-dot ${active ? 'is-active' : 'is-closed'}`} aria-hidden="true" />{active ? 'activa' : 'inactiva'}</> })()}</td>
                 <td>{invitation.accessCount}</td>
                 <td>{formatDate(invitation.lastAccess)}</td>
               </tr>)}</tbody>
@@ -139,8 +141,8 @@ export default function DemoAnalyticsPanel({ onClose }) {
               <tbody>{orderedSessions(data.sessions || [], data.access || []).slice(0, visibleSessions).map(session => <tr key={session.id}>
                 <td>{data.invitations.find(item => item.user_id === session.user_id)?.email || session.user_id}</td>
                 <td>{formatDate(session.started_at)}</td>
-                <td>{formatDuration(sessionDuration(session, isUserSessionActive(session, data.access || [])))}{isUserSessionActive(session, data.access || []) && ' (activa)'}</td>
-                <td><span className={`analytics-status-dot ${isUserSessionActive(session, data.access || []) ? 'is-active' : 'is-closed'}`} aria-label={isUserSessionActive(session, data.access || []) ? 'Activa' : 'Cerrada'} /></td>
+                <td>{formatDuration(sessionDuration(session, isUserSessionActive(session, data.access || [], data.sessions || [])))}{isUserSessionActive(session, data.access || [], data.sessions || []) && ' (activa)'}</td>
+                <td><span className={`analytics-status-dot ${isUserSessionActive(session, data.access || [], data.sessions || []) ? 'is-active' : 'is-closed'}`} aria-label={isUserSessionActive(session, data.access || [], data.sessions || []) ? 'Activa' : 'Cerrada'} /></td>
                 <td>{modulesForSession(session, data.usage || [])}</td>
               </tr>)}</tbody>
             </table>
