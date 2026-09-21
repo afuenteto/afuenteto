@@ -158,7 +158,7 @@ export default function StudioProfile({ children, usuario, appearance, onAppeara
       </button>
 
       {abierto && (
-        <div className="profile-panel">
+        <div className={`profile-panel${editando ? ' is-editing' : ''}`}>
           <button type="button" className="icon-btn personal-card-close" disabled={guardando || appearanceBusy} aria-label={translateUI('Cerrar')} onClick={() => setAbierto(false)}><LineIcon name="close-main" /></button>
 
           {!editando ? (
