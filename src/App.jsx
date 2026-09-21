@@ -1067,9 +1067,11 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
   else abrirTareas(item.project, item.task?.tipo === 'cita' ? 'cita' : 'tarea')
 }} />
 {modulos.clientes && <button
-  className="btn"
+  className="btn header-count-button"
+  title={`Clientes: ${clientes.length}`}
+  aria-label={`Clientes: ${clientes.length}`}
   onClick={() => setPanelAbierto('clientes')}
->{iconText("👥 Clientes")}</button>}
+><LineIcon name="👥" /><span>{clientes.length}</span></button>}
 
 <button type="button" className="btn" disabled={guardando || guardandoModulos}
   onClick={() => setConfigurandoModulos(true)}>{translateUI('Módulos')}</button>

@@ -457,6 +457,8 @@ a {
 
   align-items: center;
 }
+.header-count-button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 38px; min-height: 38px; padding: 7px 9px; }
+.header-count-button .line-icon { width: 17px; height: 17px; }
 .global-search { position: relative; }
 .global-search.is-open { width: min(260px, 28vw); }
 .global-search-trigger { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); cursor: pointer; }
