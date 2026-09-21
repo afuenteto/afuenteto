@@ -81,6 +81,10 @@ function modulesForSession(session, usage) {
   }, {})).map(([name, count]) => `${name} (${count})`).join(', ') || 'Sin módulos registrados'
 }
 
+function csvValue(value) {
+  return `"${String(value ?? '').replaceAll('"', '""')}"`
+}
+
 function moduleAnalytics(usage, sessions) {
   const counts = new Map()
   const times = new Map()
@@ -130,6 +134,28 @@ export default function DemoAnalyticsPanel({ onClose }) {
   const [expandedSessions, setExpandedSessions] = useState(false)
   const [, refreshDuration] = useState(Date.now())
   const [revokingId, setRevokingId] = useState(null)
+
+  function exportSessions() {
+    if (!data?.sessions?.length) return
+    const rows = [['Profesional', 'Inicio', 'Duracion', 'Estado', 'Modulos']]
+    for (const session of data.sessions) {
+      const active = isUserSessionActive(session, data.access || [], data.sessions || [])
+      rows.push([
+        data.invitations.find(item => item.user_id === session.user_id)?.email || session.user_id,
+        session.started_at,
+        sessionDuration(session, active),
+        active ? 'Activa' : 'Cerrada',
+        modulesForSession(session, data.usage || []),
+      ])
+    }
+    const csv = rows.map(row => row.map(csvValue).join(';')).join('\r\n')
+    const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' }))
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `atria-analitica-${new Date().toISOString().slice(0, 10)}.csv`
+    link.click()
+    URL.revokeObjectURL(url)
+  }
 
   useEffect(() => {
     let active = true
@@ -192,6 +218,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
             <AnalyticsBarChart title="Más tiempo por módulo" items={charts.mostTime} formatValue={formatDuration} />
           </div> })()}
           <h3 className="demo-analytics-heading">Sesiones y módulos utilizados</h3>
+          <button type="button" className="btn demo-analytics-export" onClick={exportSessions}>Exportar CSV</button>
           <div className="demo-analytics-table-wrap">
             <table className="demo-analytics-table">
               <thead><tr><th>Sesión</th><th>Inicio</th><th>Duración</th><th>Estado</th><th>Módulos</th></tr></thead>
