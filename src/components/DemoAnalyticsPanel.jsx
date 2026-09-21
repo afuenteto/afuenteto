@@ -52,6 +52,13 @@ function isUserSessionActive(session, access) {
     new Date(latestAccess.created_at).getTime() >= new Date(session.started_at).getTime())
 }
 
+function orderedSessions(sessions, access) {
+  return [...sessions].sort((a, b) => {
+    const activeDifference = Number(isUserSessionActive(b, access)) - Number(isUserSessionActive(a, access))
+    return activeDifference || new Date(b.started_at).getTime() - new Date(a.started_at).getTime()
+  })
+}
+
 function latestSessionFor(userId, sessions) {
   return sessions.filter(session => session.user_id === userId).sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime())[0]
 }
@@ -129,7 +136,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
           <div className="demo-analytics-table-wrap">
             <table className="demo-analytics-table">
               <thead><tr><th>Sesión</th><th>Inicio</th><th>Duración</th><th>Estado</th><th>Módulos</th></tr></thead>
-              <tbody>{(data.sessions || []).slice(0, visibleSessions).map(session => <tr key={session.id}>
+              <tbody>{orderedSessions(data.sessions || [], data.access || []).slice(0, visibleSessions).map(session => <tr key={session.id}>
                 <td>{data.invitations.find(item => item.user_id === session.user_id)?.email || session.user_id}</td>
                 <td>{formatDate(session.started_at)}</td>
                 <td>{formatDuration(sessionDuration(session, isUserSessionActive(session, data.access || [])))}{isUserSessionActive(session, data.access || []) && ' (activa)'}</td>
