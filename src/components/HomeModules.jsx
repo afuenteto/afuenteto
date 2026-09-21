@@ -14,7 +14,7 @@ function Module({ section, open, toggle }) {
   useEffect(() => { if (open) setVisited(true) }, [open])
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({ id: section.id })
   return <section ref={setNodeRef} data-module-id={section.id} className="home-module" style={{ transform: CSS.Transform.toString(transform), transition, position: 'relative', zIndex: isDragging ? 20 : undefined }}>
-    <header className="home-module-heading">
+    <header className={`home-module-heading home-module-heading-${section.id}`}>
       <button type="button" className="home-module-toggle serif" aria-expanded={open} aria-controls={panelId} onClick={toggle}>
         <span>{t(section.title)}</span>
       </button>
