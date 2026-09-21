@@ -414,7 +414,7 @@ a {
 .demo-invite-form input:focus { border-color: #cbb8cf; box-shadow: 0 0 0 3px rgba(230,221,231,0.72); outline: none; }
 .demo-invite-status { margin: 0; color: var(--brand-heading); font-size: 12px; }
 .demo-invite-link { width: 100%; min-height: 90px; box-sizing: border-box; padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); color: var(--ink); font-size: 11px; }
-.demo-analytics-overlay { overflow: hidden; }
+.demo-analytics-overlay { overflow: hidden !important; }
 .demo-analytics-modal { width: min(900px, calc(100vw - 32px)); max-height: calc(100vh - 48px); overflow: hidden; display: flex; flex-direction: column; }
 .demo-analytics-body { min-height: 0; overflow-y: auto; padding-right: 4px; }
 .demo-analytics-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 20px 0; }

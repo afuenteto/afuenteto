@@ -9,7 +9,9 @@ let pageHideHandler = null
 let sessionAccessToken = null
 
 function touchDemoSession() {
-  if (activeSessionId) supabase.from('demo_sessions').update({ last_seen_at: new Date().toISOString() }).eq('id', activeSessionId)
+  if (!activeSessionId) return
+  const lastSeenAt = new Date().toISOString()
+  supabase.from('demo_sessions').update({ last_seen_at: lastSeenAt }).eq('id', activeSessionId)
 }
 
 export async function startDemoSession(userId) {
@@ -22,6 +24,7 @@ export async function startDemoSession(userId) {
     const { data } = await supabase.from('demo_sessions').insert({ user_id: userId }).select('id').single()
     activeSessionId = data?.id || null
     activeSessionUserId = userId
+    touchDemoSession()
     heartbeatHandler = () => { if (document.visibilityState !== 'hidden') touchDemoSession() }
     heartbeatTimer = setInterval(heartbeatHandler, 15000)
     window.addEventListener('focus', heartbeatHandler)
