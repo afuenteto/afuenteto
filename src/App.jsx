@@ -1229,7 +1229,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
         ({ open, toggle, panelId }) => <div className="module-quick-actions">
           <button type="button" className="module-quick-action" onClick={toggle} aria-expanded={open} aria-controls={panelId}
             title={translateUI('Deudas')} aria-label={`${translateUI('Deudas')}: ${moduleCounts.debts}`}>
-            <LineIcon name="money" /><span>{moduleCounts.debts}</span>
+            <LineIcon name="💰" /><span>{moduleCounts.debts}</span>
           </button>
         </div> : section.id === 'commissions' ?
         ({ open, toggle, panelId }) => <div className="module-quick-actions">
@@ -1241,7 +1241,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
         ({ open, toggle, panelId }) => <div className="module-quick-actions">
           <button type="button" className="module-quick-action" onClick={toggle} aria-expanded={open} aria-controls={panelId}
             title={translateUI('Proveedores')} aria-label={`${translateUI('Proveedores')}: ${moduleCounts.suppliers}`}>
-            <LineIcon name="people" /><span>{moduleCounts.suppliers}</span>
+            <LineIcon name="👥" /><span>{moduleCounts.suppliers}</span>
           </button>
         </div> : section.id !== 'today' ? null :
         <ModulePreview proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items.filter(item => item.tipoCita !== 'personal') }, { id: 'personal', nombre: translateUI('Asuntos propios'), tareas: genericAppointments.items.filter(item => item.tipoCita === 'personal') }]} modulos={modulos} onOpenTasks={abrirTareas} onOpenDelivery={abrirEntrega} setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({ id: 'appointments' }) : setPanelAbierto(panel)} /> }))} />
