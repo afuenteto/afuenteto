@@ -39,6 +39,10 @@ function isSessionActive(session) {
   return !session.ended_at && (!session.last_seen_at || Date.now() - new Date(session.last_seen_at).getTime() <= 300000)
 }
 
+function latestSessionFor(userId, sessions) {
+  return sessions.filter(session => session.user_id === userId).sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime())[0]
+}
+
 function modulesForSession(session, usage) {
   const relevant = usage.filter(event => {
     if (event.user_id !== session.user_id || !event.module) return false
@@ -102,7 +106,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
               <thead><tr><th>Profesional</th><th>Estado</th><th>Accesos</th><th>Último acceso</th></tr></thead>
               <tbody>{data.invitations.map(invitation => <tr key={invitation.id}>
                 <td><strong>{invitation.nombre || 'Sin nombre'}</strong><small>{invitation.email}</small></td>
-                <td><span className={`analytics-status-dot ${invitation.estado === 'activa' ? 'is-active' : 'is-closed'}`} aria-hidden="true" />{invitation.estado}</td>
+                <td>{(() => { const session = latestSessionFor(invitation.user_id, data.sessions || []); const active = session ? isSessionActive(session) : false; return <><span className={`analytics-status-dot ${active ? 'is-active' : 'is-closed'}`} aria-hidden="true" />{active ? 'activa' : 'inactiva'}</> })()}</td>
                 <td>{invitation.accessCount}</td>
                 <td>{formatDate(invitation.lastAccess)}</td>
               </tr>)}</tbody>

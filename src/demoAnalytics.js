@@ -11,7 +11,13 @@ let sessionAccessToken = null
 function touchDemoSession() {
   if (!activeSessionId) return
   const lastSeenAt = new Date().toISOString()
-  supabase.from('demo_sessions').update({ last_seen_at: lastSeenAt }).eq('id', activeSessionId)
+  supabase.from('demo_sessions').update({ last_seen_at: lastSeenAt }).eq('id', activeSessionId).then(({ error }) => {
+    if (error && sessionAccessToken) fetch(`${supabaseUrl}/rest/v1/demo_sessions?id=eq.${activeSessionId}`, {
+      method: 'PATCH', keepalive: true,
+      headers: { apikey: supabaseKey, Authorization: `Bearer ${sessionAccessToken}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify({ last_seen_at: lastSeenAt }),
+    })
+  })
 }
 
 export async function startDemoSession(userId) {
