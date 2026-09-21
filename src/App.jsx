@@ -846,6 +846,7 @@ async function eliminarCliente(cliente) {
 
   const proyectosActivos = useMemo(() => proyectos.filter((p) => p.estado !== 'finalizado'), [proyectos])
   const proyectosFinalizados = useMemo(() => proyectos.filter((p) => p.estado === 'finalizado'), [proyectos])
+  const citasPendientes = useMemo(() => proyectosActivos.reduce((total, proyecto) => total + (proyecto.tareas || []).filter(tarea => !tarea.hecha && tarea.tipo === 'cita').length, 0) + genericAppointments.items.filter(item => !item.hecha).length, [proyectosActivos, genericAppointments.items])
 
   const proyectosFiltrados = useMemo(() =>
     filtro === 'Todos'
@@ -1201,6 +1202,12 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
           <button type="button" className="module-quick-action" onClick={() => setPanelAbierto('bloqueados')}
             title={translateUI('🔵 Proyectos bloqueados').replace(/^🔵\s*/u, '')} aria-label={`${translateUI('🔵 Proyectos bloqueados').replace(/^🔵\s*/u, '')}: ${proyectosActivos.filter(p => p.prioridad === 'bloqueado').length}`}>
             <LineIcon name="bloqueados" /><span>{proyectosActivos.filter(p => p.prioridad === 'bloqueado').length}</span>
+          </button>
+        </div> : section.id === 'appointments' ?
+        ({ open, toggle, panelId }) => <div className="module-quick-actions">
+          <button type="button" className="module-quick-action" onClick={toggle} aria-expanded={open} aria-controls={panelId}
+            title={translateUI('Citas')} aria-label={`${translateUI('Citas')}: ${citasPendientes}`}>
+            <LineIcon name="📅" /><span>{citasPendientes}</span>
           </button>
         </div> : section.id !== 'today' ? null :
         <ModulePreview proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items.filter(item => item.tipoCita !== 'personal') }, { id: 'personal', nombre: translateUI('Asuntos propios'), tareas: genericAppointments.items.filter(item => item.tipoCita === 'personal') }]} modulos={modulos} onOpenTasks={abrirTareas} onOpenDelivery={abrirEntrega} setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({ id: 'appointments' }) : setPanelAbierto(panel)} /> }))} />
