@@ -463,9 +463,11 @@ a {
 .global-search.is-open { width: min(260px, 28vw); }
 .global-search-trigger { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); cursor: pointer; }
 .global-search-trigger:hover { background: var(--accent-soft); }
-.global-search-trigger .line-icon { width: 17px; height: 17px; }
+.global-search-trigger img, .header-image-button img { display: block; width: 20px; height: 20px; object-fit: contain; }
+.header-image-button { display: inline-flex; align-items: center; justify-content: center; min-width: 38px; min-height: 38px; padding: 7px 9px; }
 .global-search-field { display: flex; align-items: center; gap: 6px; min-height: 38px; padding: 0 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .global-search-field .line-icon { width: 16px; height: 16px; }
+.global-search-field img { width: 16px; height: 16px; object-fit: contain; }
 .global-search-field input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font: inherit; font-size: 12px; }
 .global-search-clear { border: 0; background: transparent; color: var(--ink-soft); cursor: pointer; font-size: 18px; line-height: 1; }
 .global-search-results, .due-notifications-popover { position: absolute; top: calc(100% + 6px); right: 0; z-index: 60; width: min(340px, calc(100vw - 32px)); max-height: 330px; overflow-y: auto; padding: 6px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); }

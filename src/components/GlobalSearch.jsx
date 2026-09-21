@@ -29,9 +29,9 @@ export default function GlobalSearch({ projects, clients, suppliers, appointment
   ].slice(0, 12) : []
   function select(result) { setQuery(''); setOpen(false); onClosePanels(); result.action() }
   return <div className={`global-search${open ? ' is-open' : ''}`} ref={root}>
-    {!open && <button type="button" className="global-search-trigger" aria-label="Abrir búsqueda" title="Buscar" onClick={showSearch}><LineIcon name="search" /></button>}
+    {!open && <button type="button" className="global-search-trigger" aria-label="Abrir búsqueda" title="Buscar" onClick={showSearch}><img src={import.meta.env.BASE_URL + 'busqueda.png'} alt="" /></button>}
     {open && <div className="global-search-field">
-      <LineIcon name="search" />
+      <img src={import.meta.env.BASE_URL + 'busqueda.png'} alt="" />
       <input ref={input} type="search" value={query} placeholder="Buscar en el estudio" aria-label="Buscar en el estudio" onChange={event => { setQuery(event.target.value); setOpen(true) }} />
       <button type="button" className="global-search-clear" aria-label="Cerrar búsqueda" onClick={() => { setQuery(''); setOpen(false) }}>×</button>
     </div>}

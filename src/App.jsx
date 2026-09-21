@@ -1076,8 +1076,8 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
 <button type="button" className="btn" disabled={guardando || guardandoModulos}
   onClick={() => setConfigurandoModulos(true)}>{translateUI('Módulos')}</button>
 
-{usuario?.email?.toLowerCase() === demoAdminEmail && <button type="button" className="btn admin-invite-button" title="Invitar profesional" aria-label="Invitar profesional" onClick={() => setInvitacionDemoAbierta(true)}>INV</button>}
-{usuario?.email?.toLowerCase() === demoAdminEmail && <button type="button" className="btn" onClick={() => setAnaliticaDemoAbierta(true)}>Analítica</button>}
+{usuario?.email?.toLowerCase() === demoAdminEmail && <button type="button" className="btn header-image-button" title="Invitar profesional" aria-label="Invitar profesional" onClick={() => setInvitacionDemoAbierta(true)}><img src={import.meta.env.BASE_URL + 'invitar.png'} alt="" /></button>}
+{usuario?.email?.toLowerCase() === demoAdminEmail && <button type="button" className="btn header-image-button" title="Analítica" aria-label="Analítica" onClick={() => setAnaliticaDemoAbierta(true)}><img src={import.meta.env.BASE_URL + 'analiticas.png'} alt="" /></button>}
         
 </div>
 </div>
