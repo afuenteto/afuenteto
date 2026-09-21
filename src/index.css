@@ -422,6 +422,15 @@ a {
 .demo-analytics-summary > div { display: grid; gap: 6px; min-width: 0; }
 .demo-analytics-summary strong { display: block; padding: 12px; background: var(--surface-soft); color: var(--brand-heading); font-size: 24px; border-radius: 8px; }
 .demo-analytics-summary span { padding: 0 2px; color: var(--ink-soft); font-size: 11px; }
+.demo-analytics-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 18px 0 22px; }
+.demo-analytics-chart { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-soft); }
+.demo-analytics-chart h4 { margin: 0 0 10px; color: var(--brand-heading); font-size: 12px; }
+.demo-analytics-bar-row { display: grid; grid-template-columns: minmax(70px, .9fr) minmax(40px, 1.4fr) auto; align-items: center; gap: 7px; min-height: 22px; font-size: 10px; }
+.demo-analytics-bar-row > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.demo-analytics-bar-track { height: 7px; overflow: hidden; border-radius: 99px; background: var(--line); }
+.demo-analytics-bar-track i { display: block; height: 100%; border-radius: inherit; background: var(--accent-hover); }
+.demo-analytics-bar-row strong { min-width: 38px; color: var(--ink-soft); text-align: end; font-size: 10px; font-weight: 500; }
+.demo-analytics-chart-empty { margin: 0; color: var(--ink-soft); font-size: 11px; }
 .demo-analytics-table-wrap { width: 100%; overflow: visible; }
 .demo-analytics-table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 11px; }
 .demo-analytics-table th, .demo-analytics-table td { padding: 8px 6px; border-top: 1px solid var(--line); text-align: start; white-space: normal; overflow-wrap: anywhere; vertical-align: top; }
@@ -433,6 +442,9 @@ a {
 .analytics-status-dot { display: inline-block; width: 9px; height: 9px; margin-right: 6px; border-radius: 50%; vertical-align: middle; }
 .analytics-status-dot.is-active { background: #4f9b61; }
 .analytics-status-dot.is-closed { background: #a84b55; }
+@media (max-width: 600px) {
+  .demo-analytics-charts { grid-template-columns: 1fr; gap: 8px; }
+}
 /* =========================================================
    ACCIONES
    ========================================================= */

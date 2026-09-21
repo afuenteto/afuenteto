@@ -81,11 +81,52 @@ function modulesForSession(session, usage) {
   }, {})).map(([name, count]) => `${name} (${count})`).join(', ') || 'Sin módulos registrados'
 }
 
+function moduleAnalytics(usage, sessions) {
+  const counts = new Map()
+  const times = new Map()
+  const sessionById = new Map(sessions.map(session => [session.id, session]))
+  const events = usage.filter(event => event.module).map(event => ({
+    ...event,
+    time: new Date(event.created_at).getTime(),
+    name: moduleNames[event.module] || event.module,
+  })).sort((a, b) => a.time - b.time)
+
+  for (const event of events) counts.set(event.name, (counts.get(event.name) || 0) + 1)
+  for (let index = 0; index < events.length; index += 1) {
+    const event = events[index]
+    const session = event.session_id ? sessionById.get(event.session_id) : null
+    if (!session) continue
+    const next = events.slice(index + 1).find(candidate => candidate.session_id === event.session_id)
+    const end = next?.time || (session.ended_at ? new Date(session.ended_at).getTime() : Date.now())
+    const seconds = Math.min(300, Math.max(0, Math.round((end - event.time) / 1000)))
+    times.set(event.name, (times.get(event.name) || 0) + seconds)
+  }
+
+  const names = [...new Set([...counts.keys(), ...times.keys()])]
+  return {
+    mostUsed: names.map(name => ({ name, value: counts.get(name) || 0 })).sort((a, b) => b.value - a.value),
+    mostTime: names.map(name => ({ name, value: times.get(name) || 0 })).sort((a, b) => b.value - a.value),
+  }
+}
+
+function AnalyticsBarChart({ title, items, formatValue }) {
+  const max = Math.max(...items.map(item => item.value), 1)
+  return <section className="demo-analytics-chart" aria-label={title}>
+    <h4>{title}</h4>
+    {items.slice(0, 6).map(item => <div className="demo-analytics-bar-row" key={item.name}>
+      <span title={item.name}>{item.name}</span>
+      <div className="demo-analytics-bar-track"><i style={{ width: `${Math.max(4, (item.value / max) * 100)}%` }} /></div>
+      <strong>{formatValue(item.value)}</strong>
+    </div>)}
+    {!items.length && <p className="demo-analytics-chart-empty">Sin datos todavía</p>}
+  </section>
+}
+
 export default function DemoAnalyticsPanel({ onClose }) {
   const [data, setData] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
-  const [visibleSessions, setVisibleSessions] = useState(10)
+  const [visibleSessions, setVisibleSessions] = useState(6)
   const [expandedSessions, setExpandedSessions] = useState(false)
   const [, refreshDuration] = useState(Date.now())
 
@@ -135,6 +176,10 @@ export default function DemoAnalyticsPanel({ onClose }) {
               </tr>)}</tbody>
             </table>
           </div>
+          {(() => { const charts = moduleAnalytics(data.usage || [], data.sessions || []); return <div className="demo-analytics-charts">
+            <AnalyticsBarChart title="Módulos más utilizados" items={charts.mostUsed} formatValue={value => `${value} usos`} />
+            <AnalyticsBarChart title="Más tiempo por módulo" items={charts.mostTime} formatValue={formatDuration} />
+          </div> })()}
           <h3 className="demo-analytics-heading">Sesiones y módulos utilizados</h3>
           <div className="demo-analytics-table-wrap">
             <table className="demo-analytics-table">
