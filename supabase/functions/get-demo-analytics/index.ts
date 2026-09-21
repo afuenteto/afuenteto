@@ -68,7 +68,7 @@ Deno.serve(async request => {
     const normalizedSessions = normalizeSessions(mergeLatestAccessSessions(sessionRows, access ?? []))
     const usageRows = usageRowsSource.map(event => ({
       ...event,
-      session_id: event.session_id || normalizedSessions.find(session => session.user_id === event.user_id && isWithinSession(event.created_at, session))?.id || null,
+      session_id: bestSessionForEvent(event, normalizedSessions)?.id || event.session_id || null,
     }))
     const usageWithCounts = usageRows.map(event => ({ ...event, module_count: 0 }))
     const moduleCounts = new Map<string, number>()
@@ -136,6 +136,12 @@ function isWithinSession(createdAt: string, session: { started_at: string; ended
   const start = new Date(session.started_at).getTime()
   const end = session.ended_at ? new Date(session.ended_at).getTime() : Date.now()
   return time >= start && time <= end
+}
+
+function bestSessionForEvent(event: { user_id: string; created_at: string }, sessions: Array<any>) {
+  return sessions
+    .filter(session => session.user_id === event.user_id && isWithinSession(event.created_at, session))
+    .sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime())[0]
 }
 
 function normalizeSessions(sessions: Array<any>) {

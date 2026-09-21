@@ -3,11 +3,13 @@ import { supabase } from './supabase.js'
 let activeSessionId = null
 let activeSessionUserId = null
 let heartbeatTimer = null
+let startingSession = null
 
 export async function startDemoSession(userId) {
   if (!userId || activeSessionUserId === userId) return activeSessionId
   if (activeSessionId && activeSessionUserId !== userId) await endDemoSession()
-  try {
+  if (startingSession) return startingSession
+  startingSession = (async () => {
     const { data } = await supabase.from('demo_sessions').insert({ user_id: userId }).select('id').single()
     activeSessionId = data?.id || null
     activeSessionUserId = userId
@@ -15,7 +17,8 @@ export async function startDemoSession(userId) {
       if (activeSessionId) supabase.from('demo_sessions').update({ last_seen_at: new Date().toISOString() }).eq('id', activeSessionId)
     }, 30000)
     return activeSessionId
-  } catch { activeSessionUserId = null; return null }
+  })().catch(() => { activeSessionUserId = null; return null }).finally(() => { startingSession = null })
+  return startingSession
 }
 
 export async function endDemoSession() {
