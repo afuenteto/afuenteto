@@ -1625,7 +1625,8 @@ a {
 .profile-panel.is-editing { display: flex; flex-direction: column; }
 .profile-panel.is-editing .profile-edit-actions { margin-top: auto; }
 .profile-panel .profile-details { text-align: start; }
-.profile-edit-actions { display: flex; justify-content: flex-start; align-items: center; gap: 8px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.profile-edit-actions { display: flex; justify-content: flex-start; align-items: center; gap: 8px; margin-top: 20px; padding-top: 16px; }
+.profile-edit-actions .appearance-trigger { display: inline-flex; align-items: center; justify-content: center; width: 55px; height: 30px; padding: 0; border: 0; background: transparent; cursor: pointer; }
 
 
 .profile-panel h3 {
