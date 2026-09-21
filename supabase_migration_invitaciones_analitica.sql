@@ -9,8 +9,16 @@ create table if not exists public.invitaciones_demo (
   estado text not null default 'pendiente' check (estado in ('pendiente', 'activa', 'revocada')),
   user_id uuid references auth.users(id) on delete set null,
   created_at timestamptz not null default now(),
-  accepted_at timestamptz
+  accepted_at timestamptz,
+  expires_at timestamptz not null default (now() + interval '30 days')
 );
+
+alter table public.invitaciones_demo add column if not exists expires_at timestamptz;
+update public.invitaciones_demo
+set expires_at = coalesce(accepted_at, created_at, now()) + interval '30 days'
+where expires_at is null;
+alter table public.invitaciones_demo alter column expires_at set default (now() + interval '30 days');
+alter table public.invitaciones_demo alter column expires_at set not null;
 
 create index if not exists invitaciones_demo_user_idx on public.invitaciones_demo(user_id);
 update public.invitaciones_demo
@@ -47,6 +55,7 @@ create policy demo_access_events_insert_self on public.demo_access_events
       select 1 from public.invitaciones_demo invitation
       where invitation.user_id = (select auth.uid())
         and invitation.estado = 'activa'
+        and invitation.expires_at > now()
     )
   );
 
@@ -105,7 +114,7 @@ create policy demo_access_events_insert_self on public.demo_access_events
   for insert to authenticated
   with check (
     user_id = (select auth.uid())
-    and exists (select 1 from public.invitaciones_demo invitation where invitation.user_id = (select auth.uid()))
+    and exists (select 1 from public.invitaciones_demo invitation where invitation.user_id = (select auth.uid()) and invitation.estado = 'activa' and invitation.expires_at > now())
   );
 
 drop policy if exists demo_usage_events_insert_self on public.demo_usage_events;
@@ -113,7 +122,7 @@ create policy demo_usage_events_insert_self on public.demo_usage_events
   for insert to authenticated
   with check (
     user_id = (select auth.uid())
-    and exists (select 1 from public.invitaciones_demo invitation where invitation.user_id = (select auth.uid()))
+    and exists (select 1 from public.invitaciones_demo invitation where invitation.user_id = (select auth.uid()) and invitation.estado = 'activa' and invitation.expires_at > now())
   );
 
 create or replace function public.touch_demo_invitation()

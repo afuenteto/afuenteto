@@ -44,7 +44,7 @@ Deno.serve(async request => {
 
     const { data: existingInvitation, error: existingInvitationError } = await adminClient
       .from('invitaciones_demo')
-      .select('id, email, nombre, estado, user_id')
+      .select('id, email, nombre, estado, user_id, expires_at')
       .eq('email', normalizedEmail)
       .maybeSingle()
     if (existingInvitationError) throw existingInvitationError
@@ -55,7 +55,7 @@ Deno.serve(async request => {
       const { data, error } = await adminClient
         .from('invitaciones_demo')
         .insert({ email: normalizedEmail, nombre: normalizedName, token_hash: tokenHash })
-        .select('id, email, nombre, estado, user_id')
+        .select('id, email, nombre, estado, user_id, expires_at')
         .single()
       if (error) throw error
       invitation = data
@@ -79,6 +79,8 @@ Deno.serve(async request => {
       invitedUserId = invited.user.id
     }
 
+    await adminClient.auth.admin.updateUserById(invitedUserId, { ban_duration: 'none' })
+
     let recoveryLink = ''
     if (existingUser) {
       const { error: resetError } = await emailClient.auth.resetPasswordForEmail(normalizedEmail, {
@@ -96,7 +98,7 @@ Deno.serve(async request => {
     }
     const { error: linkError } = await adminClient
       .from('invitaciones_demo')
-      .update({ user_id: invitedUserId, nombre: normalizedName || invitation.nombre, estado: 'activa', accepted_at: invitation.accepted_at || new Date().toISOString() })
+      .update({ user_id: invitedUserId, nombre: normalizedName || invitation.nombre, estado: 'activa', accepted_at: invitation.accepted_at || new Date().toISOString(), expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() })
       .eq('id', invitation.id)
     if (linkError) throw linkError
 

@@ -7,6 +7,10 @@ revoke all on public.proyectos, public.clientes, public.perfil_estudio, public.c
 revoke execute on function public.touch_demo_invitation() from public, anon, authenticated;
 revoke execute on function public.validar_pago_deuda() from public, anon, authenticated;
 
+update public.invitaciones_demo
+set expires_at = coalesce(accepted_at, created_at, now()) + interval '30 days'
+where expires_at is null;
+
 update storage.buckets
 set public = false
 where id in ('presupuestos', 'imagenes-proyectos');

@@ -31,7 +31,7 @@ Deno.serve(async request => {
     }
 
     const [{ data: invitations, error: invitationsError }, { data: access, error: accessError }, { data: usage, error: usageError }, { data: sessions, error: sessionsError }] = await Promise.all([
-      adminClient.from('invitaciones_demo').select('id,email,nombre,estado,user_id,created_at,accepted_at').order('created_at', { ascending: false }),
+      adminClient.from('invitaciones_demo').select('id,email,nombre,estado,user_id,created_at,accepted_at,expires_at').order('created_at', { ascending: false }),
       adminClient.from('demo_access_events').select('user_id,event,route,created_at').order('created_at', { ascending: false }).limit(500),
       adminClient.from('demo_usage_events').select('user_id,session_id,event,module,metadata,created_at').order('created_at', { ascending: false }).limit(500),
       adminClient.from('demo_sessions').select('id,user_id,started_at,ended_at,last_seen_at,duration_seconds').order('started_at', { ascending: false }).limit(500),

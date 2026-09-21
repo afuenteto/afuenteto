@@ -129,6 +129,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
   const [visibleSessions, setVisibleSessions] = useState(4)
   const [expandedSessions, setExpandedSessions] = useState(false)
   const [, refreshDuration] = useState(Date.now())
+  const [revokingId, setRevokingId] = useState(null)
 
   useEffect(() => {
     let active = true
@@ -143,6 +144,15 @@ export default function DemoAnalyticsPanel({ onClose }) {
     const timer = setInterval(loadAnalytics, 5000)
     return () => { active = false; clearInterval(timer) }
   }, [])
+
+  async function revokeInvitation(invitation) {
+    if (revokingId || !confirm(`¿Revocar el acceso de ${invitation.email}?`)) return
+    setRevokingId(invitation.id)
+    const { error: requestError } = await supabase.functions.invoke('revoke-demo-invite', { body: { id: invitation.id } })
+    setRevokingId(null)
+    if (requestError) setError(requestError.message)
+    else setData(previous => previous ? { ...previous, invitations: previous.invitations.map(item => item.id === invitation.id ? { ...item, estado: 'revocada' } : item) } : previous)
+  }
 
   useEffect(() => {
     const timer = setInterval(() => refreshDuration(Date.now()), 1000)
@@ -167,12 +177,13 @@ export default function DemoAnalyticsPanel({ onClose }) {
           </div>
           <div className="demo-analytics-table-wrap">
             <table className="demo-analytics-table">
-              <thead><tr><th>Profesional</th><th>Estado</th><th>Accesos</th><th>Último acceso</th></tr></thead>
+              <thead><tr><th>Profesional</th><th>Estado</th><th>Accesos</th><th>Último acceso</th><th /></tr></thead>
               <tbody>{data.invitations.map(invitation => <tr key={invitation.id}>
                 <td><strong>{invitation.nombre || 'Sin nombre'}</strong><small>{invitation.email}</small></td>
-                <td>{(() => { const session = latestSessionFor(invitation.user_id, data.sessions || []); const active = session ? isUserSessionActive(session, data.access || [], data.sessions || []) : false; return <><span className={`analytics-status-dot ${active ? 'is-active' : 'is-closed'}`} aria-hidden="true" />{active ? 'activa' : 'inactiva'}</> })()}</td>
+                <td>{(() => { const session = latestSessionFor(invitation.user_id, data.sessions || []); const active = session ? isUserSessionActive(session, data.access || [], data.sessions || []) : false; const expired = invitation.expires_at && new Date(invitation.expires_at).getTime() <= Date.now(); return <><span className={`analytics-status-dot ${active && !expired && invitation.estado === 'activa' ? 'is-active' : 'is-closed'}`} aria-hidden="true" />{invitation.estado === 'revocada' ? 'revocada' : expired ? 'caducada' : active ? 'activa' : 'inactiva'}</> })()}</td>
                 <td>{invitation.accessCount}</td>
                 <td>{formatDate(invitation.lastAccess)}</td>
+                <td>{invitation.estado === 'activa' && <button type="button" className="chip" disabled={revokingId === invitation.id} onClick={() => revokeInvitation(invitation)}>{revokingId === invitation.id ? '…' : 'Revocar'}</button>}</td>
               </tr>)}</tbody>
             </table>
           </div>
