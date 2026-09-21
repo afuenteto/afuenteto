@@ -79,7 +79,8 @@ Deno.serve(async request => {
       invitedUserId = invited.user.id
     }
 
-    await adminClient.auth.admin.updateUserById(invitedUserId, { ban_duration: 'none' })
+    const { error: unbanError } = await adminClient.auth.admin.updateUserById(invitedUserId, { ban_duration: 'none' })
+    if (unbanError) throw unbanError
 
     let recoveryLink = ''
     if (existingUser) {

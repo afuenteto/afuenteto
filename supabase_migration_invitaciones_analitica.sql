@@ -85,8 +85,24 @@ grant select, insert, update on public.demo_sessions to authenticated;
 drop policy if exists demo_sessions_owner on public.demo_sessions;
 create policy demo_sessions_owner on public.demo_sessions
   for all to authenticated
-  using (user_id = (select auth.uid()))
-  with check (user_id = (select auth.uid()));
+  using (
+    user_id = (select auth.uid())
+    and exists (
+      select 1 from public.invitaciones_demo invitation
+      where invitation.user_id = (select auth.uid())
+        and invitation.estado = 'activa'
+        and invitation.expires_at > now()
+    )
+  )
+  with check (
+    user_id = (select auth.uid())
+    and exists (
+      select 1 from public.invitaciones_demo invitation
+      where invitation.user_id = (select auth.uid())
+        and invitation.estado = 'activa'
+        and invitation.expires_at > now()
+    )
+  );
 
 alter table public.demo_usage_events add column if not exists session_id uuid references public.demo_sessions(id) on delete set null;
 create index if not exists demo_usage_events_session_idx on public.demo_usage_events(session_id);
