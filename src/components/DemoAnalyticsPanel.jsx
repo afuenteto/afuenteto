@@ -86,6 +86,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [visibleSessions, setVisibleSessions] = useState(10)
+  const [expandedSessions, setExpandedSessions] = useState(false)
   const [, refreshDuration] = useState(Date.now())
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
           <h2 id="demo-analytics-title" className="serif">Analítica de invitados</h2>
           <button type="button" className="icon-btn" onClick={onClose} aria-label="Cerrar">×</button>
         </div>
-        <div className="demo-analytics-body">
+        <div className={`demo-analytics-body${expandedSessions ? ' is-expanded' : ''}`}>
         {loading && <p>Cargando datos…</p>}
         {error && <p role="alert">{error}</p>}
         {data && <>
@@ -147,7 +148,7 @@ export default function DemoAnalyticsPanel({ onClose }) {
               </tr>)}</tbody>
             </table>
           </div>
-          {visibleSessions < (data.sessions || []).length && <button type="button" className="btn demo-analytics-more" onClick={() => setVisibleSessions(value => value + 10)}>Mostrar más</button>}
+          {visibleSessions < (data.sessions || []).length && <button type="button" className="btn demo-analytics-more" onClick={() => { setVisibleSessions(value => value + 10); setExpandedSessions(true) }}>Mostrar más</button>}
         </>}
         </div>
       </section>

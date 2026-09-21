@@ -53,6 +53,12 @@ export async function endDemoSession(fromPageHide = false) {
   if (!activeSessionId) return
   const sessionId = activeSessionId
   const accessToken = sessionAccessToken
+  const startedAtValue = activeSessionStartedAt
+  const endedAt = new Date()
+  const payload = {
+    ended_at: endedAt.toISOString(),
+    duration_seconds: startedAtValue ? Math.max(0, Math.round((endedAt.getTime() - new Date(startedAtValue).getTime()) / 1000)) : 0,
+  }
   activeSessionId = null
   activeSessionUserId = null
   activeSessionStartedAt = null
@@ -69,19 +75,17 @@ export async function endDemoSession(fromPageHide = false) {
     pageHideHandler = null
   }
   try {
-    const endedAt = new Date()
-    const startedAt = await supabase.from('demo_sessions').select('started_at').eq('id', sessionId).single()
-    const duration = startedAt.data?.started_at ? Math.max(0, Math.round((endedAt.getTime() - new Date(startedAt.data.started_at).getTime()) / 1000)) : 0
-    const payload = { ended_at: endedAt.toISOString(), duration_seconds: duration }
     if (fromPageHide && accessToken) {
       fetch(`${supabaseUrl}/rest/v1/demo_sessions?id=eq.${sessionId}`, {
         method: 'PATCH', keepalive: true,
         headers: { apikey: supabaseKey, Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify(payload),
       })
-    } else {
-      await supabase.from('demo_sessions').update(payload).eq('id', sessionId)
+      return
     }
+    const startedAt = await supabase.from('demo_sessions').select('started_at').eq('id', sessionId).single()
+    const duration = startedAt.data?.started_at ? Math.max(0, Math.round((endedAt.getTime() - new Date(startedAt.data.started_at).getTime()) / 1000)) : 0
+    await supabase.from('demo_sessions').update({ ...payload, duration_seconds: duration }).eq('id', sessionId)
   } catch { /* La analítica nunca debe bloquear el cierre de sesión. */ }
 }
 

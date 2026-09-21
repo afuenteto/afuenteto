@@ -380,6 +380,7 @@ useEffect(() => {
 
   async function cerrarSesion() {
     if (guardandoModulos) return
+    await endDemoSession()
     const { error } = await supabase.auth.signOut()
     if (error) { setAviso(translateUI("No se pudo cerrar la sesión: ") + error.message); return }
     setUsuario(null)
