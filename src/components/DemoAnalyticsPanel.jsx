@@ -218,7 +218,6 @@ export default function DemoAnalyticsPanel({ onClose }) {
             <AnalyticsBarChart title="Más tiempo por módulo" items={charts.mostTime} formatValue={formatDuration} />
           </div> })()}
           <h3 className="demo-analytics-heading">Sesiones y módulos utilizados</h3>
-          <button type="button" className="btn demo-analytics-export" onClick={exportSessions}>Exportar CSV</button>
           <div className="demo-analytics-table-wrap">
             <table className="demo-analytics-table">
               <thead><tr><th>Sesión</th><th>Inicio</th><th>Duración</th><th>Estado</th><th>Módulos</th></tr></thead>
@@ -231,7 +230,10 @@ export default function DemoAnalyticsPanel({ onClose }) {
               </tr>)}</tbody>
             </table>
           </div>
-          {visibleSessions < (data.sessions || []).length && <button type="button" className="btn demo-analytics-more" onClick={() => { setVisibleSessions(value => value + 10); setExpandedSessions(true) }}>Mostrar más</button>}
+          <div className="demo-analytics-actions">
+            <button type="button" className="btn demo-analytics-export" onClick={exportSessions}>Exportar CSV</button>
+            {visibleSessions < (data.sessions || []).length && <button type="button" className="btn demo-analytics-more" onClick={() => { setVisibleSessions(value => value + 10); setExpandedSessions(true) }}>Mostrar más</button>}
+          </div>
         </>}
         </div>
       </section>

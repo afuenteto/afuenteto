@@ -439,7 +439,8 @@ a {
 .demo-analytics-table td:first-child { white-space: normal; }
 .demo-analytics-table td:first-child small { display: block; color: var(--ink-soft); }
 .demo-analytics-heading { margin: 24px 0 10px; color: var(--brand-heading); font-size: 15px; }
-.demo-analytics-export { margin-bottom: 10px; padding: 7px 10px; font-size: 11px; }
+.demo-analytics-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.demo-analytics-export { padding: 7px 10px; font-size: 11px; }
 .demo-analytics-more { margin-top: 14px; margin-inline-end: 16px; margin-bottom: 8px; }
 .analytics-status-dot { display: inline-block; width: 9px; height: 9px; margin-right: 6px; border-radius: 50%; vertical-align: middle; }
 .analytics-status-dot.is-active { background: #4f9b61; }
