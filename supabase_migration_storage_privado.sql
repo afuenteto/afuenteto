@@ -7,14 +7,14 @@ where id in ('presupuestos', 'imagenes-proyectos');
 -- Elimina las políticas públicas antiguas de presupuestos.
 drop policy if exists "Permitir lectura presupuestos 5d6qzk_0" on storage.objects;
 drop policy if exists "Permitir subida presupuestos 5d6qzk_0" on storage.objects;
-drop policy if exists imagenes_proyectos_select_authenticated on storage.objects;
-drop policy if exists imagenes_proyectos_insert_authenticated on storage.objects;
-drop policy if exists imagenes_proyectos_update_authenticated on storage.objects;
-drop policy if exists imagenes_proyectos_delete_authenticated on storage.objects;
 drop policy if exists presupuestos_select_authenticated on storage.objects;
 drop policy if exists presupuestos_insert_authenticated on storage.objects;
 drop policy if exists presupuestos_update_authenticated on storage.objects;
 drop policy if exists presupuestos_delete_authenticated on storage.objects;
+drop policy if exists imagenes_proyectos_select_authenticated on storage.objects;
+drop policy if exists imagenes_proyectos_insert_authenticated on storage.objects;
+drop policy if exists imagenes_proyectos_update_authenticated on storage.objects;
+drop policy if exists imagenes_proyectos_delete_authenticated on storage.objects;
 
 -- Las rutas nuevas deben ser: usuario-id/proyecto-id/archivo
 -- Estas políticas solo permiten al usuario operar con su propia carpeta.
