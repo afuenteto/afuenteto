@@ -10,11 +10,16 @@ export default function GlobalSearch({ projects, clients, suppliers, appointment
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const root = useRef(null)
+  const input = useRef(null)
   useEffect(() => {
     function close(event) { if (!root.current?.contains(event.target)) setOpen(false) }
     document.addEventListener('pointerdown', close)
     return () => document.removeEventListener('pointerdown', close)
   }, [])
+  function showSearch() {
+    setOpen(true)
+    requestAnimationFrame(() => input.current?.focus())
+  }
   const results = query.trim() ? [
     ...projects.filter(item => matches([item.nombre, item.cliente, item.notas], query)).map(item => ({ type: 'Proyecto', label: item.nombre, detail: item.cliente, action: () => onOpenProject(item) })),
     ...clients.filter(item => matches([item.nombre, item.email, item.telefono], query)).map(item => ({ type: 'Cliente', label: item.nombre, detail: item.email, action: () => onOpenPanel('clientes') })),
@@ -23,12 +28,13 @@ export default function GlobalSearch({ projects, clients, suppliers, appointment
     ...appointments.filter(item => matches([item.texto, item.fecha], query)).map(item => ({ type: 'Cita', label: item.texto, detail: item.fecha, action: () => onOpenPanel('appointments') })),
   ].slice(0, 12) : []
   function select(result) { setQuery(''); setOpen(false); onClosePanels(); result.action() }
-  return <div className="global-search" ref={root}>
-    <div className="global-search-field">
+  return <div className={`global-search${open ? ' is-open' : ''}`} ref={root}>
+    {!open && <button type="button" className="global-search-trigger" aria-label="Abrir búsqueda" title="Buscar" onClick={showSearch}><LineIcon name="search" /></button>}
+    {open && <div className="global-search-field">
       <LineIcon name="search" />
-      <input type="search" value={query} placeholder="Buscar en el estudio" aria-label="Buscar en el estudio" onFocus={() => setOpen(true)} onChange={event => { setQuery(event.target.value); setOpen(true) }} />
-      {query && <button type="button" className="global-search-clear" aria-label="Limpiar búsqueda" onClick={() => setQuery('')}>×</button>}
-    </div>
+      <input ref={input} type="search" value={query} placeholder="Buscar en el estudio" aria-label="Buscar en el estudio" onChange={event => { setQuery(event.target.value); setOpen(true) }} />
+      <button type="button" className="global-search-clear" aria-label="Cerrar búsqueda" onClick={() => { setQuery(''); setOpen(false) }}>×</button>
+    </div>}
     {open && query.trim() && <div className="global-search-results" role="listbox">
       {results.length ? results.map((result, index) => <button type="button" role="option" className="global-search-result" key={`${result.type}-${result.label}-${index}`} onClick={() => select(result)}>
         <strong>{result.label}</strong><small>{result.type}{result.detail ? ` · ${result.detail}` : ''}</small>
