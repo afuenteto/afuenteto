@@ -16,6 +16,7 @@ const paths = {
   '🔄': 'M20 7a9 9 0 00-16 0 M20 2v5h-5 M4 17a9 9 0 0016 0 M4 22v-5h5',
   '🤝': 'M3 7l4-3 5 2 5-2 4 3-3 10-4 3-7-3z M7 8l5-2 5 5-3 3-4-3-3 2',
   tareas: 'M9 11l2 2 4-4 M9 4H5v16h14V4h-4 M9 3h6v4H9z',
+  search: 'M11 4a7 7 0 105.3 11.6L21 20.3 M16 16l5 5',
   bloqueados: 'M7 10V7a5 5 0 0110 0v3 M5 10h14v11H5z',
 }
 const images = {

@@ -33,6 +33,8 @@ import TasksPanel from './components/TasksPanel.jsx'
 import DeliveriesPanel from './components/DeliveriesPanel.jsx'
 import PaymentsPanel from './components/PaymentsPanel.jsx'
 import BlockedPanel from './components/BlockedPanel.jsx'
+import GlobalSearch from './components/GlobalSearch.jsx'
+import DueNotifications from './components/DueNotifications.jsx'
 import ClientModal from './components/ClientModal.jsx'
 import ClientsPanel from './components/ClientsPanel.jsx'
 import { supabase } from './supabase.js'
@@ -41,6 +43,7 @@ import {
   FASES,
   nuevoProyecto,
 } from './storage.js'
+import { buildAgenda } from './todayModel.js'
 
 export default function App() {
   useSyncExternalStore(subscribeLanguage, getLanguage, () => 'es')
@@ -63,7 +66,9 @@ export default function App() {
   const [cargando, setCargando] = useState(true)
   const [proyectos, setProyectos] = useState([])
   const [clientes, setClientes] = useState([])
+  const [proveedores, setProveedores] = useState([])
   const [moduleCounts, setModuleCounts] = useState({ debts: 0, suppliers: 0 })
+  const [busquedaAbierta, setBusquedaAbierta] = useState(false)
   const [clienteAbierto, setClienteAbierto] = useState(null)
   const [editando, setEditando] = useState(null)
   const [tareasAbiertas, setTareasAbiertas] = useState(null)
@@ -117,6 +122,14 @@ export default function App() {
     loadModuleCounts().catch(() => { if (active) setModuleCounts({ debts: 0, suppliers: 0 }) })
     return () => { active = false }
   }, [usuario?.id, modulos.deudas, modulos.proveedores])
+
+  useEffect(() => {
+    if (!usuario?.id || !modulos.proveedores) { setProveedores([]); return undefined }
+    let active = true
+    supabase.from('proveedores').select('id,nombre,contacto,email').eq('user_id', usuario.id).order('nombre')
+      .then(({ data, error }) => { if (active && !error) setProveedores(data || []) })
+    return () => { active = false }
+  }, [usuario?.id, modulos.proveedores])
 
   useEffect(() => {
     if (cargando) {
@@ -875,6 +888,9 @@ async function eliminarCliente(cliente) {
 const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, ordenProyectos),
   [proyectosFiltrados, ordenProyectos])
 
+  const proyectosBusqueda = useMemo(() => [...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items.filter(item => item.tipoCita !== 'personal') }, { id: 'personal', nombre: translateUI('Asuntos propios'), tareas: genericAppointments.items.filter(item => item.tipoCita === 'personal') }], [proyectosActivos, genericAppointments.items])
+  const vencimientos = useMemo(() => buildAgenda(proyectosBusqueda, modulos).filter(item => item.days !== null && item.days <= 7), [proyectosBusqueda, modulos])
+
   /*
    * PANTALLA DE ENTRADA
    *
@@ -1041,6 +1057,15 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
   </div>
 
       <div className="top-actions">
+<GlobalSearch projects={proyectosBusqueda} clients={clientes} suppliers={proveedores} appointments={genericAppointments.items}
+  onOpenProject={(project, section) => abrirExistente(project, section)}
+  onOpenPanel={panel => panel === 'appointments' ? setOpenHomeModule({ id: 'appointments' }) : setPanelAbierto(panel)}
+  onClosePanels={() => { setPanelAbierto(null); setTareasAbiertas(null); setEntregaAbierta(null) }} />
+<DueNotifications items={vencimientos} onSelect={item => {
+  if (item.type === 'delivery') abrirEntrega(item.project)
+  else if (item.project?.id === 'generic' || item.project?.id === 'personal') setOpenHomeModule({ id: 'appointments' })
+  else abrirTareas(item.project, item.task?.tipo === 'cita' ? 'cita' : 'tarea')
+}} />
 {modulos.clientes && <button
   className="btn"
   onClick={() => setPanelAbierto('clientes')}
