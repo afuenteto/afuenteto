@@ -13,6 +13,9 @@ create table if not exists public.invitaciones_demo (
 );
 
 create index if not exists invitaciones_demo_user_idx on public.invitaciones_demo(user_id);
+update public.invitaciones_demo
+set estado = 'activa', accepted_at = coalesce(accepted_at, now())
+where user_id is not null and estado = 'pendiente';
 alter table public.invitaciones_demo enable row level security;
 revoke all on public.invitaciones_demo from anon, authenticated;
 grant select on public.invitaciones_demo to authenticated;
@@ -63,6 +66,7 @@ create table if not exists public.demo_sessions (
   ended_at timestamptz,
   duration_seconds integer not null default 0 check (duration_seconds >= 0)
 );
+alter table public.demo_sessions add column if not exists last_seen_at timestamptz not null default now();
 
 create index if not exists demo_sessions_user_started_idx
   on public.demo_sessions(user_id, started_at desc);

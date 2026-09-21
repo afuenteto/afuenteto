@@ -96,7 +96,7 @@ Deno.serve(async request => {
     }
     const { error: linkError } = await adminClient
       .from('invitaciones_demo')
-      .update({ user_id: invitedUserId, nombre: normalizedName || invitation.nombre })
+      .update({ user_id: invitedUserId, nombre: normalizedName || invitation.nombre, estado: 'activa', accepted_at: invitation.accepted_at || new Date().toISOString() })
       .eq('id', invitation.id)
     if (linkError) throw linkError
 

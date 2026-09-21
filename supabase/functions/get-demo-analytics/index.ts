@@ -34,14 +34,20 @@ Deno.serve(async request => {
       adminClient.from('invitaciones_demo').select('id,email,nombre,estado,user_id,created_at,accepted_at').order('created_at', { ascending: false }),
       adminClient.from('demo_access_events').select('user_id,event,route,created_at').order('created_at', { ascending: false }).limit(500),
       adminClient.from('demo_usage_events').select('user_id,session_id,event,module,metadata,created_at').order('created_at', { ascending: false }).limit(500),
-      adminClient.from('demo_sessions').select('id,user_id,started_at,ended_at,duration_seconds').order('started_at', { ascending: false }).limit(500),
+      adminClient.from('demo_sessions').select('id,user_id,started_at,ended_at,last_seen_at,duration_seconds').order('started_at', { ascending: false }).limit(500),
     ])
     if (invitationsError) throw invitationsError
     if (accessError) throw accessError
     if (usageError && !isMissingAnalyticsColumn(usageError)) throw usageError
-    if (sessionsError && !isMissingAnalyticsTable(sessionsError)) throw sessionsError
+    if (sessionsError && !isMissingAnalyticsTable(sessionsError) && !isMissingAnalyticsColumn(sessionsError)) throw sessionsError
 
     let usageRowsSource = usage ?? []
+    let sessionRowsSource = sessions ?? []
+    if (sessionsError && isMissingAnalyticsColumn(sessionsError)) {
+      const fallback = await adminClient.from('demo_sessions').select('id,user_id,started_at,ended_at,duration_seconds').order('started_at', { ascending: false }).limit(500)
+      if (fallback.error) throw fallback.error
+      sessionRowsSource = fallback.data ?? []
+    }
     if (usageError && isMissingAnalyticsColumn(usageError)) {
       const fallback = await adminClient.from('demo_usage_events').select('user_id,event,module,metadata,created_at').order('created_at', { ascending: false }).limit(500)
       if (fallback.error) throw fallback.error
@@ -58,7 +64,7 @@ Deno.serve(async request => {
 
     const sessionRows = sessionsError && isMissingAnalyticsTable(sessionsError)
       ? deriveSessions(access ?? [])
-      : (sessions ?? [])
+      : sessionRowsSource
     const normalizedSessions = normalizeSessions(sessionRows)
     const usageRows = usageRowsSource.map(event => ({
       ...event,
@@ -129,7 +135,13 @@ function normalizeSessions(sessions: Array<any>) {
     if (!latestByUser.has(session.user_id)) latestByUser.set(session.user_id, session)
   }
   return ordered.map(session => {
-    if (session.ended_at || latestByUser.get(session.user_id)?.id === session.id) return session
+    if (session.ended_at || latestByUser.get(session.user_id)?.id === session.id) {
+      if (!session.ended_at && session.last_seen_at && Date.now() - new Date(session.last_seen_at).getTime() > 90000) {
+        const duration = Math.max(0, Math.round((new Date(session.last_seen_at).getTime() - new Date(session.started_at).getTime()) / 1000))
+        return { ...session, ended_at: session.last_seen_at, duration_seconds: duration }
+      }
+      return session
+    }
     const newer = ordered.find(candidate => candidate.user_id === session.user_id && new Date(candidate.started_at).getTime() > new Date(session.started_at).getTime())
     if (!newer) return session
     const duration = Math.max(0, Math.round((new Date(newer.started_at).getTime() - new Date(session.started_at).getTime()) / 1000))

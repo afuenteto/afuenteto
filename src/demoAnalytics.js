@@ -2,6 +2,7 @@ import { supabase } from './supabase.js'
 
 let activeSessionId = null
 let activeSessionUserId = null
+let heartbeatTimer = null
 
 export async function startDemoSession(userId) {
   if (!userId || activeSessionUserId === userId) return activeSessionId
@@ -10,6 +11,9 @@ export async function startDemoSession(userId) {
     const { data } = await supabase.from('demo_sessions').insert({ user_id: userId }).select('id').single()
     activeSessionId = data?.id || null
     activeSessionUserId = userId
+    heartbeatTimer = setInterval(() => {
+      if (activeSessionId) supabase.from('demo_sessions').update({ last_seen_at: new Date().toISOString() }).eq('id', activeSessionId)
+    }, 30000)
     return activeSessionId
   } catch { activeSessionUserId = null; return null }
 }
@@ -19,6 +23,8 @@ export async function endDemoSession() {
   const sessionId = activeSessionId
   activeSessionId = null
   activeSessionUserId = null
+  clearInterval(heartbeatTimer)
+  heartbeatTimer = null
   try {
     const endedAt = new Date()
     const startedAt = await supabase.from('demo_sessions').select('started_at').eq('id', sessionId).single()
