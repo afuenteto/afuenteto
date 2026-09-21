@@ -59,7 +59,6 @@ export default function App() {
   }
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-      const previousUserId = usuarioActualRef.current
   const [errorLogin, setErrorLogin] = useState('')
   const [cargando, setCargando] = useState(true)
   const [proyectos, setProyectos] = useState([])
@@ -200,6 +199,7 @@ useEffect(() => {
     window.addEventListener('storage', cambioPreferencias)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!activo) return
+      const previousUserId = usuarioActualRef.current
       const cambioDeCuenta = usuarioActualRef.current !== session?.user?.id
       usuarioActualRef.current = session?.user?.id
       ++revisionUsuarioRef.current

@@ -7,15 +7,20 @@ let startingSession = null
 let heartbeatHandler = null
 let pageHideHandler = null
 let sessionAccessToken = null
+let activeSessionStartedAt = null
 
 function touchDemoSession() {
   if (!activeSessionId) return
   const lastSeenAt = new Date().toISOString()
-  supabase.from('demo_sessions').update({ last_seen_at: lastSeenAt }).eq('id', activeSessionId).then(({ error }) => {
+  const durationSeconds = activeSessionStartedAt
+    ? Math.max(0, Math.round((Date.now() - new Date(activeSessionStartedAt).getTime()) / 1000))
+    : 0
+  const payload = { last_seen_at: lastSeenAt, duration_seconds: durationSeconds }
+  supabase.from('demo_sessions').update(payload).eq('id', activeSessionId).then(({ error }) => {
     if (error && sessionAccessToken) fetch(`${supabaseUrl}/rest/v1/demo_sessions?id=eq.${activeSessionId}`, {
       method: 'PATCH', keepalive: true,
       headers: { apikey: supabaseKey, Authorization: `Bearer ${sessionAccessToken}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-      body: JSON.stringify({ last_seen_at: lastSeenAt }),
+      body: JSON.stringify(payload),
     })
   })
 }
@@ -27,9 +32,11 @@ export async function startDemoSession(userId) {
   startingSession = (async () => {
     const { data: { session } } = await supabase.auth.getSession()
     sessionAccessToken = session?.access_token || null
-    const { data } = await supabase.from('demo_sessions').insert({ user_id: userId }).select('id').single()
-    activeSessionId = data?.id || null
+    const { data, error } = await supabase.from('demo_sessions').insert({ user_id: userId }).select('id,started_at').single()
+    if (error || !data?.id) throw error || new Error('No se pudo iniciar la sesión de analítica.')
+    activeSessionId = data.id
     activeSessionUserId = userId
+    activeSessionStartedAt = data.started_at
     touchDemoSession()
     heartbeatHandler = () => { if (document.visibilityState !== 'hidden') touchDemoSession() }
     heartbeatTimer = setInterval(heartbeatHandler, 15000)
@@ -38,7 +45,7 @@ export async function startDemoSession(userId) {
     pageHideHandler = () => endDemoSession(true)
     window.addEventListener('pagehide', pageHideHandler)
     return activeSessionId
-  })().catch(() => { activeSessionUserId = null; return null }).finally(() => { startingSession = null })
+  })().catch(() => { activeSessionId = null; activeSessionUserId = null; activeSessionStartedAt = null; return null }).finally(() => { startingSession = null })
   return startingSession
 }
 
@@ -48,6 +55,7 @@ export async function endDemoSession(fromPageHide = false) {
   const accessToken = sessionAccessToken
   activeSessionId = null
   activeSessionUserId = null
+  activeSessionStartedAt = null
   sessionAccessToken = null
   clearInterval(heartbeatTimer)
   heartbeatTimer = null
