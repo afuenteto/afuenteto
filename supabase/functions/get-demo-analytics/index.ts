@@ -175,7 +175,12 @@ function mergeLatestAccessSessions(sessions: Array<any>, access: Array<any>) {
   }
   for (const [userId, event] of latestStarts) {
     const latest = result.filter(session => session.user_id === userId).sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime())[0]
-    if (!latest || new Date(event.created_at).getTime() > new Date(latest.started_at).getTime()) {
+    const eventTime = new Date(event.created_at).getTime()
+    const latestEndedAt = latest?.ended_at ? new Date(latest.ended_at).getTime() : null
+    if (latest && latestEndedAt !== null && eventTime >= latestEndedAt) {
+      const index = result.indexOf(latest)
+      result[index] = { ...latest, started_at: event.created_at, ended_at: null, duration_seconds: 0, last_seen_at: event.created_at }
+    } else if (!latest || eventTime > new Date(latest.started_at).getTime()) {
       result.push({ id: `derived-${userId}-${event.created_at}`, user_id: userId, started_at: event.created_at, ended_at: null, duration_seconds: 0, last_seen_at: event.created_at })
     }
   }
