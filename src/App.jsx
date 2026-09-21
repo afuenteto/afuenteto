@@ -1095,13 +1095,7 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
           setPanelAbierto={panel => panel === 'citas' ? setOpenHomeModule({id:'appointments'}) : setPanelAbierto(panel)}
         />) },
         ...(modulos.tareas ? [{id: 'appointments', title: 'Citas', content: <StudioToday citasOnly proyectos={[...proyectosActivos, { id: 'generic', nombre: translateUI('Genérico'), tareas: genericAppointments.items.filter(item => item.tipoCita !== 'personal') }, { id: 'personal', nombre: translateUI('Asuntos propios'), tareas: genericAppointments.items.filter(item => item.tipoCita === 'personal') }]} profileLogoUrl={appearance.logoUrl} modulos={modulos} guardando={guardando || genericAppointments.busy} onOpen={abrirExistente} onOpenTasks={abrirTareas} onCompleteTask={completarTareaDesdePanel} onSchedule={programarAgenda} />}]:[]),
-        { id: 'projects', title: 'Proyectos', content: (<>
-      <div className="project-module-actions">
-        <button className="btn btn-primary" onClick={abrirNuevo} disabled={guardando}>
-          {translateUI("+ Nuevo proyecto")}
-        </button>
-      </div>
-      <div className="filters">
+        { id: 'projects', title: 'Proyectos', content: (<>      <div className="filters">
         <div className="filter-row filter-row-categories">
         <button
           className={'chip' + (filtro === 'Todos' ? ' active' : '')}
@@ -1210,6 +1204,9 @@ const proyectosOrdenados = useMemo(() => ordenarProyectos(proyectosFiltrados, or
       ].map(section => ({ ...section, summary: section.id === 'projects' ?
         ({ open, toggle, panelId }) =>
         <div className="module-project-counts">
+          <button type="button" className="module-new-project-action" onClick={abrirNuevo} disabled={guardando}>
+            {translateUI('+ Nuevo proyecto')}
+          </button>
           <button type="button" className="module-quick-action" onClick={() => { setFiltro('Todos'); toggle() }} aria-expanded={open} aria-controls={panelId}
             title={translateUI('Proyectos activos')} aria-label={`${translateUI('Proyectos activos')}: ${proyectosActivos.length}`}>
             <LineIcon name="unlocked" /><span>{proyectosActivos.length}</span>

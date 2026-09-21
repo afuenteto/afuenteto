@@ -3089,6 +3089,9 @@ input[type='date'] {
 }
 
 .module-project-counts { display: flex; gap: 4px; margin-inline-start: auto; padding-inline: 8px; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4; color: var(--ink-soft); text-align: end; }
+.module-new-project-action { min-height: 32px; padding: 6px 10px; border: 0; border-radius: 7px; background: var(--accent); color: var(--ink); cursor: pointer; font: inherit; white-space: nowrap; }
+.module-new-project-action:hover { background: var(--accent-hover); }
+.module-new-project-action:disabled { cursor: wait; opacity: .6; }
 .module-quick-actions { display: flex; flex-wrap: wrap; gap: 4px; }
 .module-quick-action { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 40px; min-height: 44px; padding: 6px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); cursor: pointer; font-size: 12px; }
 .module-quick-action:hover { background: var(--accent); }
