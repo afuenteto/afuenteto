@@ -3114,8 +3114,10 @@ input[type='date'] {
   .home-module-toggle { font-size: 12px; letter-spacing: .02em; padding-inline: 8px; }
   .home-module-handle { min-width: 32px; padding-inline: 6px; }
   .module-quick-actions { flex-shrink: 0; gap: 2px; }
-  .module-quick-actions .module-quick-action { min-width: 32px; gap: 3px; padding-inline: 4px; }
-  .module-project-counts { max-width: 45%; padding-inline: 4px; }
+  .module-quick-actions .module-quick-action { min-width: 28px; min-height: 36px; gap: 2px; padding: 4px 3px; }
+  .module-project-counts { max-width: 52%; gap: 2px; padding-inline: 2px; }
+  .module-project-counts .module-quick-action { min-width: 28px; min-height: 36px; padding-inline: 3px; }
+  .module-new-project-action { min-height: 28px; margin: 4px 2px; padding: 4px 6px; border-radius: 6px; font-size: 10px; }
 }
 @container (max-width: 310px) {
   .home-module-heading { flex-wrap: wrap; }
