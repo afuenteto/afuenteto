@@ -162,7 +162,7 @@ function normalizeSessions(sessions: Array<any>) {
     if (!newer) return session
     const duration = Math.max(0, Math.round((new Date(newer.started_at).getTime() - new Date(session.started_at).getTime()) / 1000))
     return { ...session, ended_at: newer.started_at, duration_seconds: duration }
-  })
+  }).sort((a, b) => Number(!a.ended_at) - Number(!b.ended_at) || new Date(b.started_at).getTime() - new Date(a.started_at).getTime())
 }
 
 function mergeLatestAccessSessions(sessions: Array<any>, access: Array<any>) {

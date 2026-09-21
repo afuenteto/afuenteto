@@ -1,10 +1,12 @@
-import { supabase } from './supabase.js'
+import { supabase, supabaseKey, supabaseUrl } from './supabase.js'
 
 let activeSessionId = null
 let activeSessionUserId = null
 let heartbeatTimer = null
 let startingSession = null
 let heartbeatHandler = null
+let pageHideHandler = null
+let sessionAccessToken = null
 
 function touchDemoSession() {
   if (activeSessionId) supabase.from('demo_sessions').update({ last_seen_at: new Date().toISOString() }).eq('id', activeSessionId)
@@ -15,6 +17,8 @@ export async function startDemoSession(userId) {
   if (activeSessionId && activeSessionUserId !== userId) await endDemoSession()
   if (startingSession) return startingSession
   startingSession = (async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    sessionAccessToken = session?.access_token || null
     const { data } = await supabase.from('demo_sessions').insert({ user_id: userId }).select('id').single()
     activeSessionId = data?.id || null
     activeSessionUserId = userId
@@ -22,16 +26,20 @@ export async function startDemoSession(userId) {
     heartbeatTimer = setInterval(heartbeatHandler, 15000)
     window.addEventListener('focus', heartbeatHandler)
     document.addEventListener('visibilitychange', heartbeatHandler)
+    pageHideHandler = () => endDemoSession(true)
+    window.addEventListener('pagehide', pageHideHandler)
     return activeSessionId
   })().catch(() => { activeSessionUserId = null; return null }).finally(() => { startingSession = null })
   return startingSession
 }
 
-export async function endDemoSession() {
+export async function endDemoSession(fromPageHide = false) {
   if (!activeSessionId) return
   const sessionId = activeSessionId
+  const accessToken = sessionAccessToken
   activeSessionId = null
   activeSessionUserId = null
+  sessionAccessToken = null
   clearInterval(heartbeatTimer)
   heartbeatTimer = null
   if (heartbeatHandler) {
@@ -39,11 +47,24 @@ export async function endDemoSession() {
     document.removeEventListener('visibilitychange', heartbeatHandler)
     heartbeatHandler = null
   }
+  if (pageHideHandler) {
+    window.removeEventListener('pagehide', pageHideHandler)
+    pageHideHandler = null
+  }
   try {
     const endedAt = new Date()
     const startedAt = await supabase.from('demo_sessions').select('started_at').eq('id', sessionId).single()
     const duration = startedAt.data?.started_at ? Math.max(0, Math.round((endedAt.getTime() - new Date(startedAt.data.started_at).getTime()) / 1000)) : 0
-    await supabase.from('demo_sessions').update({ ended_at: endedAt.toISOString(), duration_seconds: duration }).eq('id', sessionId)
+    const payload = { ended_at: endedAt.toISOString(), duration_seconds: duration }
+    if (fromPageHide && accessToken) {
+      fetch(`${supabaseUrl}/rest/v1/demo_sessions?id=eq.${sessionId}`, {
+        method: 'PATCH', keepalive: true,
+        headers: { apikey: supabaseKey, Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify(payload),
+      })
+    } else {
+      await supabase.from('demo_sessions').update(payload).eq('id', sessionId)
+    }
   } catch { /* La analítica nunca debe bloquear el cierre de sesión. */ }
 }
 
